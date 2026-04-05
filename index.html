@@ -1838,7 +1838,7 @@ function criarArea(){ const nome = safe('nova_area_nome')?.value?.trim(); const 
 function excluirArea(nome){ const msg = safe('excluirAreaMsg'); if(produtos.some(p => p.area === nome)){ if(msg) msg.innerText = 'Não é possível excluir uma área que possui produtos cadastrados.'; return; } areas = areas.filter(a => a !== nome); if(msg) msg.innerText = 'Área excluída com sucesso.'; renderExcluirAreas(); atualizarPainelAdministrativo(); }
 function renderExcluirAreas(){ const box = safe('listaExcluirAreas'); if(!box) return; box.innerHTML = areas.length ? areas.map(area => `<div class="linha-admin"><span>${area}</span><button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button></div>`).join('') : '<div class="empty">Nenhuma área cadastrada.</div>'; }
 
-async function cadastrarProduto(){
+async function cadastrarProduto() {
   const area = safe('prod_area')?.value;
   const nome = safe('prod_nome')?.value?.trim();
   const descricao = safe('prod_descricao')?.value?.trim();
@@ -1847,35 +1847,63 @@ async function cadastrarProduto(){
   const status = safe('prod_status')?.value || 'N';
   const msg = safe('produtoMsg');
   const input = safe('prod_imagem_arquivo');
-  if(!area || !nome){ if(msg) msg.innerText='Preencha área e nome do produto.'; return; }
-  const novoProduto = { codigo: area.charAt(0).toUpperCase() + (produtos.length + 1), area, nome, descricao, preco, pesoGramas:peso, status, imagem:'' };
-  if(input && input.files && input.files[0]){
+
+  if (!area || !nome) {
+    if (msg) msg.innerText = 'Preencha área e nome do produto.';
+    return;
+  }
+
+  // Cria o objeto com dados do produto
+  const novoProduto = {
+    area,
+    nome,
+    descricao,
+    preco,
+    pesoGramas: peso,
+    status,
+    imagem: ''
+  };
+
+  // Função que envia para o backend
+  const enviarProduto = async (produto) => {
+    try {
+      const resposta = await fetch('https://lara05-1.onrender.com/api/produtos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          area: produto.area,
+          nome: produto.nome,
+          descricao: produto.descricao,
+          preco: produto.preco,
+          peso: produto.pesoGramas,
+          status: produto.status,
+          foto_url: produto.imagem
+        })
+      });
+
+      const produtoSalvo = await resposta.json();
+      produtos.push(produtoSalvo); // adiciona com id real
+      atualizarPainelAdministrativo();
+      if (msg) msg.innerText = 'Produto cadastrado com sucesso.';
+    } catch (error) {
+      console.error("Erro ao cadastrar produto:", error);
+      if (msg) msg.innerText = 'Erro ao cadastrar produto.';
+    }
+  };
+
+  // Se o usuário selecionou uma imagem
+  if (input && input.files && input.files[0]) {
     const reader = new FileReader();
-    reader.onload = e => { novoProduto.imagem = e.target.result; produtos.push(novoProduto); if(msg) msg.innerText='Produto cadastrado com sucesso.'; atualizarPainelAdministrativo(); };
+    reader.onload = async (e) => {
+      novoProduto.imagem = e.target.result;
+      await enviarProduto(novoProduto);
+    };
     reader.readAsDataURL(input.files[0]);
     return;
   }
-  
-  const resposta = await fetch('https://lara05-1.onrender.com/api/produtos', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    area: novoProduto.area,
-    nome: novoProduto.nome,
-    descricao: novoProduto.descricao,
-    preco: novoProduto.preco,
-    peso: novoProduto.pesoGramas,
-    status: novoProduto.status,
-    foto_url: novoProduto.imagem
-  })
-});
 
-const produtoSalvo = await resposta.json();
-produtos.push(produtoSalvo); // agora com id real do servidor
-atualizarPainelAdministrativo();
-
-if(msg) msg.innerText = 'Produto cadastrado com sucesso.';
-  
+  // Caso não tenha imagem, envia normalmente
+  await enviarProduto(novoProduto);
 }
 
 function renderGerenciarProdutos(){ const box = safe('gerenciarProdutosLista'); if(!box) return; box.innerHTML = produtos.map(p => `<div class="produto-admin-item"><div class="produto-admin-info"><strong>${p.nome}</strong><span>${p.area} • ${moedaUS(p.preco)}</span></div><div class="produto-admin-acoes"><button class="btn-mini" onclick="editarProduto('${p.codigo}')">Editar</button><button class="btn-mini excluir" onclick="excluirProduto('${p.codigo}')">Excluir</button></div></div>`).join('') || '<div class="empty">Nenhum produto cadastrado.</div>'; }
