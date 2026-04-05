@@ -1855,9 +1855,9 @@ async function cadastrarProduto(){
     reader.readAsDataURL(input.files[0]);
     return;
   }
-  produtos.push(novoProduto);
+  
   if(msg) msg.innerText='Produto cadastrado com sucesso.';
-  atualizarPainelAdministrativo();
+  
 }
 
 function renderGerenciarProdutos(){ const box = safe('gerenciarProdutosLista'); if(!box) return; box.innerHTML = produtos.map(p => `<div class="produto-admin-item"><div class="produto-admin-info"><strong>${p.nome}</strong><span>${p.area} • ${moedaUS(p.preco)}</span></div><div class="produto-admin-acoes"><button class="btn-mini" onclick="editarProduto('${p.codigo}')">Editar</button><button class="btn-mini excluir" onclick="excluirProduto('${p.codigo}')">Excluir</button></div></div>`).join('') || '<div class="empty">Nenhum produto cadastrado.</div>'; }
