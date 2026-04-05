@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Larah Imports - Home Premium</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    :root {
+      --bg: #f6efe8;
+      --bg-soft: #fbf6f1;
+      --cream: #f7efe6;
+      --white: #fffaf5;
+      --text: #4b2f22;
+      --muted: #856452;
+      --gold: #b7854e;
+      --gold-soft: #c79667;
+      --brown: #8d5d3a;
+      --brown-dark: #6f472e;
+      --line: rgba(125, 88, 57, 0.18);
+      --shadow: 0 10px 30px rgba(110, 77, 49, 0.10);
+      --sys-bg: #fbf6f1;
+      --sys-card: rgba(255,255,255,0.96);
+      --sys-line: rgba(125, 88, 57, 0.18);
+      --sys-accent: #b56f3e;
+      --sys-accent-dark: #8f562f;
+      --sys-text: #4b2f22;
+      --sys-muted: #7a5a48;
+      --sys-danger: #b63f3f;
+    }
+    body {
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg-soft);
+      color: var(--text);
+    }
+    .home-page {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .topbar {
+      height: 68px;
+      background: rgba(252, 247, 241, 0.96);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 42px;
+      flex-shrink: 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-mark {
+      font-size: 28px;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .brand-name {
+      font-size: 26px;
+      letter-spacing: 1px;
+      color: var(--gold);
+      font-weight: normal;
+    }
+    .menu {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+    .menu a {
+      text-decoration: none;
+      color: #4f3a2d;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      position: relative;
+    }
+    .menu a.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 100%;
+      height: 2px;
+      background: #4f3a2d;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      min-height: 220px;
+      max-height: 240px;
+      background: linear-gradient(90deg, #c28a5b 0%, #cf9563 40%, #d59d71 100%);
+      flex-shrink: 0;
+    }
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 12px 28px 12px 38px;
+      color: #fff8f1;
+    }
+    .hero-text h1 {
+      font-size: 28px;
+      line-height: 1.02;
+      font-weight: normal;
+      margin-bottom: 8px;
+      max-width: 390px;
+    }
+    .hero-text .sub {
+      font-size: 16px;
+      font-style: italic;
+      line-height: 1.05;
+      margin-bottom: 12px;
+      color: #fff0df;
+    }
+    .hero-text .tags {
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      color: #f7e4d3;
+    }
+    .hero-text button {
+      width: 160px;
+      height: 40px;
+      border: none;
+      background: #b56f3e;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      box-shadow: var(--shadow);
+    }
+    .hero-image {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px 10px 6px;
+    }
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .intro {
+      background: linear-gradient(180deg, #b56938 0%, #b96f3d 100%);
+      color: #fff6ef;
+      text-align: center;
+      padding: 6px 18px 24px 18px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .intro h2 {
+      font-size: 24px;
+      font-weight: normal;
+      margin-bottom: 8px;
+    }
+    .intro p {
+      max-width: 640px;
+      margin: 0 auto 10px auto;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #f8eadf;
+    }
+    .intro .services-btn {
+      display: inline-block;
+      background: #f3e5d7;
+      color: #805638;
+      padding: 10px 24px;
+      border-radius: 3px;
+      font-family: Arial, sans-serif;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 0.4px;
+      font-weight: bold;
+    }
+    .areas-strip {
+      margin-top: -22px;
+      padding: 0 34px;
+      position: relative;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+    .areas-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    .area-card {
+      background: #efe0d1;
+      border: 1px solid rgba(145, 101, 63, 0.14);
+      box-shadow: var(--shadow);
+      text-align: center;
+      padding: 8px 6px 6px 6px;
+      min-height: 46px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: 3px;
+    }
+    .area-icon {
+      font-size: 20px;
+      color: #b68458;
+      margin-bottom: 10px;
+      line-height: 1;
+    }
+    .area-title {
+      font-size: 13px;
+      color: #573724;
+    }
+    .featured {
+      padding: 10px 24px 10px 24px;
+      background: #fbf6f0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .featured h2 {
+      text-align: center;
+      font-size: 22px;
+      font-weight: normal;
+      color: #5a3825;
+      margin-bottom: 16px;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 280px);
+      justify-content: center;
+      gap: 18px;
+    }
+    .product-card {
+      background: transparent;
+    }
+    .product-photo {
+      width: 100%;
+      height: 78px;
+      background: #ead8c9;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .product-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .product-name {
+      font-size: 15px;
+      color: #4f3022;
+      margin-bottom: 4px;
+    }
+    .product-price {
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      color: #6f5647;
+    }
+    .offers-banner {
+      min-height: 130px;
+      max-height: 150px;
+      background:
+        linear-gradient(rgba(130, 73, 35, 0.35), rgba(130, 73, 35, 0.35)),
+        linear-gradient(90deg, #8f562f 0%, #ab6a3d 45%, #8b522d 100%);
+      color: #fff7ef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px 12px 8px 12px;
+      overflow: hidden;
+    }
+    .offers-banner h3 {
+      font-size: 24px;
+      font-weight: normal;
+      margin-top: 10px;
+      margin-bottom: 2px;
+    }
+    .offers-banner p {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .offers-banner button {
+      border: none;
+      background: #b96c39;
+      color: #fff;
+      padding: 6px 14px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+    .hidden { display: none !important; }
+    .screen { width: 100%; min-height: 100vh; }
+    .system-shell {
+      display: none;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #fbf6f1 0%, #f7efe6 100%);
+      color: #4b2f22;
+      font-family: Arial, sans-serif;
+    }
+    .system-shell.active { display: block; }
+    .system-page { padding: 24px; }
+    .system-card {
+      max-width: 420px;
+      margin: 60px auto;
+      background: var(--sys-card);
+      border: 1px solid var(--sys-line);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .system-card h3 {
+      margin: 0 0 14px 0;
+      font-size: 24px;
+      color: #8f562f;
+      font-family: Georgia, serif;
+      font-weight: normal;
+    }
+    .system-card label {
+      display: block;
+      margin: 8px 0 6px 0;
+      font-size: 14px;
+      font-weight: bold;
+      color: #6f4a33;
+    }
+    .system-card input {
+      width: 100%;
+      padding: 11px 12px;
+      margin-bottom: 8px;
+      border: 1px solid #dcc6b4;
+      border-radius: 12px;
+      background: #fffaf5;
+      font-size: 14px;
+      outline: none;
+    }
+    .system-btn {
+      width: 100%;
+      padding: 11px 13px;
+      border: none;
+      border-radius: 12px;
+      background: var(--sys-accent);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .system-link {
+      margin-top: 10px;
+      color: #9b5b31;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .system-msg {
+      margin-top: 8px;
+      min-height: 18px;
+      font-size: 14px;
+      color: var(--sys-muted);
+    }
+    * { box-sizing: border-box; }
+    :root{
+      --green:#b56f3e;
+      --green-dark:#8f562f;
+      --green-soft:#fbf6f1;
+      --bg:#fbf6f1;
+      --text:#4b2f22;
+      --muted:#7a5a48;
+      --line:rgba(125, 88, 57, 0.18);
+      --white:#fffaf5;
+      --gray:#8d5d3a;
+      --danger:#b63f3f;
+      --shadow:0 10px 30px rgba(110, 77, 49, 0.10);
+      --radius:16px;
+    }
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .hidden { display: none !important; }
+    .screen {
+      width: 100%;
+      min-height: 100vh;
+    }
+    #screen-home{
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .topo-principal {
+      position: relative;
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1.05fr 0.9fr 0.8fr;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 32px 8px 32px;
+      background: linear-gradient(135deg, #f9fcfa 0%, #edf6f2 100%);
+    }
+    .info-superior {
+      position: absolute;
+      top: 10px;
+      right: 18px;
+      text-align: right;
+      font-size: 13px;
+      color: #456056;
+      line-height: 1.3;
+    }
+    .bloco-esquerdo {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+    .bloco-esquerdo h1 {
+      margin: 0 0 8px 0;
+      font-size: 36px;
+      line-height: 1;
+      color: var(--green);
+      font-weight: 700;
+    }
+    .bloco-esquerdo p {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.28;
+      color: #50675d;
+      max-width: 620px;
+    }
+    .hero-linhas {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .hero-chip {
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #dce8e2;
+      font-size: 12px;
+      color: #40584f;
+      font-weight: bold;
+    }
+    .tela-inicial-foto {
+      width: 100%;
+      height: 190px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-top: 4px;
+      background: transparent;
+    }
+    .tela-inicial-foto img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .foto-placeholder {
+      width: 100%;
+      height: 100%;
+      border: 2px dashed #c9d8d0;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #70867b;
+      text-align: center;
+      padding: 16px;
+      background: rgba(255,255,255,0.5);
+      line-height: 1.4;
+      font-size: 13px;
+    }
+    .bloco-direito {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      width: 100%;
+    }
+    .login-box {
+      width: 100%;
+      max-width: 310px;
+      margin-left: auto;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid #dce8e2;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .login-box h3 {
+      margin: 0 0 10px 0;
+      color: var(--green);
+      font-size: 20px;
+    }
+    .login-box label,
+    .form-area label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #6f4a33;
+    }
+    .login-box input,
+    .form-area input,
+    .form-area select,
+    .form-area textarea {
+      width: 100%;
+      padding: 11px 12px;
+      margin-bottom: 9px;
+      border: 1px solid #dcc6b4;
+      border-radius: 12px;
+      background: #fffaf5;
+      font-size: 14px;
+      outline: none;
+    }
+    .form-area textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+    .btn, .area-btn, .comprar-btn, .secundario-btn, .danger-btn {
+      padding: 11px 13px;
+      border: none;
+      border-radius: 12px;
+      background: var(--green);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn { width: 100%; }
+    .secundario-btn {
+      background: var(--gray);
+    }
+    .danger-btn {
+      background: var(--danger);
+    }
+    .area-btn {
+      width: 100%;
+      background: #fffaf5;
+      color: #4b2f22;
+      border: 1px solid rgba(125, 88, 57, 0.18);
+      box-shadow: var(--shadow);
+    }
+    .btn:hover, .area-btn:hover, .comprar-btn:hover, .secundario-btn:hover, .danger-btn:hover {
+      opacity: 0.96;
+    }
+    .fazer-cadastro, .azul-link {
+      margin-top: 10px;
+      color: #1f5fd1;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .status-msg, .msg {
+      margin-top: 8px;
+      min-height: 18px;
+      font-size: 14px;
+      color: #5b7269;
+    }
+    .beneficios-home {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 10px 16px 6px 16px;
+      background: #f9fcfa;
+    }
+    .beneficio-card {
+      background: white;
+      border: 1px solid #dce8e2;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+    .beneficio-card strong {
+      display: block;
+      color: var(--green);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .beneficio-card span {
+      color: #5b7269;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .faixa-promocoes {
+      width: 100%;
+      background: #ffffff;
+      border-top: 1px solid #e0ebe5;
+      padding: 10px 16px 10px 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    .faixa-promocoes h3 {
+      margin: 0 0 8px 4px;
+      font-size: 18px;
+      color: #2c4239;
+    }
+    .carrossel {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      align-items: stretch;
+      padding-bottom: 0;
+    }
+    .produto {
+      cursor: pointer;
+      flex: 0 0 80px;
+      background: #fbfdfc;
+      border: 1px solid #dce8e2;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+    }
+    .foto {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      color: #6f857b;
+      font-size: 12px;
+      font-weight: bold;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .foto img, .catalogo-card .foto img, .detalhe-foto img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: white;
+      display: block;
+    }
+    .info {
+      padding: 6px;
+      text-align: center;
+      background: white;
+      min-height: 55px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 2px;
+    }
+    .nome {
+      font-size: 11px;
+      font-weight: bold;
+      color: #26352e;
+      margin-bottom: 2px;
+    }
+    .preco {
+      font-size: 11px;
+      color: var(--green);
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .preco small {
+      font-size: 11px;
+      color: #6b7280;
+      font-weight: normal;
+    }
+    .comprar-btn {
+      padding: 5px 6px;
+      font-size: 10px;
+      align-self: center;
+      margin-top: 0;
+    }
+    .footer-site {
+      width: 100%;
+      border-top: 1px solid #dce8e2;
+      background: #f4f8f6;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: #4d655b;
+    }
+    .footer-brand {
+      font-weight: bold;
+      color: #2d463d;
+    }
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .footer-link {
+      cursor: pointer;
+      font-weight: bold;
+      color: #1f5fd1;
+    }
+    .footer-link:hover {
+      text-decoration: underline;
+    }
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      padding: 20px;
+      background: linear-gradient(180deg, #fbf6f1 0%, #f7efe6 100%);
+    }
+    .page h2 {
+      margin-top: 0;
+      margin-bottom: 0;
+      color: #8f562f;
+      font-size: 28px;
+    }
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .back {
+      background: var(--gray);
+      width: auto;
+    }
+    .card {
+      background: rgba(255,255,255,0.96);
+      border: 1px solid #dce8e2;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .grid-areas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .menu-list { display: grid; gap: 12px; max-width: 760px; }
+    .menu-item {
+      background: white;
+      border: 1px solid #dce8e2;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .menu-item:hover { background: #f6fbf8; }
+    .catalogo-grade {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .catalogo-card {
+      background: white;
+      border: 1px solid #dce8e2;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .catalogo-card .foto { height: 180px; }
+    .catalogo-info { padding: 14px; }
+    .catalogo-descricao {
+      font-size: 14px;
+      color: #7a5a48;
+      min-height: 38px;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .catalogo-linhas {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+    .catalogo-linha {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 14px;
+      border-bottom: 1px solid #edf3ef;
+      padding-bottom: 5px;
+    }
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 16px;
+    }
+    .resumo-box {
+      background: #f8fcfa;
+      border: 1px solid #dce8e2;
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .resumo-linha {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+    .painel-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .kpi-card {
+      background: white;
+      border: 1px solid #dce8e2;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .kpi-card h3 {
+      margin: 0 0 6px 0;
+      font-size: 14px;
+      color: #7a5a48;
+    }
+    .kpi-numero {
+      font-size: 28px;
+      color: var(--green);
+      font-weight: bold;
+    }
+    .painel-duplo {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+    }
+    .lista-admin {
+      background: white;
+      border: 1px solid #dce8e2;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .lista-admin h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #8f562f;
+    }
+    .linha-admin {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #edf3ef;
+      font-size: 15px;
+    }
+    .linha-admin:last-child { border-bottom: none; }
+    .admin-acoes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .acao-admin {
+      background: #fffaf5;
+      border: 1px solid rgba(125, 88, 57, 0.18);
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #4b2f22;
+    }
+    .acao-admin:hover { background: #f7efe6; }
+    .empty {
+      color: #7a5a48;
+      padding: 14px;
+      border: 1px dashed #dcc6b4;
+      border-radius: 14px;
+      background: #fffaf5;
+    }
+    .subtitulo-area {
+      color: #7a5a48;
+      font-size: 15px;
+      margin-top: -2px;
+      margin-bottom: 14px;
+    }
+    .preview-box {
+      max-width: 520px;
+      height: 260px;
+      border: 1px dashed #cad8d1;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 12px;
+      background: white;
+      color: #6f857b;
+    }
+    .preview-produto {
+      max-width: 240px;
+      height: 190px;
+    }
+    .preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .detalhe-foto {
+      height: 260px;
+      border: 1px solid #dce8e2;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: white;
+      color: #6f857b;
+      font-weight: bold;
+    }
+    .faq-lista {
+      display: grid;
+      gap: 12px;
+    }
+    .faq-item {
+      background: white;
+      border: 1px solid #dce8e2;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .faq-pergunta {
+      font-weight: bold;
+      color: #b56f3e;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+    .faq-resposta {
+      color: #7a5a48;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    .produto-admin-item {
+      display: grid;
+      grid-template-columns: 1.2fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #edf3ef;
+    }
+    .produto-admin-item:last-child {
+      border-bottom: none;
+    }
+    .produto-admin-info strong {
+      display: block;
+      color: #24342d;
+      margin-bottom: 4px;
+    }
+    .produto-admin-info span {
+      display: block;
+      color: #7a5a48;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .produto-admin-acoes {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .btn-mini {
+      padding: 8px 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      background: var(--green);
+    }
+    .btn-mini.excluir {
+      background: var(--danger);
+    }
+    @media (max-width: 1200px) {
+      .catalogo-grade { grid-template-columns: repeat(2, 1fr); }
+      .topo-principal { grid-template-columns: 1fr 1fr; }
+      .bloco-direito { grid-column: 1 / -1; justify-content: center; }
+      .login-box { margin-left: 0; }
+    }
+    @media (max-width: 950px) {
+      .topo-principal,
+      .grid-2,
+      .grid-areas,
+      .catalogo-grade,
+      .checkout-layout,
+      .painel-duplo,
+      .painel-grid,
+      .admin-acoes,
+      .beneficios-home,
+      .produto-admin-item {
+        grid-template-columns: 1fr;
+      }
+      .topo-principal { padding: 22px 18px 12px 18px; gap: 14px; }
+      .info-superior { position: static; text-align: left; margin-bottom: 2px; }
+      .bloco-esquerdo h1 { font-size: 32px; }
+      .bloco-esquerdo p { font-size: 16px; }
+      .tela-inicial-foto { height: 200px; }
+      .bloco-direito { justify-content: flex-start; }
+      .page { padding: 18px; }
+      .footer-site { justify-content: center; text-align: center; }
+      .footer-links { justify-content: center; }
+      .produto-admin-acoes { justify-content: flex-start; }
+    }
+    @media (max-width: 1100px) {
+      .home-page { min-height: auto; }
+      .hero { grid-template-columns: 1fr; min-height: auto; max-height: none; }
+      .hero-image { min-height: 220px; padding: 14px 18px; }
+      .areas-grid, .products-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 760px) {
+      .topbar { height: auto; padding: 18px; flex-direction: column; gap: 14px; }
+      .brand-name { font-size: 22px; }
+      .menu { gap: 16px; flex-wrap: wrap; justify-content: center; }
+      .hero-text { padding: 20px 18px; }
+      .hero-text h1 { font-size: 26px; }
+      .hero-text .sub { font-size: 20px; }
+      .intro h2, .featured h2, .offers-banner h3 { font-size: 24px; }
+      .areas-strip { padding: 0 18px; }
+      .areas-grid, .products-grid { grid-template-columns: 1fr; }
+      .featured { padding: 22px 18px; }
+      .product-photo { height: 240px; }
+      .system-page { padding: 18px; }
+      .system-card { margin: 28px auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="home-page" id="premiumHome">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">✺</div>
+        <div class="brand-name">LARAH IMPORTS</div>
+      </div>
+      <nav class="menu">
+        <a href="#" class="active" onclick="abrirSistema(event)">Início</a>
+        <a href="#">Shop</a>
+        <a href="#" onclick="abrirFaqPrincipal(event)">Perguntas Frequentes</a>
+        <a href="#">Sobre</a>
+        <a href="#">Contato</a>
+      </nav>
+    </header>
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Curadoria exclusiva de produtos internacionais</h1>
+        <div class="sub">selecionados nos EUA</div>
+        <div class="tags">BELEZA • MODA • LIFESTYLE</div>
+        
+      </div>
+      <div class="hero-image">
+        <img id="premiumHeroImage" src="" alt="Larah Imports">
+      </div>
+    </section>
+    <section class="intro">
+      <h2>Bem-vinda à Larah Imports</h2>
+      <p>
+        Seleção exclusiva de produtos internacionais escolhidos com olhar de estilo,
+        qualidade e autenticidade.
+      </p>
+      <span class="services-btn">Nossas áreas</span>
+    </section>
+    <section class="areas-strip">
+      <div class="areas-grid" id="areasHomeGrid"></div>
+    </section>
+    <section class="featured">
+      <h2>Produtos em destaque</h2>
+      <div class="products-grid" id="featuredProductsGrid"></div>
+    </section>
+
+    <section class="offers-banner" id="offersBannerSection">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div style="font-size:20px;">✺</div>
+        <h3>Ofertas da semana</h3>
+        <p>Os melhores achados de Miami com preços especiais</p>
+        <button>Shop now</button>
+        <div class="carrossel" id="carrosselPromocoesHome" style="margin-top:6px;"></div>
+      </div>
+    </section>
+    <footer class="footer-site">
+      <div class="footer-brand">Larah Imports</div>
+      <div class="footer-links">
+        <div class="footer-link" onclick="abrirTermosPrincipal()">Termos e Condições</div>
+        <div class="footer-link" onclick="abrirPrivacidadePrincipal()">Política de Privacidade</div>
+      </div>
+    </footer>
+  </main>
+
+  <section id="systemShell" class="system-shell">
+    <div class="system-page">
+      <div class="toolbar" style="margin-bottom:14px; justify-content:flex-end; max-width:420px; margin-left:auto; margin-right:auto;">
+        <button class="btn back" onclick="voltarTelaInicial()">Voltar</button>
+      </div>
+      <div class="system-card">
+        <h3>Acesse sua conta</h3>
+        <label>Login</label>
+        <input id="login" placeholder="Digite seu login">
+        <label>Senha</label>
+        <input id="senha" type="password" placeholder="Digite sua senha">
+        <button class="system-btn" onclick="loginSistema()">Acessar</button>
+        <div class="system-link" onclick="abrirTela('screen-cadastro-cliente')">Fazer Cadastro</div>
+        <div class="system-link" onclick="abrirTela('screen-areas-publicas'); renderAreasPublicas()">Ver Produtos</div>
+        <div class="system-msg" id="statusMensagem"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-cadastro-cliente" class="screen hidden"><div class="page"><div class="toolbar"><h2>Cadastro de Cliente</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card form-area"><div class="grid-2"><div><label>Nome</label><input id="cad_nome" /></div><div><label>Endereço</label><input id="cad_endereco" /></div><div><label>Cidade</label><input id="cad_cidade" /></div><div><label>Estado</label><input id="cad_estado" /></div><div><label>CEP</label><input id="cad_cep" /></div><div><label>CPF</label><input id="cad_cpf" /></div><div><label>Login</label><input id="cad_login" /></div><div><label>Senha</label><input id="cad_senha" type="password" /></div></div><div><label>Confirma Senha</label><input id="cad_senha2" type="password" /></div><button class="btn" onclick="cadastrarCliente()">Cadastrar Cliente</button><div class="msg" id="cadastroClienteMsg"></div></div></div></section>
+  <section id="screen-faq" class="screen hidden"><div class="page"><div class="toolbar"><h2>Perguntas Frequentes</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card faq-lista"><div class="faq-item"><div class="faq-pergunta">Como funciona a entrega?</div><div class="faq-resposta">A entrega é realizada em até <strong>12 dias úteis</strong>, contados a partir da confirmação da compra e envio do produto.</div></div><div class="faq-item"><div class="faq-pergunta">Como é calculado o frete?</div><div class="faq-resposta">O frete é calculado com base na <strong>tabela dos Correios</strong>, considerando o <strong>peso do produto</strong> e o <strong>local de entrega no Brasil</strong>.</div></div><div class="faq-item"><div class="faq-pergunta">Os impostos já aparecem antes da compra?</div><div class="faq-resposta">Sim. Todos os <strong>impostos e custos estão discriminados no momento da escolha do produto</strong>, garantindo total transparência antes da finalização da compra.</div></div><div class="faq-item"><div class="faq-pergunta">Como acompanho meu pedido?</div><div class="faq-resposta">Assim que o produto chega ao Brasil, você recebe o <strong>código de rastreamento (tracking)</strong> dos Correios para acompanhar a entrega.</div></div><div class="faq-item"><div class="faq-pergunta">Quais formas de pagamento são aceitas?</div><div class="faq-resposta">Aceitamos <strong>cartões de crédito nacionais</strong>, <strong>cartões de crédito internacionais</strong> e <strong>PIX</strong>.</div></div></div></div></section>
+  <section id="screen-termos" class="screen hidden"><div class="page"><div class="toolbar"><h2>Termos e Condições</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card" style="line-height:1.7; color:#586d64;"><p>Ao utilizar a plataforma Larah Imports, o usuário declara estar de acordo com as regras de uso do sistema, políticas comerciais, prazos operacionais e condições de compra aplicáveis.</p><p>Os valores apresentados no sistema podem incluir estimativas de frete e tributos, sujeitos à conferência final conforme a operação.</p><p>O cliente é responsável pela veracidade das informações fornecidas no cadastro e nos pedidos realizados.</p></div></div></section>
+  <section id="screen-privacidade" class="screen hidden"><div class="page"><div class="toolbar"><h2>Política de Privacidade</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card" style="line-height:1.7; color:#586d64;"><p>A Larah Imports poderá utilizar os dados informados pelo cliente exclusivamente para cadastro, processamento de pedidos, comunicação operacional e melhorias da experiência no sistema.</p><p>As informações pessoais não devem ser compartilhadas com terceiros fora das hipóteses necessárias para a operação logística, financeira e legal do serviço.</p><p>Ao utilizar a plataforma, o usuário concorda com o tratamento de seus dados nos termos desta política.</p></div></div></section>
+  <section id="screen-cliente" class="screen hidden"><div class="page"><div class="toolbar"><h2>Área do Cliente</h2><button class="btn back" onclick="logoutSistema()">Sair</button></div><div class="card"><div id="clienteLogadoInfo"></div><p style="margin:10px 0 0 0; color:#7a5a48;">Escolha uma opção abaixo.</p><div class="admin-acoes"><div class="acao-admin" onclick="abrirTela('screen-areas-cliente'); renderAreasCliente();">Ver Produtos por Área</div><div class="acao-admin" onclick="abrirTela('screen-carrinho'); renderCarrinhoCliente();">Carrinho de Compras</div></div></div><div class="featured" style="margin-top:14px; border-radius:18px; border:1px solid rgba(125,88,57,0.18); box-shadow: var(--shadow);"><h2>Nossas áreas</h2><div class="areas-grid" id="areasClienteHomeGrid"></div></div><div class="featured" style="margin-top:14px; border-radius:18px; border:1px solid rgba(125,88,57,0.18); box-shadow: var(--shadow);"><h2>Produtos em destaque</h2><div class="products-grid" id="featuredProductsClienteGrid"></div></div><section class="offers-banner" style="margin-top:14px; border-radius:18px;"><div style="display:flex; flex-direction:column; align-items:center; gap:6px;"><div style="font-size:20px;">✺</div><h3>Ofertas da semana</h3><p>Os melhores achados de Miami com preços especiais</p><button>Shop now</button><div class="carrossel" id="carrosselPromocoesCliente" style="margin-top:6px;"></div></div></section></div></section>
+  <section id="screen-admin" class="screen hidden"><div class="page"><div class="toolbar"><h2>Painel Administrativo</h2><button class="btn back" onclick="logoutSistema()">Sair</button></div><div class="painel-grid"><div class="kpi-card"><h3>Total de produtos</h3><div class="kpi-numero" id="kpiTotalProdutos">0</div></div><div class="kpi-card"><h3>Produtos em promoção</h3><div class="kpi-numero" id="kpiPromocoes">0</div></div><div class="kpi-card"><h3>Clientes cadastrados</h3><div class="kpi-numero" id="kpiClientes">0</div></div><div class="kpi-card"><h3>Total de áreas</h3><div class="kpi-numero" id="kpiAreas">0</div></div></div><div class="painel-duplo"><div class="lista-admin"><h3>Ações do administrador</h3><div class="menu-list"><div class="menu-item" onclick="abrirTela('screen-criar-area')">Criar Área</div><div class="menu-item" onclick="abrirTela('screen-excluir-area'); renderExcluirAreas();">Excluir Área</div><div class="menu-item" onclick="abrirTela('screen-cadastrar-produto'); preencherSelectAreas(); limparFormularioProduto();">Cadastrar Produto</div><div class="menu-item" onclick="abrirTela('screen-gerenciar-produtos'); renderGerenciarProdutos();">Editar / Excluir Produtos</div><div class="menu-item" onclick="abrirTela('screen-foto-principal'); carregarPreviewFotoPrincipalAtual();">Alterar Foto da Tela Principal</div><div class="menu-item" onclick="abrirTela('screen-areas-admin'); renderAreasAdmin();">Ver Catálogo por Área</div></div></div><div class="lista-admin"><h3>Resumo por área</h3><div id="painelResumoAreas"></div></div></div></div></section>
+  <section id="screen-gerenciar-produtos" class="screen hidden"><div class="page"><div class="toolbar"><h2>Gerenciar Produtos</h2><button class="btn back" onclick="abrirTela('screen-admin')">Voltar</button></div><div class="card"><div id="gerenciarProdutosLista"></div></div></div></section>
+  <section id="screen-editar-produto" class="screen hidden"><div class="page"><div class="toolbar"><h2>Editar Produto</h2><button class="btn back" onclick="abrirTela('screen-gerenciar-produtos'); renderGerenciarProdutos();">Voltar</button></div><div class="card form-area"><div class="grid-2"><div><label>Área do Produto</label><select id="edit_prod_area"></select></div><div><label>Nome Comercial do produto</label><input id="edit_prod_nome" /></div><div><label>Descrição do Produto</label><textarea id="edit_prod_descricao" maxlength="180"></textarea></div><div><label>Preço do Produto US$</label><input id="edit_prod_preco" type="number" step="0.01" placeholder="ex: 123.45" /><label>Peso do Produto (gramas)</label><input id="edit_prod_peso" type="number" step="1" placeholder="ex: 123" /><label>Status do Produto</label><select id="edit_prod_status"><option value="N">Normal</option><option value="P">Promocao</option><option value="D">Destaque</option></select></div></div><label>Nova foto do produto</label><input id="edit_prod_imagem_arquivo" type="file" accept="image/*" onchange="previewFotoProdutoEdicao()" /><div class="preview-box preview-produto" id="previewFotoProdutoEdicao">Sem foto</div><button class="btn" onclick="salvarEdicaoProduto()">Salvar Alterações</button><div class="msg" id="editarProdutoMsg"></div></div></div></section>
+  <section id="screen-criar-area" class="screen hidden"><div class="page"><div class="toolbar"><h2>Criar Área</h2><button class="btn back" onclick="abrirTela('screen-admin'); atualizarPainelAdministrativo();">Voltar</button></div><div class="card form-area"><label>Nome da nova área</label><input id="nova_area_nome" placeholder="Ex: Eletrônicos Premium" /><button class="btn" onclick="criarArea()">Criar Área</button><div class="msg" id="novaAreaMsg"></div></div></div></section>
+  <section id="screen-excluir-area" class="screen hidden"><div class="page"><div class="toolbar"><h2>Excluir Área</h2><button class="btn back" onclick="abrirTela('screen-admin'); atualizarPainelAdministrativo();">Voltar</button></div><div class="card"><div id="listaExcluirAreas"></div><div class="msg" id="excluirAreaMsg" style="margin-top:12px;"></div></div></div></section>
+  <section id="screen-foto-principal" class="screen hidden"><div class="page"><div class="toolbar"><h2>Foto da Tela Principal</h2><button class="btn back" onclick="abrirTela('screen-admin')">Voltar</button></div><div class="card form-area"><label>Escolha a nova foto da tela principal</label><input id="foto_tela_principal_input" type="file" accept="image/*" onchange="previewFotoTelaPrincipal()" /><div class="preview-box" id="previewFotoTelaPrincipal">Sem foto</div><button class="btn" onclick="salvarFotoTelaPrincipal()">Salvar foto da tela principal</button><div class="msg" id="fotoTelaPrincipalMsg"></div></div></div></section>
+  <section id="screen-cadastrar-produto" class="screen hidden"><div class="page"><div class="toolbar"><h2>Cadastrar Produto</h2><button class="btn back" onclick="abrirTela('screen-admin'); atualizarPainelAdministrativo();">Voltar</button></div><div class="card form-area"><div class="grid-2"><div><label>Área do Produto</label><select id="prod_area"></select></div><div><label>Nome Comercial do produto</label><input id="prod_nome" /></div><div><label>Descrição do Produto</label><textarea id="prod_descricao" maxlength="180"></textarea></div><div><label>Preço do Produto US$</label><input id="prod_preco" type="number" step="0.01" placeholder="ex: 123.45" /><label>Peso do Produto (gramas)</label><input id="prod_peso" type="number" step="1" placeholder="ex: 123" /><label>Status do Produto</label><select id="prod_status"><option value="N">Normal</option><option value="P">Promocao</option><option value="D">Destaque</option></select></div></div><label>Foto do produto</label><input id="prod_imagem_arquivo" type="file" accept="image/*" onchange="previewFotoProduto()" /><div class="preview-box preview-produto" id="previewFotoProduto">Sem foto</div><button class="btn" onclick="cadastrarProduto()">Confirmar Informações</button><div class="msg" id="produtoMsg"></div></div></div></section>
+  <section id="screen-areas-publicas" class="screen hidden"><div class="page"><div class="toolbar"><h2>Áreas de Produtos</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="subtitulo-area">Escolha uma área para visualizar os produtos.</div><div class="grid-areas" id="areasPublicasGrid"></div></div></section>
+  <section id="screen-areas-cliente" class="screen hidden"><div class="page"><div class="toolbar"><h2>Áreas de Produtos</h2><button class="btn back" onclick="abrirTela('screen-cliente')">Voltar</button></div><div class="subtitulo-area">Escolha uma área para visualizar os produtos.</div><div class="grid-areas" id="areasClienteGrid"></div></div></section>
+  <section id="screen-areas-admin" class="screen hidden"><div class="page"><div class="toolbar"><h2>Áreas de Produtos</h2><button class="btn back" onclick="abrirTela('screen-admin')">Voltar</button></div><div class="subtitulo-area">Escolha uma área para visualizar o catálogo.</div><div class="grid-areas" id="areasAdminGrid"></div></div></section>
+  <section id="screen-catalogo" class="screen hidden"><div class="page"><div class="toolbar"><h2 id="tituloCatalogo">Catálogo de Produtos</h2><button class="btn back" onclick="voltarDoCatalogo()">Voltar</button></div><div class="catalogo-grade" id="catalogoArea"></div></div></section>
+  <section id="screen-produto-detalhe" class="screen hidden"><div class="page"><div class="toolbar"><h2>Detalhes do Produto</h2><button class="btn back" onclick="voltarDoDetalheProduto()">Voltar</button></div><div class="card"><div class="checkout-layout"><div><div class="detalhe-foto" id="detalheProdutoFoto">Sem foto</div></div><div><h3 id="detalheProdutoNome" style="margin-top:0; color:#167a5d;">Produto</h3><p id="detalheProdutoDescricao" style="line-height:1.55; color:#586d64;">Descrição</p><div class="catalogo-linhas"><div class="catalogo-linha"><span>Área</span><strong id="detalheProdutoArea">-</strong></div><div class="catalogo-linha"><span>Preço nos EUA</span><strong id="detalheProdutoPreco">-</strong></div><div class="catalogo-linha"><span>Peso</span><strong id="detalheProdutoPeso">-</strong></div><div class="catalogo-linha"><span>Frete</span><strong id="detalheProdutoFrete">-</strong></div><div class="catalogo-linha"><span>Taxa de serviço</span><strong id="detalheProdutoTaxa">-</strong></div><div class="catalogo-linha"><span>II PRC</span><strong id="detalheProdutoII">-</strong></div><div class="catalogo-linha"><span>ICMS SP</span><strong id="detalheProdutoICMS">-</strong></div><div class="catalogo-linha"><span>Total estimado</span><strong id="detalheProdutoTotal">-</strong></div></div><div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;"><button class="btn" style="width:auto;" onclick="abrirOpcoesPagamento()" >Comprar agora</button><button class="secundario-btn" onclick="colocarNoCarrinhoDetalhe()">Colocar no carrinho</button></div><div class="msg" id="detalheProdutoMsg"></div>
+  <div id="opcoesPagamentoBox" class="hidden" style="margin-top:14px; display:flex; gap:12px; flex-wrap:wrap;">
+  <button class="btn" style="width:auto; min-width:180px;" onclick="iniciarPagamentoPix()">Pagar com PIX</button>
+  <button class="secundario-btn" style="min-width:180px;" onclick="iniciarPagamentoCartao()">Cartão de Crédito</button>
+ <div id="areaCartao" class="hidden" style="margin-top:12px;">
+  <input id="cardNumber" placeholder="Número do cartão" style="width:100%; padding:10px; margin-bottom:8px;">
+  <input id="cardName" placeholder="Nome no cartão" style="width:100%; padding:10px; margin-bottom:8px;">
+  <input id="cardMonth" placeholder="Mês (MM)" style="width:100%; padding:10px; margin-bottom:8px;">
+  <input id="cardYear" placeholder="Ano (AA)" style="width:100%; padding:10px; margin-bottom:8px;">
+  <input id="cardCvv" placeholder="CVV" style="width:100%; padding:10px; margin-bottom:8px;">
+  <button class="btn" style="width:100%;" onclick="finalizarPagamentoCartao()">Pagar com cartão</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </section>
+ 
+<section id="screen-carrinho" class="screen hidden">
+  <div class="page">
+    <div class="toolbar">
+      <h2>Carrinho de Compras</h2>
+      <button class="btn back" onclick="abrirTela('screen-cliente')">Voltar</button>
+    </div>
+    <div class="checkout-layout">
+      <div class="card">
+        <div id="carrinhoClienteConteudo"></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0; color:#167a5d;">Resumo da Compra</h3>
+        <div class="resumo-box" id="carrinhoResumoBox"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script> 
+
+// preview refresh
+const LOGIN_ADM = 'admin';
+const SENHA_ADM = '1234';
+
+let areas = ['Bolsas','Roupas','Cosméticos','Eletro Domésticos','Calçados','Suplementos Alimentares'];
+let clientes = [];
+
+let produtos = [];
+
+async function carregarProdutosDoBanco() {
+  try {
+    const resposta = await fetch('/api/produtos');
+    const dados = await resposta.json();
+    alert(JSON.stringify(dados[0]));
+    if (!Array.isArray(dados)) {
+      produtos = [];
+      return;
+    }
+
+    produtos = dados.map(p => ({
+      id: p.id ?? p.produto_id ?? p.ID ?? p.Id,
+      codigo: p.codigo,
+      area: p.area,
+      nome: p.nome,
+      descricao: p.descricao,
+      preco: Number(p.preco || 0),
+      pesoGramas: Number(p.peso || 0),
+      status: p.status,
+      imagem: p.foto_url || ''
+    }));
+
+    renderFeaturedHome();
+    carregarPromocoes();
+  } catch (error) {
+    console.error('Erro ao carregar produtos:', error);
+    produtos = [];
+  }
+}
+
+
+let clienteAtual = null;
+let adminLogado = false;
+let contextoCatalogo = 'publico';
+let produtoDetalheAtual = null;
+let contextoDetalheAnterior = 'screen-catalogo';
+let codigoProdutoEdicao = null;
+let carrinhos = {};
+let pedidos = {};
+let produtoPendente = null;
+let fotoTelaInicial = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800"><rect fill="%23d59d71" width="1200" height="800"/><circle cx="840" cy="240" r="170" fill="%23f7e4d3" opacity="0.55"/><circle cx="980" cy="360" r="130" fill="%23fff3e7" opacity="0.45"/><circle cx="760" cy="430" r="120" fill="%23f3d5bb" opacity="0.35"/><text x="90" y="650" font-family="Georgia" font-size="72" fill="%23fff8f1">Larah Imports</text></svg>';
+
+function safe(id){ return document.getElementById(id); }
+function hideAllScreens(){ document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); }
+function moedaUS(v){ return 'US$ ' + Number(v || 0).toFixed(2); }
+function precoHtml(v){ return 'US$ ' + Number(v || 0).toFixed(2) + ' <small>(preço nos EUA)</small>'; }
+function percentualTaxaServico(valor){ const preco = Number(valor || 0); if (preco <= 100) return 0.20; if (preco <= 300) return 0.15; return 0.12; }
+function calcularFrete(pesoGramas){ const peso = Number(pesoGramas || 0); if (peso <= 0) return 0; const pesoCobrado = Math.ceil(peso / 100) * 100; return (pesoCobrado / 100) * 2; }
+function calcularResumoFinanceiro(precoUSA, pesoGramas){
+  const preco = Number(precoUSA || 0);
+  const taxaPct = percentualTaxaServico(preco);
+  const taxaServico = preco * taxaPct;
+  let ii = 0;
+  if (preco <= 50) ii = preco * 0.20; else ii = Math.max((preco * 0.60) - 20, 0);
+  const freteDoor = calcularFrete(pesoGramas);
+  const baseICMS = preco + taxaServico + ii + freteDoor;
+  const icms = baseICMS > 0 ? (baseICMS / (1 - 0.18)) * 0.18 : 0;
+  const total = preco + taxaServico + ii + freteDoor + icms;
+  return { preco, taxaPct, taxaServico, ii, freteDoor, icms, total };
+}
+function imagemProdutoHtml(base64){ return base64 ? '<img src="' + base64 + '" alt="Produto">' : 'Imagem'; }
+
+function salvarSessaoCliente(){
+  try {
+    if(clienteAtual) localStorage.setItem('larah_cliente_logado', JSON.stringify(clienteAtual));
+    else localStorage.removeItem('larah_cliente_logado');
+  } catch(e) {}
+}
+function restaurarSessaoCliente(){
+  try {
+    const salvo = localStorage.getItem('larah_cliente_logado');
+    clienteAtual = salvo ? JSON.parse(salvo) : null;
+    if(clienteAtual) renderClienteLogado();
+  } catch(e) {
+    clienteAtual = null;
+  }
+}
+
+function aplicarFotoTelaInicial(){
+  const img = safe('premiumHeroImage');
+  if(img && fotoTelaInicial){
+    img.src = fotoTelaInicial;
+    img.style.display = 'block';
+  }
+}
+
+function abrirSistema(event){
+  if(event) event.preventDefault();
+  const home = safe('premiumHome');
+  const shell = safe('systemShell');
+  if(home) home.style.display = 'none';
+  if(shell) shell.classList.add('active');
+  hideAllScreens();
+  const msg = safe('statusMensagem');
+  if(msg) msg.innerText = '';
+  window.scrollTo(0,0);
+}
+
+function voltarTelaInicial(){
+  hideAllScreens();
+  const home = safe('premiumHome');
+  const shell = safe('systemShell');
+  if(home) home.style.display = 'flex';
+  if(shell) shell.classList.remove('active');
+  window.scrollTo(0,0);
+}
+
+function abrirTela(id){
+  const shell = safe('systemShell');
+  const home = safe('premiumHome');
+  if(shell) shell.classList.remove('active');
+  if(home) home.style.display = 'none';
+  hideAllScreens();
+  const tela = safe(id);
+  if(tela) tela.classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+function voltarHome(){
+  hideAllScreens();
+  const home = safe('premiumHome');
+  const shell = safe('systemShell');
+  if(shell) shell.classList.remove('active');
+  if(home) home.style.display = 'flex';
+  window.scrollTo(0,0);
+}
+
+function abrirFaqPrincipal(e){ if(e) e.preventDefault(); abrirSistema(); abrirTela('screen-faq'); }
+function abrirTermosPrincipal(){ abrirSistema(); abrirTela('screen-termos'); }
+function abrirPrivacidadePrincipal(){ abrirSistema(); abrirTela('screen-privacidade'); }
+
+function renderClienteLogado(){
+  const el = safe('clienteLogadoInfo');
+  if(el) el.innerHTML = '<strong>Cliente:</strong> ' + (clienteAtual?.nome || 'Cliente');
+}
+
+async function loginSistema(){
+  const login = (safe('login')?.value || '').trim();
+  const senha = (safe('senha')?.value || '').trim();
+  const msg = safe('statusMensagem');
+
+  if (login === LOGIN_ADM && senha === SENHA_ADM){
+    adminLogado = true;
+    clienteAtual = null;
+    if (msg) msg.innerText = '';
+    atualizarPainelAdministrativo();
+    abrirTela('screen-admin');
+    return;
+  }
+
+  try {
+    const resposta = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ login, senha })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      if (msg) msg.innerText = dados.erro || 'Login inválido.';
+      return;
+    }
+
+    clienteAtual = dados;
+    adminLogado = false;
+
+    salvarSessaoCliente();
+    renderClienteLogado();
+    renderAreasCliente();
+    carregarPromocoes();
+    renderFeaturedHome();
+
+    if (msg) msg.innerText = '';
+
+    if (produtoPendente) {
+      const codigo = produtoPendente;
+      produtoPendente = null;
+      abrirDetalheProduto(codigo, 'screen-cliente');
+    } else {
+      abrirTela('screen-cliente');
+    }
+  } catch (error) {
+    console.error(error);
+    if (msg) msg.innerText = 'Erro de conexão no login.';
+  }
+}
+
+function logoutSistema(){
+  clienteAtual = null;
+  adminLogado = false;
+  salvarSessaoCliente();
+  if(safe('login')) safe('login').value = '';
+  if(safe('senha')) safe('senha').value = '';
+  voltarHome();
+}
+
+async function cadastrarCliente(){
+  const nome = safe('cad_nome')?.value?.trim();
+  const endereco = safe('cad_endereco')?.value?.trim();
+  const cidade = safe('cad_cidade')?.value?.trim();
+  const estado = safe('cad_estado')?.value?.trim();
+  const cep = safe('cad_cep')?.value?.trim();
+  const cpf = safe('cad_cpf')?.value?.trim();
+  const login = safe('cad_login')?.value?.trim();
+  const senha = safe('cad_senha')?.value || '';
+  const senha2 = safe('cad_senha2')?.value || '';
+  const msg = safe('cadastroClienteMsg');
+
+  if (!nome || !login || !senha) {
+    if (msg) msg.innerText = 'Preencha nome, login e senha.';
+    return;
+  }
+
+  if (senha !== senha2) {
+    if (msg) msg.innerText = 'As senhas não coincidem.';
+    return;
+  }
+
+  try {
+    const resposta = await fetch('/api/clientes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome,
+        endereco,
+        cidade,
+        estado,
+        cep,
+        cpf,
+        login,
+        senha
+      })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      if (msg) msg.innerText = dados.erro || 'Erro ao cadastrar cliente.';
+      return;
+    }
+
+    clienteAtual = dados;
+    adminLogado = false;
+    salvarSessaoCliente();
+    renderClienteLogado();
+    renderAreasCliente();
+    carregarPromocoes();
+    renderFeaturedHome();
+
+    if (msg) msg.innerText = 'Cliente cadastrado com sucesso.';
+    abrirTela('screen-cliente');
+  } catch (error) {
+    console.error(error);
+    if (msg) msg.innerText = 'Erro de conexão ao cadastrar cliente.';
+  }
+}
+
+function renderAreasHome(){
+  const container = safe('areasHomeGrid');
+  if(!container) return;
+
+  const icones = ['◔','⌁','✧','◒','◡'];
+  const primeirasCinco = areas.slice(0, 5);
+
+  container.innerHTML = primeirasCinco.map((area, index) =>
+    `<div class="area-card">
+      <div class="area-icon">${icones[index] || '◔'}</div>
+      <div class="area-title">${area}</div>
+    </div>`
+  ).join('');
+}
+
+function renderAreasEm(containerId, origem){
+  const container = safe(containerId);
+  if(!container) return;
+
+  container.innerHTML = areas.map(area =>
+    `<button class="area-btn" onclick="abrirCatalogoPorArea('${String(area).replace(/'/g, "\\'")}', '${origem}')">${area}</button>`
+  ).join('');
+}
+
+function renderAreasPublicas(){ renderAreasEm('areasPublicasGrid', 'publico'); }
+function renderAreasCliente(){ renderAreasEm('areasClienteGrid', 'cliente'); renderAreasEm('areasClienteHomeGrid', 'cliente'); }
+function renderAreasAdmin(){ renderAreasEm('areasAdminGrid', 'admin'); }
+
+function acaoProdutoHome(codigo){
+  restaurarSessaoCliente();
+  if(clienteAtual){
+    renderClienteLogado();
+    abrirDetalheProduto(codigo, 'screen-cliente');
+    return;
+  }
+  produtoPendente = codigo;
+  const home = safe('premiumHome');
+  const shell = safe('systemShell');
+  if(home) home.style.display = 'none';
+  if(shell) shell.classList.add('active');
+  hideAllScreens();
+  const msg = safe('statusMensagem');
+  if(msg) msg.innerText = 'Faça login ou cadastro para comprar este produto.';
+  window.scrollTo(0,0);
+}
+
+function renderFeaturedHome(){
+  const renderBox = (id) => {
+    const box = safe(id);
+    if(!box) return;
+    const destaques = produtos.filter(p => p.status === 'D');
+    const base = destaques.length ? destaques : produtos.slice(0,3);
+    box.innerHTML = base.map(produto => `<div class="product-card" style="cursor:pointer;" onclick="acaoProdutoHome('${produto.codigo}')"><div class="product-photo">${produto.imagem ? `<img src="${produto.imagem}" alt="${produto.nome}">` : ''}</div><div class="product-name">${produto.nome}</div><div class="product-price">${moedaUS(produto.preco)}</div></div>`).join('');
+  };
+  renderBox('featuredProductsGrid');
+  renderBox('featuredProductsClienteGrid');
+}
+
+function montarCardPromocao(produto){
+  return `<div class="produto" onclick="acaoProdutoHome('${produto.codigo}')"><div class="foto">${imagemProdutoHtml(produto.imagem)}</div><div class="info"><div class="nome">${produto.nome}</div><div class="preco">${precoHtml(produto.preco)}</div><button class="comprar-btn" type="button">Shop</button></div></div>`;
+}
+
+function carregarPromocoes(){
+  const html = produtos.filter(p => p.status === 'P').map(montarCardPromocao).join('') || '<div class="empty">Nenhum produto em promoção.</div>';
+  if(safe('carrosselPromocoesCliente')) safe('carrosselPromocoesCliente').innerHTML = html;
+  if(safe('carrosselPromocoesHome')) safe('carrosselPromocoesHome').innerHTML = html;
+}
+
+function montarCardCatalogo(produto, comBotaoCompra){
+  const resumo = calcularResumoFinanceiro(produto.preco, produto.pesoGramas);
+  return `<div class="catalogo-card"><div class="foto">${imagemProdutoHtml(produto.imagem)}</div><div class="catalogo-info"><div class="nome" style="font-size:18px;">${produto.nome}</div><div class="catalogo-descricao">${produto.descricao}</div><div class="catalogo-linhas"><div class="catalogo-linha"><span>Área</span><strong>${produto.area}</strong></div><div class="catalogo-linha"><span>Preço nos EUA</span><strong>${moedaUS(produto.preco)}</strong></div><div class="catalogo-linha"><span>Peso</span><strong>${Number(produto.pesoGramas || 0).toFixed(0)} g</strong></div><div class="catalogo-linha"><span>Frete</span><strong>${moedaUS(resumo.freteDoor)}</strong></div><div class="catalogo-linha"><span>Taxa de serviço</span><strong>${moedaUS(resumo.taxaServico)}</strong></div><div class="catalogo-linha"><span>II PRC</span><strong>${moedaUS(resumo.ii)}</strong></div><div class="catalogo-linha"><span>ICMS SP</span><strong>${moedaUS(resumo.icms)}</strong></div><div class="catalogo-linha"><span>Total estimado</span><strong>${moedaUS(resumo.total)}</strong></div></div>${comBotaoCompra ? `<button class="btn" onclick="abrirDetalheProduto('${produto.codigo}','screen-catalogo')">Ver detalhes</button>` : ''}</div></div>`;
+}
+
+function abrirCatalogoPorArea(area, origem){
+  contextoCatalogo = origem;
+  if(safe('tituloCatalogo')) safe('tituloCatalogo').innerText = 'Catálogo - ' + area;
+  const areaCatalogo = safe('catalogoArea');
+  if(!areaCatalogo) return;
+  const lista = produtos.filter(p => p.area === area);
+  areaCatalogo.innerHTML = lista.length ? lista.map(p => montarCardCatalogo(p, origem === 'cliente')).join('') : '<div class="empty">Nenhum produto cadastrado nesta área.</div>';
+  abrirTela('screen-catalogo');
+}
+
+function voltarDoCatalogo(){
+  if(contextoCatalogo === 'cliente') abrirTela('screen-areas-cliente');
+  else if(contextoCatalogo === 'admin') abrirTela('screen-areas-admin');
+  else abrirTela('screen-areas-publicas');
+}
+
+function abrirDetalheProduto(codigo, telaOrigem = 'screen-catalogo'){
+  const produto = produtos.find(p => String(p.codigo) === String(codigo));
+
+  if(!produto){
+    if(safe('detalheProdutoMsg')) safe('detalheProdutoMsg').innerText = 'Produto não encontrado.';
+    return;
+  }
+
+  produtoDetalheAtual = {
+    id: Number(produto.id),
+    codigo: produto.codigo,
+    area: produto.area,
+    nome: produto.nome,
+    descricao: produto.descricao,
+    preco: Number(produto.preco || 0),
+    pesoGramas: Number(produto.pesoGramas || 0),
+    status: produto.status,
+    imagem: produto.imagem || ''
+  };
+
+  contextoDetalheAnterior = telaOrigem;
+
+  const resumo = calcularResumoFinanceiro(produtoDetalheAtual.preco, produtoDetalheAtual.pesoGramas);
+
+  if(safe('detalheProdutoFoto')) safe('detalheProdutoFoto').innerHTML = imagemProdutoHtml(produtoDetalheAtual.imagem);
+  if(safe('detalheProdutoNome')) safe('detalheProdutoNome').innerText = produtoDetalheAtual.nome;
+  if(safe('detalheProdutoDescricao')) safe('detalheProdutoDescricao').innerText = produtoDetalheAtual.descricao;
+  if(safe('detalheProdutoArea')) safe('detalheProdutoArea').innerText = produtoDetalheAtual.area;
+  if(safe('detalheProdutoPreco')) safe('detalheProdutoPreco').innerText = moedaUS(produtoDetalheAtual.preco);
+  if(safe('detalheProdutoPeso')) safe('detalheProdutoPeso').innerText = Number(produtoDetalheAtual.pesoGramas || 0).toFixed(0) + ' g';
+  if(safe('detalheProdutoFrete')) safe('detalheProdutoFrete').innerText = moedaUS(resumo.freteDoor);
+  if(safe('detalheProdutoTaxa')) safe('detalheProdutoTaxa').innerText = moedaUS(resumo.taxaServico);
+  if(safe('detalheProdutoII')) safe('detalheProdutoII').innerText = moedaUS(resumo.ii);
+  if(safe('detalheProdutoICMS')) safe('detalheProdutoICMS').innerText = moedaUS(resumo.icms);
+  if(safe('detalheProdutoTotal')) safe('detalheProdutoTotal').innerText = moedaUS(resumo.total);
+  if(safe('detalheProdutoMsg')) safe('detalheProdutoMsg').innerText = '';
+
+  abrirTela('screen-produto-detalhe');
+}
+
+function voltarDoDetalheProduto(){ abrirTela(contextoDetalheAnterior || 'screen-catalogo'); }
+
+async function removerDoCarrinho(itemId) {
+  try {
+    const resposta = await fetch(`/api/carrinho/${itemId}`, {
+      method: 'DELETE'
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      alert(dados.erro || 'Erro ao remover item do carrinho');
+      return;
+    }
+
+    alert('Item removido do carrinho com sucesso');
+    await renderCarrinhoCliente();
+  } catch (error) {
+    console.error(error);
+    alert('Erro de conexão ao remover item');
+  }
+}
+
+
+async function comprarAgoraDetalhe() {
+  try {
+    const msg = safe('detalheProdutoMsg');
+    if (msg) msg.innerText = 'Gerando PIX...';
+
+    const valorTexto = safe('detalheProdutoTotal')?.innerText || '';
+    const valorLimpo = valorTexto.replace(/[^0-9.,]/g, '').replace(',', '.');
+    const valor = Number(valorLimpo);
+
+    const descricao = safe('detalheProdutoNome')?.innerText || 'Pagamento Larah Imports';
+
+    const resposta = await fetch('/api/pagamento/pix', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        valor,
+        descricao
+      })
+    });
+
+    const dados = await resposta.json();
+    window.ultimoPagamentoGerado = dados.id;
+    verificarPagamentoAprovado(dados.id);
+
+    if (!resposta.ok) {
+      throw new Error(dados.erro || 'Erro ao gerar pagamento PIX');
+    }
+
+    if (msg) {
+      msg.innerHTML = `
+        PIX gerado com sucesso.<br>
+        <img src="data:image/png;base64,${dados.qr_code_base64}" style="max-width:220px; display:block; margin:12px 0;">
+        <strong>Copia e cola:</strong><br>
+        <textarea style="width:100%; min-height:120px; margin-top:8px;">${dados.qr_code}</textarea>
+      `;
+    }
+
+  } catch (error) {
+    console.error(error);
+    const msg = safe('detalheProdutoMsg');
+    if (msg) msg.innerText = 'Erro ao gerar PIX.';
+  }
+}
+
+async function colocarNoCarrinhoDetalhe() {
+  const msg = safe('detalheProdutoMsg');
+
+  if (!produtoDetalheAtual || !produtoDetalheAtual.id) {
+  if (msg) {
+    msg.innerText =
+      'Produto inválido | detalhe=' + JSON.stringify(produtoDetalheAtual);
+  }
+  return;
+}
+
+  if (!produtoDetalheAtual || !produtoDetalheAtual.id) {
+    if (msg) msg.innerText = 'Produto inválido.';
+    return;
+  }
+
+  try {
+    const resposta = await fetch('/api/carrinho', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cliente_id: Number(clienteAtual.id),
+        produto_id: Number(produtoDetalheAtual.id)
+      })
+    });
+
+    const dados = await resposta.json();
+
+    console.log('ADD CARRINHO:', {
+      cliente_id: Number(clienteAtual.id),
+      produto_id: Number(produtoDetalheAtual.id),
+      resposta: dados
+    });
+
+    if (!resposta.ok) {
+      if (msg) msg.innerText = dados.erro || 'Erro ao adicionar no carrinho.';
+      return;
+    }
+
+    if (msg) msg.innerText = 'Produto colocado no carrinho.';
+  } catch (error) {
+    console.error('Erro ao adicionar no carrinho:', error);
+    if (msg) msg.innerText = 'Erro de conexão ao adicionar no carrinho.';
+  }
+}
+
+async function verificarPagamentoAprovado(idPagamento) {
+  const tentativas = 20;
+
+  for (let i = 0; i < tentativas; i++) {
+    try {
+      const resposta = await fetch(`/api/verificar-pagamento/${idPagamento}`);
+      const dados = await resposta.json();
+
+      if (dados.aprovado && clienteAtual && produtoDetalheAtual) {
+
+        // ✅ MOSTRAR MENSAGEM NA TELA DO PIX
+        const msg = safe('detalheProdutoMsg');
+        if (msg) {
+          msg.innerHTML = '<strong style="color:green;">✅ Pagamento aprovado!</strong>';
+        }
+
+        // ✅ CRIAR LISTA SE NÃO EXISTIR
+        if (!pedidos[clienteAtual.login]) pedidos[clienteAtual.login] = [];
+
+        // ✅ DATA DE ENTREGA
+        const dataEntrega = new Date();
+        dataEntrega.setDate(dataEntrega.getDate() + 12);
+
+        // ✅ SALVAR PEDIDO
+        pedidos[clienteAtual.login].push({
+          nome: produtoDetalheAtual.nome,
+          valor: produtoDetalheAtual.preco,
+          entrega: dataEntrega.toLocaleDateString('pt-BR'),
+          status: 'Em transporte'
+        });
+
+        // ✅ ATUALIZAR TELA
+        renderCarrinhoCliente();
+
+        return;
+      }
+
+    } catch (error) {
+      console.error('Erro ao verificar pagamento:', error);
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 3000));
+  }
+}
+
+async function renderCarrinhoCliente() {
+  const conteudo = safe('carrinhoClienteConteudo');
+  const resumo = safe('carrinhoResumoBox');
+
+  if (!conteudo || !resumo) return;
+
+  if (!clienteAtual || !clienteAtual.id) {
+    conteudo.innerHTML = '<div class="empty">Cliente não identificado.</div>';
+    resumo.innerHTML = '';
+    return;
+  }
+
+  let itens = [];
+
+  try {
+    const resposta = await fetch(`/api/carrinho/${Number(clienteAtual.id)}`);
+    const dados = await resposta.json();
+
+    console.log('GET CARRINHO:', {
+      clienteId: Number(clienteAtual.id),
+      retorno: dados
+    });
+
+    if (!resposta.ok) {
+      conteudo.innerHTML = `<div class="empty">${dados.erro || 'Erro ao carregar carrinho.'}</div>`;
+      resumo.innerHTML = '';
+      return;
+    }
+
+    itens = Array.isArray(dados) ? dados : [];
+  } catch (error) {
+    console.error('Erro ao carregar carrinho:', error);
+    conteudo.innerHTML = '<div class="empty">Erro ao carregar carrinho.</div>';
+    resumo.innerHTML = '';
+    return;
+  }
+
+  const pedidosCliente = clienteAtual ? (pedidos[clienteAtual.login] || []) : [];
+
+  if (!itens.length) {
+    conteudo.innerHTML = '<div class="empty">Carrinho vazio.</div>';
+  } else {
+    conteudo.innerHTML = itens.map((p, i) => `
+      <div class="linha-admin">
+        <span>${i + 1}. ${p.nome}</span>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <strong>${moedaUS(p.preco)}</strong>
+          <button class="btn-mini excluir" onclick="removerDoCarrinho(${p.id})">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const resumoCarrinho = itens.reduce((acc, p) => {
+    const preco = Number(p.preco || 0);
+    const r = calcularResumoFinanceiro(preco, p.peso || p.pesoGramas);
+
+    acc.produtos += preco;
+    acc.frete += Number(r.freteDoor || 0);
+    acc.taxa += Number(r.taxaServico || 0);
+    acc.impostos += Number(r.ii || 0) + Number(r.icms || 0);
+    acc.total += Number(r.total || 0);
+    return acc;
+  }, {
+    produtos: 0,
+    frete: 0,
+    taxa: 0,
+    impostos: 0,
+    total: 0
+  });
+
+  resumo.innerHTML = `
+    <div class="resumo-linha"><span>Itens no carrinho</span><strong>${itens.length}</strong></div>
+    <div class="resumo-linha"><span>Produtos</span><strong>${moedaUS(resumoCarrinho.produtos)}</strong></div>
+    <div class="resumo-linha"><span>Frete</span><strong>${moedaUS(resumoCarrinho.frete)}</strong></div>
+    <div class="resumo-linha"><span>Taxa de serviço</span><strong>${moedaUS(resumoCarrinho.taxa)}</strong></div>
+    <div class="resumo-linha"><span>Impostos</span><strong>${moedaUS(resumoCarrinho.impostos)}</strong></div>
+    <div class="resumo-linha"><span>Total estimado</span><strong>${moedaUS(resumoCarrinho.total)}</strong></div>
+    <div class="resumo-linha"><span>Comprados</span><strong>${pedidosCliente.length}</strong></div>
+  `;
+}
+
+function atualizarPainelAdministrativo(){
+  if(safe('kpiTotalProdutos')) safe('kpiTotalProdutos').innerText = produtos.length;
+  if(safe('kpiPromocoes')) safe('kpiPromocoes').innerText = produtos.filter(p => p.status === 'P').length;
+  if(safe('kpiClientes')) safe('kpiClientes').innerText = clientes.length;
+  if(safe('kpiAreas')) safe('kpiAreas').innerText = areas.length;
+  if(safe('painelResumoAreas')) safe('painelResumoAreas').innerHTML = areas.map(a => `<div class="linha-admin"><span>${a}</span><strong>${produtos.filter(p => p.area === a).length}</strong></div>`).join('') || '<div class="empty">Sem áreas.</div>';
+  renderFeaturedHome();
+  carregarPromocoes();
+}
+
+function preencherSelectAreas(){ if(safe('prod_area')) safe('prod_area').innerHTML = '<option value="">Selecione</option>' + areas.map(a => `<option>${a}</option>`).join(''); }
+function preencherSelectAreasEdicao(){ if(safe('edit_prod_area')) safe('edit_prod_area').innerHTML = '<option value="">Selecione</option>' + areas.map(a => `<option>${a}</option>`).join(''); }
+function limparFormularioProduto(){ ['prod_nome','prod_descricao','prod_preco','prod_peso'].forEach(id => { if(safe(id)) safe(id).value=''; }); if(safe('prod_status')) safe('prod_status').value='N'; if(safe('previewFotoProduto')) safe('previewFotoProduto').innerHTML='Sem foto'; }
+function criarArea(){ const nome = safe('nova_area_nome')?.value?.trim(); const msg = safe('novaAreaMsg'); if(!nome){ if(msg) msg.innerText='Digite o nome da área.'; return; } if(areas.includes(nome)){ if(msg) msg.innerText='Essa área já existe.'; return; } areas.push(nome); if(msg) msg.innerText='Área criada com sucesso.'; atualizarPainelAdministrativo(); }
+function excluirArea(nome){ const msg = safe('excluirAreaMsg'); if(produtos.some(p => p.area === nome)){ if(msg) msg.innerText = 'Não é possível excluir uma área que possui produtos cadastrados.'; return; } areas = areas.filter(a => a !== nome); if(msg) msg.innerText = 'Área excluída com sucesso.'; renderExcluirAreas(); atualizarPainelAdministrativo(); }
+function renderExcluirAreas(){ const box = safe('listaExcluirAreas'); if(!box) return; box.innerHTML = areas.length ? areas.map(area => `<div class="linha-admin"><span>${area}</span><button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button></div>`).join('') : '<div class="empty">Nenhuma área cadastrada.</div>'; }
+
+function cadastrarProduto(){
+  const area = safe('prod_area')?.value;
+  const nome = safe('prod_nome')?.value?.trim();
+  const descricao = safe('prod_descricao')?.value?.trim();
+  const preco = parseFloat(safe('prod_preco')?.value || '0');
+  const peso = parseFloat(safe('prod_peso')?.value || '0');
+  const status = safe('prod_status')?.value || 'N';
+  const msg = safe('produtoMsg');
+  const input = safe('prod_imagem_arquivo');
+  if(!area || !nome){ if(msg) msg.innerText='Preencha área e nome do produto.'; return; }
+  const novoProduto = { codigo: area.charAt(0).toUpperCase() + (produtos.length + 1), area, nome, descricao, preco, pesoGramas:peso, status, imagem:'' };
+  if(input && input.files && input.files[0]){
+    const reader = new FileReader();
+    reader.onload = e => { novoProduto.imagem = e.target.result; produtos.push(novoProduto); if(msg) msg.innerText='Produto cadastrado com sucesso.'; atualizarPainelAdministrativo(); };
+    reader.readAsDataURL(input.files[0]);
+    return;
+  }
+  produtos.push(novoProduto);
+  if(msg) msg.innerText='Produto cadastrado com sucesso.';
+  atualizarPainelAdministrativo();
+}
+
+function renderGerenciarProdutos(){ const box = safe('gerenciarProdutosLista'); if(!box) return; box.innerHTML = produtos.map(p => `<div class="produto-admin-item"><div class="produto-admin-info"><strong>${p.nome}</strong><span>${p.area} • ${moedaUS(p.preco)}</span></div><div class="produto-admin-acoes"><button class="btn-mini" onclick="editarProduto('${p.codigo}')">Editar</button><button class="btn-mini excluir" onclick="excluirProduto('${p.codigo}')">Excluir</button></div></div>`).join('') || '<div class="empty">Nenhum produto cadastrado.</div>'; }
+function editarProduto(codigo){ const p = produtos.find(x => x.codigo === codigo); if(!p) return; codigoProdutoEdicao = codigo; preencherSelectAreasEdicao(); if(safe('edit_prod_area')) safe('edit_prod_area').value = p.area; if(safe('edit_prod_nome')) safe('edit_prod_nome').value = p.nome; if(safe('edit_prod_descricao')) safe('edit_prod_descricao').value = p.descricao; if(safe('edit_prod_preco')) safe('edit_prod_preco').value = p.preco; if(safe('edit_prod_peso')) safe('edit_prod_peso').value = p.pesoGramas; if(safe('edit_prod_status')) safe('edit_prod_status').value = p.status; if(safe('previewFotoProdutoEdicao')) safe('previewFotoProdutoEdicao').innerHTML = p.imagem ? `<img src="${p.imagem}">` : 'Sem foto'; abrirTela('screen-editar-produto'); }
+function salvarEdicaoProduto(){ const p = produtos.find(x => x.codigo === codigoProdutoEdicao); const msg = safe('editarProdutoMsg'); const input = safe('edit_prod_imagem_arquivo'); if(!p){ if(msg) msg.innerText='Produto não encontrado.'; return; } p.area = safe('edit_prod_area')?.value || p.area; p.nome = safe('edit_prod_nome')?.value || p.nome; p.descricao = safe('edit_prod_descricao')?.value || p.descricao; p.preco = parseFloat(safe('edit_prod_preco')?.value || p.preco); p.pesoGramas = parseFloat(safe('edit_prod_peso')?.value || p.pesoGramas); p.status = safe('edit_prod_status')?.value || p.status; if(input && input.files && input.files[0]){ const reader = new FileReader(); reader.onload = e => { p.imagem = e.target.result; if(msg) msg.innerText='Alterações salvas.'; atualizarPainelAdministrativo(); }; reader.readAsDataURL(input.files[0]); return; } if(msg) msg.innerText='Alterações salvas.'; atualizarPainelAdministrativo(); }
+function excluirProduto(codigo){ produtos = produtos.filter(p => p.codigo !== codigo); renderGerenciarProdutos(); atualizarPainelAdministrativo(); }
+
+function previewFotoTelaPrincipal(){ const input = safe('foto_tela_principal_input'); const box = safe('previewFotoTelaPrincipal'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
+function salvarFotoTelaPrincipal(){ const input = safe('foto_tela_principal_input'); const msg = safe('fotoTelaPrincipalMsg'); if(!input || !input.files || !input.files[0]){ if(msg) msg.innerText = 'Selecione uma foto.'; return; } const reader = new FileReader(); reader.onload = e => { fotoTelaInicial = e.target.result; restaurarSessaoCliente();
+renderAreasPublicas();
+renderAaplicarFotoTelaInicial(); if(msg) msg.innerText = 'Foto da tela principal salva com sucesso.'; }; reader.readAsDataURL(input.files[0]); }
+function carregarPreviewFotoPrincipalAtual(){ const box = safe('previewFotoTelaPrincipal'); if(box) box.innerHTML = fotoTelaInicial ? `<img src="${fotoTelaInicial}">` : 'Sem foto'; }
+function previewFotoProduto(){ const input = safe('prod_imagem_arquivo'); const box = safe('previewFotoProduto'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
+function previewFotoProdutoEdicao(){ const input = safe('edit_prod_imagem_arquivo'); const box = safe('previewFotoProdutoEdicao'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
+
+window.addEventListener('DOMContentLoaded', () => {
+  hideAllScreens();
+  restaurarSessaoCliente();
+  aplicarFotoTelaInicial();
+  atualizarPainelAdministrativo();
+  carregarPromocoes();
+  renderFeaturedHome();
+  renderAreasHome();
+  renderAreasCliente();
+  renderAreasPublicas();
+  renderAreasAdmin();
+});
+
+function abrirOpcoesPagamento() {
+  const box = safe('opcoesPagamentoBox');
+  if (box) {
+    box.classList.remove('hidden');
+  }
+}
+
+function iniciarPagamentoPix() {
+  comprarAgoraDetalhe();
+}
+
+function iniciarPagamentoCartao() {
+  const msg = safe('detalheProdutoMsg');
+  const area = safe('areaCartao');
+  if (msg) msg.innerText = '';
+  if (area) area.classList.remove('hidden');
+}
+
+
+async function finalizarPagamentoCartao() {
+  const msg = safe('detalheProdutoMsg');
+
+  try {
+    if (msg) msg.innerText = 'Gerando token do cartão...';
+
+    const tokenResponse = await mp.createCardToken({
+      cardNumber: document.getElementById("cardNumber").value,
+      cardholderName: document.getElementById("cardName").value,
+      cardExpirationMonth: document.getElementById("cardMonth").value,
+      cardExpirationYear: document.getElementById("cardYear").value,
+      securityCode: document.getElementById("cardCvv").value,
+      identificationType: "CPF",
+      identificationNumber: "12345678909"
+    });
+
+    if (msg) msg.innerText = 'Enviando pagamento...';
+
+    const res = await fetch('/api/pagamento/cartao', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        valor: 100,
+        descricao: 'Pagamento teste cartão',
+        token: tokenResponse.id,
+        parcelas: 1,
+        metodo_pagamento: 'visa',
+        email: 'teste@test.com',
+        nome: 'Teste',
+        cpf: '12345678909'
+      })
+    });
+
+    const data = await res.json();
+    if (msg) msg.innerText = 'Pagamento enviado! Status: ' + data.status;
+
+  } catch (err) {
+  console.error('ERRO COMPLETO CARTAO:', err);
+  if (msg) msg.innerText = 'Erro: ' + JSON.stringify(err);
+  }
+}
+
+carregarProdutosDoBanco();
+
+</script>
+
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script>
+const mp = new MercadoPago("APP_USR-cda67e12-c84e-49d3-952a-d979816619c2");
+</script>
+</body>
+</html>
+
