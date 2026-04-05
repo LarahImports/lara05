@@ -1193,7 +1193,7 @@ let produtos = [];
 
 async function carregarProdutosDoBanco() {
   try {
-    const resposta = await fetch('/api/produtos');
+    const resposta = await etch('https://lara05-1.onrender.com/api/produtos');
     const dados = await resposta.json();
     alert(JSON.stringify(dados[0]));
     if (!Array.isArray(dados)) {
@@ -1342,7 +1342,7 @@ async function loginSistema(){
   }
 
   try {
-    const resposta = await fetch('/api/login', {
+    const resposta = await fetch('https://lara05-1.onrender.com/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ login, senha })
@@ -1411,7 +1411,7 @@ async function cadastrarCliente(){
   }
 
   try {
-    const resposta = await fetch('/api/clientes', {
+    const resposta = await fetch('https://lara05-1.onrender.com/api/clientes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1582,7 +1582,7 @@ function voltarDoDetalheProduto(){ abrirTela(contextoDetalheAnterior || 'screen-
 
 async function removerDoCarrinho(itemId) {
   try {
-    const resposta = await fetch(`/api/carrinho/${itemId}`, {
+    const resposta = await fetch(`https://lara05-1.onrender.com/api/carrinho/${itemId}`, {
       method: 'DELETE'
     });
 
@@ -1613,7 +1613,7 @@ async function comprarAgoraDetalhe() {
 
     const descricao = safe('detalheProdutoNome')?.innerText || 'Pagamento Larah Imports';
 
-    const resposta = await fetch('/api/pagamento/pix', {
+    const resposta = await await fetch('https://lara05-1.onrender.com/api/pagamento/pix', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1663,7 +1663,7 @@ async function colocarNoCarrinhoDetalhe() {
   }
 
   try {
-    const resposta = await fetch('/api/carrinho', {
+    const resposta = await await fetch('https://lara05-1.onrender.com/api/carrinho', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1697,7 +1697,7 @@ async function verificarPagamentoAprovado(idPagamento) {
 
   for (let i = 0; i < tentativas; i++) {
     try {
-      const resposta = await fetch(`/api/verificar-pagamento/${idPagamento}`);
+      const resposta = await fetch(`https://lara05-1.onrender.com/api/verificar-pagamento/${idPagamento}`);
       const dados = await resposta.json();
 
       if (dados.aprovado && clienteAtual && produtoDetalheAtual) {
@@ -1752,7 +1752,7 @@ async function renderCarrinhoCliente() {
   let itens = [];
 
   try {
-    const resposta = await fetch(`/api/carrinho/${Number(clienteAtual.id)}`);
+    const resposta = await fetch(`https://lara05-1.onrender.com/api/carrinho/${Number(clienteAtual.id)}`);
     const dados = await resposta.json();
 
     console.log('GET CARRINHO:', {
@@ -1923,7 +1923,7 @@ async function finalizarPagamentoCartao() {
 
     if (msg) msg.innerText = 'Enviando pagamento...';
 
-    const res = await fetch('/api/pagamento/cartao', {
+    const res = await fetch('https://lara05-1.onrender.com/api/pagamento/cartao', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
