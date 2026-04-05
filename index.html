@@ -1856,7 +1856,25 @@ async function cadastrarProduto(){
     return;
   }
   
-  if(msg) msg.innerText='Produto cadastrado com sucesso.';
+  const resposta = await fetch('https://lara05-1.onrender.com/api/produtos', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    area: novoProduto.area,
+    nome: novoProduto.nome,
+    descricao: novoProduto.descricao,
+    preco: novoProduto.preco,
+    peso: novoProduto.pesoGramas,
+    status: novoProduto.status,
+    foto_url: novoProduto.imagem
+  })
+});
+
+const produtoSalvo = await resposta.json();
+produtos.push(produtoSalvo); // agora com id real do servidor
+atualizarPainelAdministrativo();
+
+if(msg) msg.innerText = 'Produto cadastrado com sucesso.';
   
 }
 
