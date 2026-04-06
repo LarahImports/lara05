@@ -1283,13 +1283,23 @@ function aplicarFotoTelaInicial(){
 }
 
 function abrirSistema(event){
-  console.log("CLIQUE FUNCIONOU");
+  alert("ENTROU NA FUNÇÃO");
   if(event) event.preventDefault();
+
   const home = safe('premiumHome');
   const shell = safe('systemShell');
+
+  alert("PEGOU OS ELEMENTOS");
+
   if(home) home.style.display = 'none';
   if(shell) shell.classList.add('active');
+
+  alert("ANTES DO hideAllScreens");
+
   hideAllScreens();
+
+  alert("DEPOIS DO hideAllScreens");
+
   const msg = safe('statusMensagem');
   if(msg) msg.innerText = '';
   window.scrollTo(0,0);
