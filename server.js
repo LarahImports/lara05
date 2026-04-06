@@ -314,8 +314,8 @@ app.get('/api/dolar', async (req, res) => {
   try {
     const fetch = (await import('node-fetch')).default;
 
-    const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRLT');
-    const dados = await resposta.json();
+    const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+    const valor = dados?.USDBRL?.ask || null;
 
     const valor = dados?.USDBRLT?.bid || null;
     const data = dados?.USDBRLT?.create_date || null;
