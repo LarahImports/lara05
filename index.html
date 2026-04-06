@@ -1193,7 +1193,7 @@ let produtos = [];
 
 async function carregarProdutosDoBanco() {
   try {
-    const resposta = await etch('https://lara05-1.onrender.com/api/produtos');
+    const resposta = await fetch('https://lara05-1.onrender.com/api/produtos');
     const dados = await resposta.json();
     alert(JSON.stringify(dados[0]));
     if (!Array.isArray(dados)) {
