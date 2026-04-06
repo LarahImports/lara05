@@ -45,8 +45,6 @@
       overflow: hidden;
     }
     .topbar {
-      position: relative;
-      z-index: 9999;
       height: 68px;
       background: rgba(252, 247, 241, 0.96);
       border-bottom: 1px solid var(--line);
@@ -1058,9 +1056,7 @@
         <div class="brand-name">LARAH IMPORTS</div>
       </div>
       <nav class="menu">
-       <button type="button" class="active" onclick="abrirSistema(event)" style="background:none;border:none;padding:0;color:#4f3a2d;font-size:14px;text-transform:uppercase;letter-spacing:0.6px;cursor:pointer;">
-       Início
-       </button>
+        <a href="#" class="active" onclick="abrirSistema(event)">Início</a>
         <a href="#">Shop</a>
         <a href="#" onclick="abrirFaqPrincipal(event)">Perguntas Frequentes</a>
         <a href="#">Sobre</a>
@@ -1196,11 +1192,10 @@ let clientes = [];
 let produtos = [];
 
 async function carregarProdutosDoBanco() {
-  console.log("FUNÇÃO INICIOU");
   try {
-    const resposta = await fetch('https://lara05-1.onrender.com/api/produtos');
+    const resposta = await fetch('/api/produtos');
     const dados = await resposta.json();
-   // alert(JSON.stringify(dados[0]));
+    alert(JSON.stringify(dados[0]));
     if (!Array.isArray(dados)) {
       produtos = [];
       return;
@@ -1283,23 +1278,12 @@ function aplicarFotoTelaInicial(){
 }
 
 function abrirSistema(event){
-  alert("ENTROU NA FUNÇÃO");
   if(event) event.preventDefault();
-
   const home = safe('premiumHome');
   const shell = safe('systemShell');
-
-  alert("PEGOU OS ELEMENTOS");
-
   if(home) home.style.display = 'none';
   if(shell) shell.classList.add('active');
-
-  alert("ANTES DO hideAllScreens");
-
   hideAllScreens();
-
-  alert("DEPOIS DO hideAllScreens");
-
   const msg = safe('statusMensagem');
   if(msg) msg.innerText = '';
   window.scrollTo(0,0);
@@ -1358,7 +1342,7 @@ async function loginSistema(){
   }
 
   try {
-    const resposta = await fetch('https://lara05-1.onrender.com/api/login', {
+    const resposta = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ login, senha })
@@ -1427,7 +1411,7 @@ async function cadastrarCliente(){
   }
 
   try {
-    const resposta = await fetch('https://lara05-1.onrender.com/api/clientes', {
+    const resposta = await fetch('/api/clientes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1598,7 +1582,7 @@ function voltarDoDetalheProduto(){ abrirTela(contextoDetalheAnterior || 'screen-
 
 async function removerDoCarrinho(itemId) {
   try {
-    const resposta = await fetch(`https://lara05-1.onrender.com/api/carrinho/${itemId}`, {
+    const resposta = await fetch(`/api/carrinho/${itemId}`, {
       method: 'DELETE'
     });
 
@@ -1629,7 +1613,7 @@ async function comprarAgoraDetalhe() {
 
     const descricao = safe('detalheProdutoNome')?.innerText || 'Pagamento Larah Imports';
 
-    const resposta = await await fetch('https://lara05-1.onrender.com/api/pagamento/pix', {
+    const resposta = await fetch('/api/pagamento/pix', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1665,10 +1649,13 @@ async function comprarAgoraDetalhe() {
 async function colocarNoCarrinhoDetalhe() {
   const msg = safe('detalheProdutoMsg');
 
-  if (!clienteAtual || !clienteAtual.id) {
-    if (msg) msg.innerText = 'Faça login para adicionar ao carrinho.';
-    return;
+  if (!produtoDetalheAtual || !produtoDetalheAtual.id) {
+  if (msg) {
+    msg.innerText =
+      'Produto inválido | detalhe=' + JSON.stringify(produtoDetalheAtual);
   }
+  return;
+}
 
   if (!produtoDetalheAtual || !produtoDetalheAtual.id) {
     if (msg) msg.innerText = 'Produto inválido.';
@@ -1676,7 +1663,7 @@ async function colocarNoCarrinhoDetalhe() {
   }
 
   try {
-    const resposta = await fetch('https://lara05-1.onrender.com/api/carrinho', {
+    const resposta = await fetch('/api/carrinho', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1686,6 +1673,12 @@ async function colocarNoCarrinhoDetalhe() {
     });
 
     const dados = await resposta.json();
+
+    console.log('ADD CARRINHO:', {
+      cliente_id: Number(clienteAtual.id),
+      produto_id: Number(produtoDetalheAtual.id),
+      resposta: dados
+    });
 
     if (!resposta.ok) {
       if (msg) msg.innerText = dados.erro || 'Erro ao adicionar no carrinho.';
@@ -1704,7 +1697,7 @@ async function verificarPagamentoAprovado(idPagamento) {
 
   for (let i = 0; i < tentativas; i++) {
     try {
-      const resposta = await fetch(`https://lara05-1.onrender.com/api/verificar-pagamento/${idPagamento}`);
+      const resposta = await fetch(`/api/verificar-pagamento/${idPagamento}`);
       const dados = await resposta.json();
 
       if (dados.aprovado && clienteAtual && produtoDetalheAtual) {
@@ -1759,7 +1752,7 @@ async function renderCarrinhoCliente() {
   let itens = [];
 
   try {
-    const resposta = await fetch(`https://lara05-1.onrender.com/api/carrinho/${Number(clienteAtual.id)}`);
+    const resposta = await fetch(`/api/carrinho/${Number(clienteAtual.id)}`);
     const dados = await resposta.json();
 
     console.log('GET CARRINHO:', {
@@ -1845,8 +1838,7 @@ function criarArea(){ const nome = safe('nova_area_nome')?.value?.trim(); const 
 function excluirArea(nome){ const msg = safe('excluirAreaMsg'); if(produtos.some(p => p.area === nome)){ if(msg) msg.innerText = 'Não é possível excluir uma área que possui produtos cadastrados.'; return; } areas = areas.filter(a => a !== nome); if(msg) msg.innerText = 'Área excluída com sucesso.'; renderExcluirAreas(); atualizarPainelAdministrativo(); }
 function renderExcluirAreas(){ const box = safe('listaExcluirAreas'); if(!box) return; box.innerHTML = areas.length ? areas.map(area => `<div class="linha-admin"><span>${area}</span><button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button></div>`).join('') : '<div class="empty">Nenhuma área cadastrada.</div>'; }
 
-async function cadastrarProduto() {
- async function cadastrarProduto() {
+function cadastrarProduto(){
   const area = safe('prod_area')?.value;
   const nome = safe('prod_nome')?.value?.trim();
   const descricao = safe('prod_descricao')?.value?.trim();
@@ -1855,60 +1847,19 @@ async function cadastrarProduto() {
   const status = safe('prod_status')?.value || 'N';
   const msg = safe('produtoMsg');
   const input = safe('prod_imagem_arquivo');
-
-  if (!area || !nome) {
-    if (msg) msg.innerText = 'Preencha área e nome do produto.';
-    return;
-  }
-
-  const novoProduto = {
-    area,
-    nome,
-    descricao,
-    preco,
-    pesoGramas: peso,
-    status,
-    imagem: ''
-  };
-
-  const enviarProduto = async (produto) => {
-    try {
-      const resposta = await fetch('https://lara05-1.onrender.com/api/produtos', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          area: produto.area,
-          nome: produto.nome,
-          descricao: produto.descricao,
-          preco: produto.preco,
-          peso: produto.pesoGramas,
-          status: produto.status,
-          foto_url: produto.imagem
-        })
-      });
-
-      const produtoSalvo = await resposta.json();
-      produtos.push(produtoSalvo); // ✅ id real
-      atualizarPainelAdministrativo();
-      if (msg) msg.innerText = 'Produto cadastrado com sucesso.';
-    } catch (error) {
-      console.error("Erro ao cadastrar produto:", error);
-      if (msg) msg.innerText = 'Erro ao cadastrar produto.';
-    }
-  };
-
-  if (input && input.files && input.files[0]) {
+  if(!area || !nome){ if(msg) msg.innerText='Preencha área e nome do produto.'; return; }
+  const novoProduto = { codigo: area.charAt(0).toUpperCase() + (produtos.length + 1), area, nome, descricao, preco, pesoGramas:peso, status, imagem:'' };
+  if(input && input.files && input.files[0]){
     const reader = new FileReader();
-    reader.onload = async (e) => {
-      novoProduto.imagem = e.target.result;
-      await enviarProduto(novoProduto);
-    };
+    reader.onload = e => { novoProduto.imagem = e.target.result; produtos.push(novoProduto); if(msg) msg.innerText='Produto cadastrado com sucesso.'; atualizarPainelAdministrativo(); };
     reader.readAsDataURL(input.files[0]);
     return;
   }
-
-  await enviarProduto(novoProduto);
+  produtos.push(novoProduto);
+  if(msg) msg.innerText='Produto cadastrado com sucesso.';
+  atualizarPainelAdministrativo();
 }
+
 function renderGerenciarProdutos(){ const box = safe('gerenciarProdutosLista'); if(!box) return; box.innerHTML = produtos.map(p => `<div class="produto-admin-item"><div class="produto-admin-info"><strong>${p.nome}</strong><span>${p.area} • ${moedaUS(p.preco)}</span></div><div class="produto-admin-acoes"><button class="btn-mini" onclick="editarProduto('${p.codigo}')">Editar</button><button class="btn-mini excluir" onclick="excluirProduto('${p.codigo}')">Excluir</button></div></div>`).join('') || '<div class="empty">Nenhum produto cadastrado.</div>'; }
 function editarProduto(codigo){ const p = produtos.find(x => x.codigo === codigo); if(!p) return; codigoProdutoEdicao = codigo; preencherSelectAreasEdicao(); if(safe('edit_prod_area')) safe('edit_prod_area').value = p.area; if(safe('edit_prod_nome')) safe('edit_prod_nome').value = p.nome; if(safe('edit_prod_descricao')) safe('edit_prod_descricao').value = p.descricao; if(safe('edit_prod_preco')) safe('edit_prod_preco').value = p.preco; if(safe('edit_prod_peso')) safe('edit_prod_peso').value = p.pesoGramas; if(safe('edit_prod_status')) safe('edit_prod_status').value = p.status; if(safe('previewFotoProdutoEdicao')) safe('previewFotoProdutoEdicao').innerHTML = p.imagem ? `<img src="${p.imagem}">` : 'Sem foto'; abrirTela('screen-editar-produto'); }
 function salvarEdicaoProduto(){ const p = produtos.find(x => x.codigo === codigoProdutoEdicao); const msg = safe('editarProdutoMsg'); const input = safe('edit_prod_imagem_arquivo'); if(!p){ if(msg) msg.innerText='Produto não encontrado.'; return; } p.area = safe('edit_prod_area')?.value || p.area; p.nome = safe('edit_prod_nome')?.value || p.nome; p.descricao = safe('edit_prod_descricao')?.value || p.descricao; p.preco = parseFloat(safe('edit_prod_preco')?.value || p.preco); p.pesoGramas = parseFloat(safe('edit_prod_peso')?.value || p.pesoGramas); p.status = safe('edit_prod_status')?.value || p.status; if(input && input.files && input.files[0]){ const reader = new FileReader(); reader.onload = e => { p.imagem = e.target.result; if(msg) msg.innerText='Alterações salvas.'; atualizarPainelAdministrativo(); }; reader.readAsDataURL(input.files[0]); return; } if(msg) msg.innerText='Alterações salvas.'; atualizarPainelAdministrativo(); }
@@ -1972,7 +1923,7 @@ async function finalizarPagamentoCartao() {
 
     if (msg) msg.innerText = 'Enviando pagamento...';
 
-    const res = await fetch('https://lara05-1.onrender.com/api/pagamento/cartao', {
+    const res = await fetch('/api/pagamento/cartao', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -1997,8 +1948,7 @@ async function finalizarPagamentoCartao() {
   if (msg) msg.innerText = 'Erro: ' + JSON.stringify(err);
   }
 }
-  
-alert("SCRIPT CARREGOU");
+
 carregarProdutosDoBanco();
 
 </script>
