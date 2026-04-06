@@ -1256,6 +1256,7 @@ function calcularResumoFinanceiro(precoUSA, pesoGramas){
 }
 async function carregarDolarTurismo() {
   try {
+    document.getElementById('cotacaoTurismoBox').innerText = 'TESTE FUNÇÃO';
     const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRLT');
     const dados = await resposta.json();
 
