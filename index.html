@@ -1969,9 +1969,10 @@ async function finalizarPagamentoCartao() {
   if (msg) msg.innerText = 'Erro: ' + JSON.stringify(err);
   }
 }
-
-carregarProdutosDoBanco();
-carregarDolarTurismo();
+window.onload = function() {
+  carregarProdutosDoBanco();
+  carregarDolarTurismo();
+}
 
 </script>
 
