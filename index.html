@@ -1649,13 +1649,10 @@ async function comprarAgoraDetalhe() {
 async function colocarNoCarrinhoDetalhe() {
   const msg = safe('detalheProdutoMsg');
 
-  if (!produtoDetalheAtual || !produtoDetalheAtual.id) {
-  if (msg) {
-    msg.innerText =
-      'Produto inválido | detalhe=' + JSON.stringify(produtoDetalheAtual);
+  if (!clienteAtual || !clienteAtual.id) {
+    if (msg) msg.innerText = 'Faça login para adicionar ao carrinho.';
+    return;
   }
-  return;
-}
 
   if (!produtoDetalheAtual || !produtoDetalheAtual.id) {
     if (msg) msg.innerText = 'Produto inválido.';
@@ -1663,7 +1660,7 @@ async function colocarNoCarrinhoDetalhe() {
   }
 
   try {
-    const resposta = await await fetch('https://lara05-1.onrender.com/api/carrinho', {
+    const resposta = await fetch('https://lara05-1.onrender.com/api/carrinho', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1673,12 +1670,6 @@ async function colocarNoCarrinhoDetalhe() {
     });
 
     const dados = await resposta.json();
-
-    console.log('ADD CARRINHO:', {
-      cliente_id: Number(clienteAtual.id),
-      produto_id: Number(produtoDetalheAtual.id),
-      resposta: dados
-    });
 
     if (!resposta.ok) {
       if (msg) msg.innerText = dados.erro || 'Erro ao adicionar no carrinho.';
