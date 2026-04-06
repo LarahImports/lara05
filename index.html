@@ -1195,7 +1195,7 @@ async function carregarProdutosDoBanco() {
   try {
     const resposta = await fetch('/api/produtos');
     const dados = await resposta.json();
-    alert(JSON.stringify(dados[0]));
+   // alert(JSON.stringify(dados[0]));
     if (!Array.isArray(dados)) {
       produtos = [];
       return;
