@@ -320,11 +320,7 @@ app.get('/api/dolar', async (req, res) => {
     const valor = dados?.USDBRLT?.bid || null;
     const data = dados?.USDBRLT?.create_date || null;
 
-    res.json({
-      sucesso: true,
-      valor,
-      data
-    });
+    res.json(dados);
 
   } catch (erro) {
     console.error('Erro ao buscar dólar:', erro);
