@@ -312,14 +312,17 @@ app.get("/api/pedidos", async (req, res) => {
 
 app.get('/api/dolar', async (req, res) => {
   try {
-    
     const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+    const dados = await resposta.json();
+
     const valor = dados?.USDBRL?.ask || null;
+    const data = dados?.USDBRL?.create_date || null;
 
-    const valor = dados?.USDBRLT?.bid || null;
-    const data = dados?.USDBRLT?.create_date || null;
-
-    res.json(dados);
+    res.json({
+      sucesso: true,
+      valor,
+      data
+    });
 
   } catch (erro) {
     console.error('Erro ao buscar dólar:', erro);
