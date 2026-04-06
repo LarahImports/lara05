@@ -1055,6 +1055,9 @@
         <div class="brand-mark">✺</div>
         <div class="brand-name">LARAH IMPORTS</div>
       </div>
+      <div id="cotacaoTurismoBox" style="text-align:center; font-family:Arial,sans-serif; font-size:12px; color:#6f5647;">
+      Dólar Turismo: --
+      </div>
       <nav class="menu">
         <a href="#" class="active" onclick="abrirSistema(event)">Início</a>
         <a href="#">Shop</a>
@@ -1251,6 +1254,23 @@ function calcularResumoFinanceiro(precoUSA, pesoGramas){
   const total = preco + taxaServico + ii + freteDoor + icms;
   return { preco, taxaPct, taxaServico, ii, freteDoor, icms, total };
 }
+async function carregarDolarTurismo() {
+  try {
+    const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRLT');
+    const dados = await resposta.json();
+
+    const valor = dados?.USDBRLT?.bid || '--';
+
+    const box = document.getElementById('cotacaoTurismoBox');
+    if (box) {
+      box.innerText = 'Dólar Turismo: R$ ' + Number(valor).toFixed(2);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+  
 function imagemProdutoHtml(base64){ return base64 ? '<img src="' + base64 + '" alt="Produto">' : 'Imagem'; }
 
 function salvarSessaoCliente(){
@@ -1950,6 +1970,7 @@ async function finalizarPagamentoCartao() {
 }
 
 carregarProdutosDoBanco();
+carregarDolarTurismo();
 
 </script>
 
