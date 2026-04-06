@@ -1055,6 +1055,9 @@
         <div class="brand-mark">✺</div>
         <div class="brand-name">LARAH IMPORTS</div>
       </div>
+      <div id="cotacaoTurismoBox" style="text-align:center; font-family:Arial,sans-serif; font-size:12px; color:#6f5647;">
+      Dólar Turismo: --
+      </div>
       <nav class="menu">
         <a href="#" class="active" onclick="abrirSistema(event)">Início</a>
         <a href="#">Shop</a>
@@ -1143,7 +1146,7 @@
   <section id="screen-areas-cliente" class="screen hidden"><div class="page"><div class="toolbar"><h2>Áreas de Produtos</h2><button class="btn back" onclick="abrirTela('screen-cliente')">Voltar</button></div><div class="subtitulo-area">Escolha uma área para visualizar os produtos.</div><div class="grid-areas" id="areasClienteGrid"></div></div></section>
   <section id="screen-areas-admin" class="screen hidden"><div class="page"><div class="toolbar"><h2>Áreas de Produtos</h2><button class="btn back" onclick="abrirTela('screen-admin')">Voltar</button></div><div class="subtitulo-area">Escolha uma área para visualizar o catálogo.</div><div class="grid-areas" id="areasAdminGrid"></div></div></section>
   <section id="screen-catalogo" class="screen hidden"><div class="page"><div class="toolbar"><h2 id="tituloCatalogo">Catálogo de Produtos</h2><button class="btn back" onclick="voltarDoCatalogo()">Voltar</button></div><div class="catalogo-grade" id="catalogoArea"></div></div></section>
-  <section id="screen-produto-detalhe" class="screen hidden"><div class="page"><div class="toolbar"><h2>Detalhes do Produto</h2><button class="btn back" onclick="voltarDoDetalheProduto()">Voltar</button></div><div class="card"><div class="checkout-layout"><div><div class="detalhe-foto" id="detalheProdutoFoto">Sem foto</div></div><div><h3 id="detalheProdutoNome" style="margin-top:0; color:#167a5d;">Produto</h3><p id="detalheProdutoDescricao" style="line-height:1.55; color:#586d64;">Descrição</p><div class="catalogo-linhas"><div class="catalogo-linha"><span>Área</span><strong id="detalheProdutoArea">-</strong></div><div class="catalogo-linha"><span>Preço nos EUA</span><strong id="detalheProdutoPreco">-</strong></div><div class="catalogo-linha"><span>Peso</span><strong id="detalheProdutoPeso">-</strong></div><div class="catalogo-linha"><span>Frete</span><strong id="detalheProdutoFrete">-</strong></div><div class="catalogo-linha"><span>Taxa de serviço</span><strong id="detalheProdutoTaxa">-</strong></div><div class="catalogo-linha"><span>II PRC</span><strong id="detalheProdutoII">-</strong></div><div class="catalogo-linha"><span>ICMS SP</span><strong id="detalheProdutoICMS">-</strong></div><div class="catalogo-linha"><span>Total estimado</span><strong id="detalheProdutoTotal">-</strong></div></div><div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;"><button class="btn" style="width:auto;" onclick="abrirOpcoesPagamento()" >Comprar agora</button><button class="secundario-btn" onclick="colocarNoCarrinhoDetalhe()">Colocar no carrinho</button></div><div class="msg" id="detalheProdutoMsg"></div>
+  <section id="screen-produto-detalhe" class="screen hidden"><div class="page"><div class="toolbar"><h2>Detalhes do Produto</h2><button class="btn back" onclick="voltarDoDetalheProduto()">Voltar</button></div><div class="card"><div class="checkout-layout"><div><div class="detalhe-foto" id="detalheProdutoFoto">Sem foto</div></div><div><h3 id="detalheProdutoNome" style="margin-top:0; color:#167a5d;">Produto</h3><p id="detalheProdutoDescricao" style="line-height:1.55; color:#586d64;">Descrição</p><div class="catalogo-linhas"><div class="catalogo-linha"><span>Área</span><strong id="detalheProdutoArea">-</strong></div><div class="catalogo-linha"><span>Preço nos EUA</span><strong id="detalheProdutoPreco">-</strong></div><div class="catalogo-linha"><span>Peso</span><strong id="detalheProdutoPeso">-</strong></div><div class="catalogo-linha"><span>Frete</span><strong id="detalheProdutoFrete">-</strong></div><div class="catalogo-linha"><span>Taxa de serviço</span><strong id="detalheProdutoTaxa">-</strong></div><div class="catalogo-linha"><span>II PRC</span><strong id="detalheProdutoII">-</strong></div><div class="catalogo-linha"><span>ICMS SP</span><strong id="detalheProdutoICMS">-</strong></div><div class="catalogo-linha"><span>Total Estimado (US$)</span><strong id="detalheProdutoTotal">-</strong></div><div class="catalogo-linha"><span>Total Final (R$)</span><strong id="detalheProdutoTotalBRL">-</strong></div></div><div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;"><button class="btn" style="width:auto;" onclick="abrirOpcoesPagamento()" >Comprar agora</button><button class="secundario-btn" onclick="colocarNoCarrinhoDetalhe()">Colocar no carrinho</button></div><div class="msg" id="detalheProdutoMsg"></div>
   <div id="opcoesPagamentoBox" class="hidden" style="margin-top:14px; display:flex; gap:12px; flex-wrap:wrap;">
   <button class="btn" style="width:auto; min-width:180px;" onclick="iniciarPagamentoPix()">Pagar com PIX</button>
   <button class="secundario-btn" style="min-width:180px;" onclick="iniciarPagamentoCartao()">Cartão de Crédito</button>
@@ -1195,7 +1198,7 @@ async function carregarProdutosDoBanco() {
   try {
     const resposta = await fetch('/api/produtos');
     const dados = await resposta.json();
-    alert(JSON.stringify(dados[0]));
+   // alert(JSON.stringify(dados[0]));
     if (!Array.isArray(dados)) {
       produtos = [];
       return;
@@ -1251,6 +1254,27 @@ function calcularResumoFinanceiro(precoUSA, pesoGramas){
   const total = preco + taxaServico + ii + freteDoor + icms;
   return { preco, taxaPct, taxaServico, ii, freteDoor, icms, total };
 }
+async function carregarDolarTurismo() {
+  try {
+    const resposta = await fetch('/api/dolar');
+    const dados = await resposta.json();
+
+    const box = document.getElementById('cotacaoTurismoBox');
+
+    if (box && dados.valor) {
+      window.dolarAtual = Number(dados.valor);
+      box.innerText = 'Dólar Turismo: R$ ' + Number(dados.valor).toFixed(2);
+    } else {
+      box.innerText = 'Erro ao carregar dólar';
+    }
+
+  } catch (e) {
+    console.error(e);
+    document.getElementById('cotacaoTurismoBox').innerText = 'Erro ao carregar dólar';
+  }
+}
+  
+  
 function imagemProdutoHtml(base64){ return base64 ? '<img src="' + base64 + '" alt="Produto">' : 'Imagem'; }
 
 function salvarSessaoCliente(){
@@ -1573,6 +1597,8 @@ function abrirDetalheProduto(codigo, telaOrigem = 'screen-catalogo'){
   if(safe('detalheProdutoII')) safe('detalheProdutoII').innerText = moedaUS(resumo.ii);
   if(safe('detalheProdutoICMS')) safe('detalheProdutoICMS').innerText = moedaUS(resumo.icms);
   if(safe('detalheProdutoTotal')) safe('detalheProdutoTotal').innerText = moedaUS(resumo.total);
+  const totalBRL = resumo.total * (window.dolarAtual || 0);
+  if(safe('detalheProdutoTotalBRL')) safe('detalheProdutoTotalBRL').innerText = 'R$ ' + totalBRL.toFixed(2).replace('.', ',');
   if(safe('detalheProdutoMsg')) safe('detalheProdutoMsg').innerText = '';
 
   abrirTela('screen-produto-detalhe');
@@ -1816,7 +1842,8 @@ async function renderCarrinhoCliente() {
     <div class="resumo-linha"><span>Frete</span><strong>${moedaUS(resumoCarrinho.frete)}</strong></div>
     <div class="resumo-linha"><span>Taxa de serviço</span><strong>${moedaUS(resumoCarrinho.taxa)}</strong></div>
     <div class="resumo-linha"><span>Impostos</span><strong>${moedaUS(resumoCarrinho.impostos)}</strong></div>
-    <div class="resumo-linha"><span>Total estimado</span><strong>${moedaUS(resumoCarrinho.total)}</strong></div>
+    <div class="resumo-linha"><span>Total Estimado (US$)</span><strong>${moedaUS(resumoCarrinho.total)}</strong></div>
+    <div class="resumo-linha"><span>Total Final (R$)</span><strong>R$ ${(resumoCarrinho.total * (window.dolarAtual || 0)).toFixed(2).replace('.', ',')}</strong></div>
     <div class="resumo-linha"><span>Comprados</span><strong>${pedidosCliente.length}</strong></div>
   `;
 }
@@ -1948,8 +1975,10 @@ async function finalizarPagamentoCartao() {
   if (msg) msg.innerText = 'Erro: ' + JSON.stringify(err);
   }
 }
-
-carregarProdutosDoBanco();
+window.onload = function() {
+  carregarProdutosDoBanco();
+  carregarDolarTurismo();
+}
 
 </script>
 
