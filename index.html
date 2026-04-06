@@ -1257,10 +1257,10 @@ function calcularResumoFinanceiro(precoUSA, pesoGramas){
 async function carregarDolarTurismo() {
   try {
     document.getElementById('cotacaoTurismoBox').innerText = 'TESTE FUNÇÃO';
-    const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRLT');
+    const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
     const dados = await resposta.json();
 
-    const valor = dados.USDBRLT?.bid || '--';
+    const valor = dados.USDBRL?.bid || '--';
 
     const box = document.getElementById('cotacaoTurismoBox');
     if (box) {
