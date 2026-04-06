@@ -1262,6 +1262,7 @@ async function carregarDolarTurismo() {
     const box = document.getElementById('cotacaoTurismoBox');
 
     if (box && dados.valor) {
+      window.dolarAtual = Number(dados.valor);
       box.innerText = 'Dólar Turismo: R$ ' + Number(dados.valor).toFixed(2);
     } else {
       box.innerText = 'Erro ao carregar dólar';
