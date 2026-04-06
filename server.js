@@ -16,7 +16,7 @@ let pagamentosAprovados = {};
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
-app.use(express.static("public"));
+app.use(express.static(__dirname));
   
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -24,7 +24,7 @@ const pool = new Pool({
 });  
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(__dirname + "/index.html");
 });
 app.get("/teste-db", async (req, res) => {
   try {
