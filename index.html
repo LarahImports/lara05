@@ -1255,25 +1255,9 @@ function calcularResumoFinanceiro(precoUSA, pesoGramas){
   return { preco, taxaPct, taxaServico, ii, freteDoor, icms, total };
 }
 async function carregarDolarTurismo() {
-  try {
-    const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
-    const dados = await resposta.json();
-
-    console.log('DADOS DOLAR:', dados);
-
-    const valor = dados?.USDBRL?.bid;
-
-    const box = document.getElementById('cotacaoTurismoBox');
-
-    if (box && valor) {
-      box.innerText = 'Dólar Turismo: R$ ' + Number(valor).toFixed(2);
-    } else {
-      box.innerText = 'ERRO AO LER VALOR';
-    }
-
-  } catch (e) {
-    console.error(e);
-    document.getElementById('cotacaoTurismoBox').innerText = 'ERRO FETCH';
+  const box = document.getElementById('cotacaoTurismoBox');
+  if (box) {
+    box.innerText = 'Dólar Turismo: R$ 5,80';
   }
 }
   
