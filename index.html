@@ -1255,9 +1255,21 @@ function calcularResumoFinanceiro(precoUSA, pesoGramas){
   return { preco, taxaPct, taxaServico, ii, freteDoor, icms, total };
 }
 async function carregarDolarTurismo() {
-  const box = document.getElementById('cotacaoTurismoBox');
-  if (box) {
-    box.innerText = 'Dólar Turismo: R$ 5,80';
+  try {
+    const resposta = await fetch('/api/dolar');
+    const dados = await resposta.json();
+
+    const box = document.getElementById('cotacaoTurismoBox');
+
+    if (box && dados.valor) {
+      box.innerText = 'Dólar Turismo: R$ ' + Number(dados.valor).toFixed(2);
+    } else {
+      box.innerText = 'Erro ao carregar dólar';
+    }
+
+  } catch (e) {
+    console.error(e);
+    document.getElementById('cotacaoTurismoBox').innerText = 'Erro ao carregar dólar';
   }
 }
   
