@@ -1194,6 +1194,7 @@ let clientes = [];
 let produtos = [];
 
 async function carregarProdutosDoBanco() {
+  console.log("FUNÇÃO INICIOU");
   try {
     const resposta = await fetch('https://lara05-1.onrender.com/api/produtos');
     const dados = await resposta.json();
