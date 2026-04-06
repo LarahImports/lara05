@@ -312,8 +312,7 @@ app.get("/api/pedidos", async (req, res) => {
 
 app.get('/api/dolar', async (req, res) => {
   try {
-    const fetch = (await import('node-fetch')).default;
-
+    
     const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
     const valor = dados?.USDBRL?.ask || null;
 
