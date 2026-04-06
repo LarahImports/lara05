@@ -1259,7 +1259,7 @@ async function carregarDolarTurismo() {
     const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRLT');
     const dados = await resposta.json();
 
-    const valor = dados.USDBRL?.bid || '--';
+    const valor = dados.USDBRLT?.bid || '--';
 
     const box = document.getElementById('cotacaoTurismoBox');
     if (box) {
