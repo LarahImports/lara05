@@ -310,6 +310,28 @@ app.get("/api/pedidos", async (req, res) => {
   }
 });
 
+app.get('/api/dolar', async (req, res) => {
+  try {
+    const fetch = (await import('node-fetch')).default;
+
+    const resposta = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRLT');
+    const dados = await resposta.json();
+
+    const valor = dados?.USDBRLT?.bid || null;
+    const data = dados?.USDBRLT?.create_date || null;
+
+    res.json({
+      sucesso: true,
+      valor,
+      data
+    });
+
+  } catch (erro) {
+    console.error('Erro ao buscar dólar:', erro);
+    res.status(500).json({ erro: 'Erro ao buscar dólar' });
+  }
+});
+
 app.post("/api/pagamento/pix", async (req, res) => {
   try {
     const { valor, descricao } = req.body;
