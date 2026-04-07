@@ -303,7 +303,25 @@ app.delete("/api/areas/:nome", async (req, res) => {
     res.status(500).json({ erro: "Erro ao excluir área" });
   }
 });
+app.get("/api/areas", async (req, res) => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS areas (
+        id SERIAL PRIMARY KEY,
+        nome TEXT UNIQUE
+      )
+    `);
 
+    const result = await pool.query(
+      `SELECT * FROM areas ORDER BY nome ASC`
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar áreas" });
+  }
+});
 app.get("/api/produtos", async (req, res) => {
   try {
     const result = await pool.query(
