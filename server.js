@@ -473,7 +473,7 @@ app.post("/webhook", async (req, res) => {
       }
     }
 
-    res.sendStatus(200);
+    res.status(200).json({ erro: String(error?.message || error) });
   } catch (error) {
     console.error("Erro no webhook:", error);
     res.sendStatus(500);
