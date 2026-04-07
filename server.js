@@ -331,13 +331,13 @@ app.post("/api/pedidos", async (req, res) => {
       `INSERT INTO pedidos (cliente_id, produto_id, forma_pagamento, total, status)
        VALUES ($1,$2,$3,$4,$5)
        RETURNING *`,
-      [cliente_id, produto_id, forma_pagamento, total, 'pendente']
+      [Number(cliente_id), Number(produto_id), forma_pagamento, Number(total), 'pendente']
     );
 
     res.json(result.rows[0]);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ erro: "Erro ao salvar pedido" });
+    console.error("ERRO AO SALVAR PEDIDO:", error);
+    res.status(500).json({ erro: error.message });
   }
 });
 
