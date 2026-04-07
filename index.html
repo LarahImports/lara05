@@ -1875,7 +1875,14 @@ function atualizarPainelAdministrativo(){
 
 function preencherSelectAreas(){ if(safe('prod_area')) safe('prod_area').innerHTML = '<option value="">Selecione</option>' + areas.map(a => `<option>${a}</option>`).join(''); }
 function preencherSelectAreasEdicao(){ if(safe('edit_prod_area')) safe('edit_prod_area').innerHTML = '<option value="">Selecione</option>' + areas.map(a => `<option>${a}</option>`).join(''); }
-function limparFormularioProduto(){ ['prod_nome','prod_descricao','prod_preco','prod_peso'].forEach(id => { if(safe(id)) safe(id).value=''; }); if(safe('prod_status')) safe('prod_status').value='N'; if(safe('previewFotoProduto')) safe('previewFotoProduto').innerHTML='Sem foto'; }
+function limparFormularioProduto(){
+  ['prod_nome','prod_descricao','prod_preco','prod_peso'].forEach(id => {
+    if (safe(id)) safe(id).value = '';
+  });
+  if (safe('prod_status')) safe('prod_status').value = 'N';
+  if (safe('previewFotoProduto')) safe('previewFotoProduto').innerHTML = 'Sem foto';
+}
+
 async function criarArea(){
   const nome = safe('nova_area_nome')?.value?.trim();
   const msg = safe('novaAreaMsg');
@@ -1911,6 +1918,7 @@ async function criarArea(){
     if (msg) msg.innerText = 'Erro de conexão ao criar área.';
   }
 }
+
 async function excluirArea(nome){
   const msg = safe('excluirAreaMsg');
 
@@ -1941,7 +1949,20 @@ async function excluirArea(nome){
     if (msg) msg.innerText = 'Erro de conexão ao excluir área.';
   }
 }
-  function renderExcluirAreas(){ const box = safe('listaExcluirAreas'); if(!box) return; box.innerHTML = areas.length ? areas.map(area => `<div class="linha-admin"><span>${area}</span><button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button></div>`).join('') : '<div class="empty">Nenhuma área cadastrada.</div>'; }
+
+function renderExcluirAreas(){
+  const box = safe('listaExcluirAreas');
+  if (!box) return;
+
+  box.innerHTML = areas.length
+    ? areas.map(area => `
+      <div class="linha-admin">
+        <span>${area}</span>
+        <button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button>
+      </div>
+    `).join('')
+    : '<div class="empty">Nenhuma área cadastrada.</div>';
+}
 
 async function cadastrarProduto(){
   const area = safe('prod_area')?.value;
@@ -1963,7 +1984,7 @@ async function cadastrarProduto(){
   if (input && input.files && input.files[0]) {
     const reader = new FileReader();
 
-    reader.onload = async e => {
+    reader.onload = async (e) => {
       foto_url = e.target.result;
 
       try {
@@ -2033,7 +2054,6 @@ async function cadastrarProduto(){
     if (msg) msg.innerText = 'Erro de conexão ao cadastrar produto.';
   }
 }
-
 function renderGerenciarProdutos(){ const box = safe('gerenciarProdutosLista'); if(!box) return; box.innerHTML = produtos.map(p => `<div class="produto-admin-item"><div class="produto-admin-info"><strong>${p.nome}</strong><span>${p.area} • ${moedaUS(p.preco)}</span></div><div class="produto-admin-acoes"><button class="btn-mini" onclick="editarProduto('${p.codigo}')">Editar</button><button class="btn-mini excluir" onclick="excluirProduto('${p.codigo}')">Excluir</button></div></div>`).join('') || '<div class="empty">Nenhum produto cadastrado.</div>'; }
 function editarProduto(codigo){ const p = produtos.find(x => x.codigo === codigo); if(!p) return; codigoProdutoEdicao = codigo; preencherSelectAreasEdicao(); if(safe('edit_prod_area')) safe('edit_prod_area').value = p.area; if(safe('edit_prod_nome')) safe('edit_prod_nome').value = p.nome; if(safe('edit_prod_descricao')) safe('edit_prod_descricao').value = p.descricao; if(safe('edit_prod_preco')) safe('edit_prod_preco').value = p.preco; if(safe('edit_prod_peso')) safe('edit_prod_peso').value = p.pesoGramas; if(safe('edit_prod_status')) safe('edit_prod_status').value = p.status; if(safe('previewFotoProdutoEdicao')) safe('previewFotoProdutoEdicao').innerHTML = p.imagem ? `<img src="${p.imagem}">` : 'Sem foto'; abrirTela('screen-editar-produto'); }
 function salvarEdicaoProduto(){ const p = produtos.find(x => x.codigo === codigoProdutoEdicao); const msg = safe('editarProdutoMsg'); const input = safe('edit_prod_imagem_arquivo'); if(!p){ if(msg) msg.innerText='Produto não encontrado.'; return; } p.area = safe('edit_prod_area')?.value || p.area; p.nome = safe('edit_prod_nome')?.value || p.nome; p.descricao = safe('edit_prod_descricao')?.value || p.descricao; p.preco = parseFloat(safe('edit_prod_preco')?.value || p.preco); p.pesoGramas = parseFloat(safe('edit_prod_peso')?.value || p.pesoGramas); p.status = safe('edit_prod_status')?.value || p.status; if(input && input.files && input.files[0]){ const reader = new FileReader(); reader.onload = e => { p.imagem = e.target.result; if(msg) msg.innerText='Alterações salvas.'; atualizarPainelAdministrativo(); }; reader.readAsDataURL(input.files[0]); return; } if(msg) msg.innerText='Alterações salvas.'; atualizarPainelAdministrativo(); }
