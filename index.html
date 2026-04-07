@@ -2110,7 +2110,99 @@ async function cadastrarProduto(){
 }
 function renderGerenciarProdutos(){ const box = safe('gerenciarProdutosLista'); if(!box) return; box.innerHTML = produtos.map(p => `<div class="produto-admin-item"><div class="produto-admin-info"><strong>${p.nome}</strong><span>${p.area} • ${moedaUS(p.preco)}</span></div><div class="produto-admin-acoes"><button class="btn-mini" onclick="editarProduto('${p.codigo}')">Editar</button><button class="btn-mini excluir" onclick="excluirProduto('${p.codigo}')">Excluir</button></div></div>`).join('') || '<div class="empty">Nenhum produto cadastrado.</div>'; }
 function editarProduto(codigo){ const p = produtos.find(x => x.codigo === codigo); if(!p) return; codigoProdutoEdicao = codigo; preencherSelectAreasEdicao(); if(safe('edit_prod_area')) safe('edit_prod_area').value = p.area; if(safe('edit_prod_nome')) safe('edit_prod_nome').value = p.nome; if(safe('edit_prod_descricao')) safe('edit_prod_descricao').value = p.descricao; if(safe('edit_prod_preco')) safe('edit_prod_preco').value = p.preco; if(safe('edit_prod_peso')) safe('edit_prod_peso').value = p.pesoGramas; if(safe('edit_prod_status')) safe('edit_prod_status').value = p.status; if(safe('previewFotoProdutoEdicao')) safe('previewFotoProdutoEdicao').innerHTML = p.imagem ? `<img src="${p.imagem}">` : 'Sem foto'; abrirTela('screen-editar-produto'); }
-function salvarEdicaoProduto(){ const p = produtos.find(x => x.codigo === codigoProdutoEdicao); const msg = safe('editarProdutoMsg'); const input = safe('edit_prod_imagem_arquivo'); if(!p){ if(msg) msg.innerText='Produto não encontrado.'; return; } p.area = safe('edit_prod_area')?.value || p.area; p.nome = safe('edit_prod_nome')?.value || p.nome; p.descricao = safe('edit_prod_descricao')?.value || p.descricao; p.preco = parseFloat(safe('edit_prod_preco')?.value || p.preco); p.pesoGramas = parseFloat(safe('edit_prod_peso')?.value || p.pesoGramas); p.status = safe('edit_prod_status')?.value || p.status; if(input && input.files && input.files[0]){ const reader = new FileReader(); reader.onload = e => { p.imagem = e.target.result; if(msg) msg.innerText='Alterações salvas.'; atualizarPainelAdministrativo(); }; reader.readAsDataURL(input.files[0]); return; } if(msg) msg.innerText='Alterações salvas.'; atualizarPainelAdministrativo(); }
+async function salvarEdicaoProduto(){
+  const p = produtos.find(x => x.codigo === codigoProdutoEdicao);
+  const msg = safe('editarProdutoMsg');
+  const input = safe('edit_prod_imagem_arquivo');
+
+  if (!p) {
+    if (msg) msg.innerText = 'Produto não encontrado.';
+    return;
+  }
+
+  const area = safe('edit_prod_area')?.value || p.area;
+  const nome = safe('edit_prod_nome')?.value || p.nome;
+  const descricao = safe('edit_prod_descricao')?.value || p.descricao;
+  const preco = parseFloat(safe('edit_prod_preco')?.value || p.preco);
+  const peso = parseFloat(safe('edit_prod_peso')?.value || p.pesoGramas);
+  const status = safe('edit_prod_status')?.value || p.status;
+
+  let foto_url = p.imagem || '';
+
+  if (input && input.files && input.files[0]) {
+    const reader = new FileReader();
+
+    reader.onload = async (e) => {
+      foto_url = e.target.result;
+
+      try {
+        const resposta = await fetch('/api/produtos/' + encodeURIComponent(codigoProdutoEdicao), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            area,
+            nome,
+            descricao,
+            preco,
+            peso,
+            status,
+            foto_url
+          })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+          if (msg) msg.innerText = dados.erro || 'Erro ao salvar alterações.';
+          return;
+        }
+
+        await carregarProdutosDoBanco();
+        if (msg) msg.innerText = 'Alterações salvas.';
+        atualizarPainelAdministrativo();
+        renderGerenciarProdutos();
+      } catch (error) {
+        console.error(error);
+        if (msg) msg.innerText = 'Erro de conexão ao salvar alterações.';
+      }
+    };
+
+    reader.readAsDataURL(input.files[0]);
+    return;
+  }
+
+  try {
+    const resposta = await fetch('/api/produtos/' + encodeURIComponent(codigoProdutoEdicao), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        area,
+        nome,
+        descricao,
+        preco,
+        peso,
+        status,
+        foto_url
+      })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      if (msg) msg.innerText = dados.erro || 'Erro ao salvar alterações.';
+      return;
+    }
+
+    await carregarProdutosDoBanco();
+    if (msg) msg.innerText = 'Alterações salvas.';
+    atualizarPainelAdministrativo();
+    renderGerenciarProdutos();
+  } catch (error) {
+    console.error(error);
+    if (msg) msg.innerText = 'Erro de conexão ao salvar alterações.';
+  }
+}
+  
 async function excluirProduto(codigo){
   try {
     const resposta = await fetch('/api/produtos/' + encodeURIComponent(codigo), {
