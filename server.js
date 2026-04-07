@@ -382,16 +382,15 @@ app.post("/api/pagamento/pix", async (req, res) => {
 
     const payment = new Payment(mpClient);
 
-    const resposta = await payment.create({
+        const resposta = await payment.create({
       body: {
         transaction_amount: Number(valor),
         description: descricao,
         payment_method_id: "pix",
         payer: {
-           email: "teste@larahimports.com"
-               }
-           }
+          email: "teste@larahimports.com"
         }
+      }
     });
 
     res.json({
