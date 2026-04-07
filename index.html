@@ -1650,12 +1650,31 @@ async function comprarAgoraDetalhe() {
     });
 
     const dados = await resposta.json();
-    window.ultimoPagamentoGerado = dados.id;
-    verificarPagamentoAprovado(dados.id);
 
     if (!resposta.ok) {
       throw new Error(dados.erro || 'Erro ao gerar pagamento PIX');
     }
+
+    const respostaPedido = await fetch('/api/pedidos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cliente_id: Number(clienteAtual.id),
+        produto_id: Number(produtoDetalheAtual.id),
+        forma_pagamento: 'PIX',
+        total: valor
+      })
+    });
+
+    const pedido = await respostaPedido.json();
+
+    if (!respostaPedido.ok) {
+      throw new Error(pedido.erro || 'Erro ao salvar pedido');
+    }
+
+    ultimoPedidoId = pedido.id;
+    window.ultimoPagamentoGerado = dados.id;
+    verificarPagamentoAprovado(dados.id);
 
     if (msg) {
       msg.innerHTML = `
@@ -1719,51 +1738,40 @@ async function colocarNoCarrinhoDetalhe() {
   }
 }
 
-async function verificarPagamentoAprovado(idPagamento) {
-  const tentativas = 20;
+async function verificarPagamentoAprovado(id) {
+  const msg = safe('detalheProdutoMsg');
 
-  for (let i = 0; i < tentativas; i++) {
+  const intervalo = setInterval(async () => {
     try {
-      const resposta = await fetch(`/api/verificar-pagamento/${idPagamento}`);
-      const dados = await resposta.json();
+      const res = await fetch('/api/verificar-pagamento/' + id);
+      const dados = await res.json();
 
-      if (dados.aprovado && clienteAtual && produtoDetalheAtual) {
+      if (dados.aprovado) {
+        clearInterval(intervalo);
 
-        // ✅ MOSTRAR MENSAGEM NA TELA DO PIX
-        const msg = safe('detalheProdutoMsg');
+        // 🔥 NOVO: atualizar mensagem na tela
         if (msg) {
-          msg.innerHTML = '<strong style="color:green;">✅ Pagamento aprovado!</strong>';
+          msg.innerHTML = `
+            <strong style="color:green;">Pagamento aprovado!</strong><br><br>
+            Seu pedido foi confirmado com sucesso.<br>
+            Já está sendo preparado para redespacho.<br><br>
+            <small>Em breve você receberá atualizações do envio.</small>
+          `;
         }
 
-        // ✅ CRIAR LISTA SE NÃO EXISTIR
-        if (!pedidos[clienteAtual.login]) pedidos[clienteAtual.login] = [];
-
-        // ✅ DATA DE ENTREGA
-        const dataEntrega = new Date();
-        dataEntrega.setDate(dataEntrega.getDate() + 12);
-
-        // ✅ SALVAR PEDIDO
-        pedidos[clienteAtual.login].push({
-          nome: produtoDetalheAtual.nome,
-          valor: produtoDetalheAtual.preco,
-          entrega: dataEntrega.toLocaleDateString('pt-BR'),
-          status: 'Em transporte'
-        });
-
-        // ✅ ATUALIZAR TELA
-        renderCarrinhoCliente();
-
-        return;
+        // 🔥 opcional: atualizar também no banco (garantia)
+        if (ultimoPedidoId) {
+          fetch('/api/pedidos/' + ultimoPedidoId + '/status')
+            .then(r => r.json())
+            .then(p => console.log('Status do pedido:', p.status));
+        }
       }
 
-    } catch (error) {
-      console.error('Erro ao verificar pagamento:', error);
+    } catch (e) {
+      console.error('Erro ao verificar pagamento:', e);
     }
-
-    await new Promise(resolve => setTimeout(resolve, 3000));
-  }
+  }, 3000);
 }
-
 async function renderCarrinhoCliente() {
   const conteudo = safe('carrinhoClienteConteudo');
   const resumo = safe('carrinhoResumoBox');
