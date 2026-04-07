@@ -1876,7 +1876,41 @@ function atualizarPainelAdministrativo(){
 function preencherSelectAreas(){ if(safe('prod_area')) safe('prod_area').innerHTML = '<option value="">Selecione</option>' + areas.map(a => `<option>${a}</option>`).join(''); }
 function preencherSelectAreasEdicao(){ if(safe('edit_prod_area')) safe('edit_prod_area').innerHTML = '<option value="">Selecione</option>' + areas.map(a => `<option>${a}</option>`).join(''); }
 function limparFormularioProduto(){ ['prod_nome','prod_descricao','prod_preco','prod_peso'].forEach(id => { if(safe(id)) safe(id).value=''; }); if(safe('prod_status')) safe('prod_status').value='N'; if(safe('previewFotoProduto')) safe('previewFotoProduto').innerHTML='Sem foto'; }
-function criarArea(){ const nome = safe('nova_area_nome')?.value?.trim(); const msg = safe('novaAreaMsg'); if(!nome){ if(msg) msg.innerText='Digite o nome da área.'; return; } if(areas.includes(nome)){ if(msg) msg.innerText='Essa área já existe.'; return; } areas.push(nome); if(msg) msg.innerText='Área criada com sucesso.'; atualizarPainelAdministrativo(); }
+async function criarArea(){
+  const nome = safe('nova_area_nome')?.value?.trim();
+  const msg = safe('novaAreaMsg');
+
+  if (!nome) {
+    if (msg) msg.innerText = 'Digite o nome da área.';
+    return;
+  }
+
+  try {
+    const resposta = await fetch('/api/areas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      if (msg) msg.innerText = dados.erro || 'Erro ao criar área.';
+      return;
+    }
+
+    if (!areas.includes(nome)) {
+      areas.push(nome);
+    }
+
+    if (safe('nova_area_nome')) safe('nova_area_nome').value = '';
+    if (msg) msg.innerText = 'Área criada com sucesso.';
+    atualizarPainelAdministrativo();
+  } catch (error) {
+    console.error(error);
+    if (msg) msg.innerText = 'Erro de conexão ao criar área.';
+  }
+}
 function excluirArea(nome){ const msg = safe('excluirAreaMsg'); if(produtos.some(p => p.area === nome)){ if(msg) msg.innerText = 'Não é possível excluir uma área que possui produtos cadastrados.'; return; } areas = areas.filter(a => a !== nome); if(msg) msg.innerText = 'Área excluída com sucesso.'; renderExcluirAreas(); atualizarPainelAdministrativo(); }
 function renderExcluirAreas(){ const box = safe('listaExcluirAreas'); if(!box) return; box.innerHTML = areas.length ? areas.map(area => `<div class="linha-admin"><span>${area}</span><button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button></div>`).join('') : '<div class="empty">Nenhuma área cadastrada.</div>'; }
 
