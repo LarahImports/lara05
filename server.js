@@ -483,6 +483,17 @@ app.get("/api/verificar-pagamento/:id", (req, res) => {
   res.json({ aprovado: false });
 });
 
+app.get("/criar-status-pedidos", async (req, res) => {
+  try {
+    await pool.query("ALTER TABLE pedidos ADD COLUMN status TEXT DEFAULT 'pendente'");
+    res.send("Coluna status criada com sucesso!");
+  } catch (e) {
+    console.error(e);
+    res.send("Erro: " + e.message);
+  }
+});
+
+
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000");
 });
