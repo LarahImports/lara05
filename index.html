@@ -632,15 +632,17 @@
     }
    .produto {
      cursor: pointer;
-     flex: 0 0 80px;
+     flex: 0 0 120px; /* 🔥 largura fixa maior */
+     height: 180px;   /* 🔥 altura fixa */
      background: #fbfdfc;
      border: 1px solid #dce8e2;
      border-radius: 12px;
-     overflow: visible; /* 🔥 MUDAR AQUI */
+     overflow: visible;
      display: flex;
      flex-direction: column;
+     justify-content: space-between; /* 🔥 distribui conteúdo */
      box-shadow: var(--shadow);
-     position: relative; /* 🔥 IMPORTANTE */
+     position: relative;
     }
     .foto {
       height: 48px;
