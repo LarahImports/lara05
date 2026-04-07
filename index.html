@@ -623,12 +623,12 @@
       color: #2c4239;
     }
     .carrossel {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      overflow-y: hidden;
-      align-items: stretch;
-      padding-bottom: 0;
+       display: flex;
+       gap: 12px;
+       justify-content: center; /* 🔥 CENTRALIZA */
+       flex-wrap: wrap; /* 🔥 QUEBRA LINHA SE PRECISAR */
+       overflow: visible; /* 🔥 REMOVE SCROLL */
+       align-items: stretch;
     }
    .produto {
      cursor: pointer;
