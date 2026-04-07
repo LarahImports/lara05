@@ -1533,7 +1533,37 @@ function renderFeaturedHome(){
 }
 
 function montarCardPromocao(produto){
-  return `<div class="produto" onclick="acaoProdutoHome('${produto.codigo}')"><div class="foto">${imagemProdutoHtml(produto.imagem)}</div><div class="info"><div class="nome">${produto.nome}</div><div class="preco">${precoHtml(produto.preco)}</div><button class="comprar-btn" type="button">Shop</button></div></div>`;
+  return `
+    <div class="produto" onclick="acaoProdutoHome('${produto.codigo}')" style="position:relative;">
+      
+      <!-- 🔥 BADGE DE OFERTA -->
+      <div style="
+        position:absolute;
+        top:8px;
+        left:8px;
+        background:#ff3b3b;
+        color:#fff;
+        font-size:12px;
+        padding:4px 8px;
+        border-radius:8px;
+        font-weight:bold;
+        z-index:2;
+      ">
+        🔥 OFERTA
+      </div>
+
+      <div class="foto">
+        ${imagemProdutoHtml(produto.imagem)}
+      </div>
+
+      <div class="info">
+        <div class="nome">${produto.nome}</div>
+        <div class="preco">${precoHtml(produto.preco)}</div>
+        <button class="comprar-btn" type="button">Shop</button>
+      </div>
+
+    </div>
+  `;
 }
 
 function carregarPromocoes(){
