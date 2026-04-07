@@ -1189,7 +1189,7 @@
 const LOGIN_ADM = 'admin';
 const SENHA_ADM = '1234';
 
-let areas = ['Bolsas','Roupas','Cosméticos','Eletro Domésticos','Calçados','Suplementos Alimentares'];
+let areas = [];
 let clientes = [];
 
 let produtos = [];
@@ -2193,6 +2193,7 @@ async function finalizarPagamentoCartao() {
   }
 }
 window.onload = function() {
+  carregarAreasDoBanco();
   carregarProdutosDoBanco();
   carregarDolarTurismo();
 }
