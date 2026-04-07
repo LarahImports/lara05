@@ -268,6 +268,25 @@ app.post("/api/areas", async (req, res) => {
     res.status(500).json({ erro: "Erro ao criar área" });
   }
 });
+app.delete("/api/areas/:nome", async (req, res) => {
+  try {
+    const { nome } = req.params;
+
+    const result = await pool.query(
+      `DELETE FROM areas WHERE nome = $1 RETURNING *`,
+      [nome]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ erro: "Área não encontrada" });
+    }
+
+    res.json({ sucesso: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao excluir área" });
+  }
+});
 
 app.get("/api/produtos", async (req, res) => {
   try {
