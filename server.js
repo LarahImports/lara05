@@ -277,6 +277,27 @@ app.post("/api/areas", async (req, res) => {
     res.status(500).json({ erro: "Erro ao criar área" });
   }
 });
+app.delete("/api/produtos/:codigo", async (req, res) => {
+  try {
+    const { codigo } = req.params;
+
+    const result = await pool.query(
+      `DELETE FROM produtos WHERE codigo = $1 RETURNING *`,
+      [codigo]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ erro: "Produto não encontrado" });
+    }
+
+    res.json({ sucesso: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao excluir produto" });
+  }
+});
+
+
 app.delete("/api/areas/:nome", async (req, res) => {
   try {
     const { nome } = req.params;
