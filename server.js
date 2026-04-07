@@ -239,6 +239,35 @@ app.post("/api/produtos", async (req, res) => {
     res.status(500).json({ erro: "Erro ao cadastrar produto" });
   }
 });
+app.post("/api/areas", async (req, res) => {
+  try {
+    const { nome } = req.body;
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS areas (
+        id SERIAL PRIMARY KEY,
+        nome TEXT UNIQUE
+      )
+    `);
+
+    const result = await pool.query(
+      `INSERT INTO areas (nome)
+       VALUES ($1)
+       RETURNING *`,
+      [nome]
+    );
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+
+    if (error.code === '23505') {
+      return res.status(400).json({ erro: "Área já existe" });
+    }
+
+    res.status(500).json({ erro: "Erro ao criar área" });
+  }
+});
 
 app.get("/api/produtos", async (req, res) => {
   try {
