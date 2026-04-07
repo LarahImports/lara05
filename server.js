@@ -524,7 +524,15 @@ app.get("/api/pedidos/:id/status", async (req, res) => {
     res.status(500).json({ erro: "Erro ao buscar status do pedido" });
   }
 });
-
+app.get("/criar-forma-pagamento-pedidos", async (req, res) => {
+  try {
+    await pool.query("ALTER TABLE pedidos ADD COLUMN forma_pagamento TEXT");
+    res.send("Coluna forma_pagamento criada com sucesso!");
+  } catch (e) {
+    console.error(e);
+    res.send("Erro: " + e.message);
+  }
+});
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000");
 });
