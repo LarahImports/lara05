@@ -1893,7 +1893,22 @@ function salvarEdicaoProduto(){ const p = produtos.find(x => x.codigo === codigo
 function excluirProduto(codigo){ produtos = produtos.filter(p => p.codigo !== codigo); renderGerenciarProdutos(); atualizarPainelAdministrativo(); }
 
 function previewFotoTelaPrincipal(){ const input = safe('foto_tela_principal_input'); const box = safe('previewFotoTelaPrincipal'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
-function salvarFotoTelaPrincipal(){ const input = safe('foto_tela_principal_input'); const msg = safe('fotoTelaPrincipalMsg'); if(!input || !input.files || !input.files[0]){ if(msg) msg.innerText = 'Selecione uma foto.'; return; } const reader = new FileReader(); reader.onload = e => { fotoTelaInicial = e.target.result; aplicarFotoTelaInicial(); if(msg) msg.innerText = 'Foto da tela principal salva com sucesso.'; }; reader.readAsDataURL(input.files[0]); }
+function salvarFotoTelaPrincipal(){ 
+  const input = safe('foto_tela_principal_input'); 
+  const msg = safe('fotoTelaPrincipalMsg'); 
+  if(!input || !input.files || !input.files[0]){ 
+    if(msg) msg.innerText = 'Selecione uma foto.'; 
+    return; 
+  } 
+  const reader = new FileReader(); 
+  reader.onload = e => { 
+    alert("entrou aqui"); // 👈 TESTE
+    fotoTelaInicial = e.target.result; 
+    aplicarFotoTelaInicial(); 
+    if(msg) msg.innerText = 'Foto da tela principal salva com sucesso.'; 
+  }; 
+  reader.readAsDataURL(input.files[0]); 
+}
 function carregarPreviewFotoPrincipalAtual(){ const box = safe('previewFotoTelaPrincipal'); if(box) box.innerHTML = fotoTelaInicial ? `<img src="${fotoTelaInicial}">` : 'Sem foto'; }
 function previewFotoProduto(){ const input = safe('prod_imagem_arquivo'); const box = safe('previewFotoProduto'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
 function previewFotoProdutoEdicao(){ const input = safe('edit_prod_imagem_arquivo'); const box = safe('previewFotoProdutoEdicao'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
