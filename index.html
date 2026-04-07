@@ -2077,8 +2077,27 @@ async function cadastrarProduto(){
 function renderGerenciarProdutos(){ const box = safe('gerenciarProdutosLista'); if(!box) return; box.innerHTML = produtos.map(p => `<div class="produto-admin-item"><div class="produto-admin-info"><strong>${p.nome}</strong><span>${p.area} • ${moedaUS(p.preco)}</span></div><div class="produto-admin-acoes"><button class="btn-mini" onclick="editarProduto('${p.codigo}')">Editar</button><button class="btn-mini excluir" onclick="excluirProduto('${p.codigo}')">Excluir</button></div></div>`).join('') || '<div class="empty">Nenhum produto cadastrado.</div>'; }
 function editarProduto(codigo){ const p = produtos.find(x => x.codigo === codigo); if(!p) return; codigoProdutoEdicao = codigo; preencherSelectAreasEdicao(); if(safe('edit_prod_area')) safe('edit_prod_area').value = p.area; if(safe('edit_prod_nome')) safe('edit_prod_nome').value = p.nome; if(safe('edit_prod_descricao')) safe('edit_prod_descricao').value = p.descricao; if(safe('edit_prod_preco')) safe('edit_prod_preco').value = p.preco; if(safe('edit_prod_peso')) safe('edit_prod_peso').value = p.pesoGramas; if(safe('edit_prod_status')) safe('edit_prod_status').value = p.status; if(safe('previewFotoProdutoEdicao')) safe('previewFotoProdutoEdicao').innerHTML = p.imagem ? `<img src="${p.imagem}">` : 'Sem foto'; abrirTela('screen-editar-produto'); }
 function salvarEdicaoProduto(){ const p = produtos.find(x => x.codigo === codigoProdutoEdicao); const msg = safe('editarProdutoMsg'); const input = safe('edit_prod_imagem_arquivo'); if(!p){ if(msg) msg.innerText='Produto não encontrado.'; return; } p.area = safe('edit_prod_area')?.value || p.area; p.nome = safe('edit_prod_nome')?.value || p.nome; p.descricao = safe('edit_prod_descricao')?.value || p.descricao; p.preco = parseFloat(safe('edit_prod_preco')?.value || p.preco); p.pesoGramas = parseFloat(safe('edit_prod_peso')?.value || p.pesoGramas); p.status = safe('edit_prod_status')?.value || p.status; if(input && input.files && input.files[0]){ const reader = new FileReader(); reader.onload = e => { p.imagem = e.target.result; if(msg) msg.innerText='Alterações salvas.'; atualizarPainelAdministrativo(); }; reader.readAsDataURL(input.files[0]); return; } if(msg) msg.innerText='Alterações salvas.'; atualizarPainelAdministrativo(); }
-function excluirProduto(codigo){ produtos = produtos.filter(p => p.codigo !== codigo); renderGerenciarProdutos(); atualizarPainelAdministrativo(); }
+async function excluirProduto(codigo){
+  try {
+    const resposta = await fetch('/api/produtos/' + encodeURIComponent(codigo), {
+      method: 'DELETE'
+    });
 
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      alert(dados.erro || 'Erro ao excluir produto');
+      return;
+    }
+
+    await carregarProdutosDoBanco();
+    renderGerenciarProdutos();
+    atualizarPainelAdministrativo();
+  } catch (error) {
+    console.error(error);
+    alert('Erro de conexão ao excluir produto');
+  }
+}
 function previewFotoTelaPrincipal(){ const input = safe('foto_tela_principal_input'); const box = safe('previewFotoTelaPrincipal'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
 async function salvarFotoTelaPrincipal(){ 
   const input = safe('foto_tela_principal_input'); 
