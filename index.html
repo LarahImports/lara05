@@ -1918,7 +1918,27 @@ async function criarArea(){
     if (msg) msg.innerText = 'Erro de conexão ao criar área.';
   }
 }
+async function carregarAreasDoBanco(){
+  try {
+    const resposta = await fetch('/api/areas');
+    const dados = await resposta.json();
 
+    areas = [];
+
+    if (Array.isArray(dados)) {
+      areas = dados.map(item => item.nome);
+    }
+
+    renderExcluirAreas();
+    atualizarPainelAdministrativo();
+    renderAreasHome();
+    renderAreasCliente();
+    renderAreasAdmin();
+    renderAreasPublicas();
+  } catch (error) {
+    console.error('Erro ao carregar áreas:', error);
+  }
+}
 async function excluirArea(nome){
   const msg = safe('excluirAreaMsg');
 
