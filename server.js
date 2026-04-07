@@ -113,7 +113,53 @@ app.post("/api/clientes", async (req, res) => {
     res.status(500).json({ erro: "Erro ao cadastrar cliente" });
   }
 });
+app.get("/api/foto-tela-principal", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      CREATE TABLE IF NOT EXISTS configuracoes (
+        chave TEXT PRIMARY KEY,
+        valor TEXT
+      )
+    `);
 
+    const foto = await pool.query(
+      `SELECT valor FROM configuracoes WHERE chave = 'foto_tela_principal'`
+    );
+
+    res.json({
+      foto: foto.rows[0]?.valor || null
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar foto da tela principal" });
+  }
+});
+
+app.post("/api/foto-tela-principal", async (req, res) => {
+  try {
+    const { foto } = req.body;
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS configuracoes (
+        chave TEXT PRIMARY KEY,
+        valor TEXT
+      )
+    `);
+
+    await pool.query(
+      `INSERT INTO configuracoes (chave, valor)
+       VALUES ('foto_tela_principal', $1)
+       ON CONFLICT (chave)
+       DO UPDATE SET valor = EXCLUDED.valor`,
+      [foto]
+    );
+
+    res.json({ sucesso: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao salvar foto da tela principal" });
+  }
+});
 app.get("/api/clientes", async (req, res) => {
   try {
     const result = await pool.query(
