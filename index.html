@@ -1654,6 +1654,11 @@ async function comprarAgoraDetalhe() {
     if (!resposta.ok) {
       throw new Error(dados.erro || 'Erro ao gerar pagamento PIX');
     }
+    console.log("DEBUG PEDIDO:", {
+    cliente_id: clienteAtual?.id,
+    produto_id: produtoDetalheAtual?.id,
+    total: valor
+    });
 
     const respostaPedido = await fetch('/api/pedidos', {
       method: 'POST',
