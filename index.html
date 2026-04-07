@@ -1688,7 +1688,8 @@ async function comprarAgoraDetalhe() {
   } catch (error) {
     console.error(error);
     const msg = safe('detalheProdutoMsg');
-    if (msg) msg.innerText = 'Erro ao gerar PIX.';
+    console.error('ERRO COMPLETO:', error);
+    if (msg) msg.innerText = error.message || 'Erro ao gerar PIX.';
   }
 }
 
