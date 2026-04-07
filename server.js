@@ -325,13 +325,13 @@ app.delete("/api/carrinho/:id", async (req, res) => {
 
 app.post("/api/pedidos", async (req, res) => {
   try {
-    const { cliente_id, produto_id, forma_pagamento, total } = req.body;
+    const { cliente_id, produto_id, total } = req.body;
 
     const result = await pool.query(
-      `INSERT INTO pedidos (cliente_id, produto_id, forma_pagamento, total, status)
-       VALUES ($1,$2,$3,$4,$5)
+      `INSERT INTO pedidos (cliente_id, produto_id, total, status)
+       VALUES ($1,$2,$3,$4)
        RETURNING *`,
-      [Number(cliente_id), Number(produto_id), forma_pagamento, Number(total), 'pendente']
+      [Number(cliente_id), Number(produto_id), Number(total), 'pendente']
     );
 
     res.json(result.rows[0]);
@@ -340,11 +340,10 @@ app.post("/api/pedidos", async (req, res) => {
     res.status(500).json({ erro: error.message });
   }
 });
-
 app.get("/api/pedidos", async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT pe.id, pe.cliente_id, pe.produto_id, pe.forma_pagamento, pe.total, p.nome
+      `SELECT pe.id, pe.cliente_id, pe.produto_id, pe.total, pe.status, p.nome
        FROM pedidos pe
        JOIN produtos p ON p.id = pe.produto_id
        ORDER BY pe.id DESC`
