@@ -1911,8 +1911,37 @@ async function criarArea(){
     if (msg) msg.innerText = 'Erro de conexão ao criar área.';
   }
 }
-function excluirArea(nome){ const msg = safe('excluirAreaMsg'); if(produtos.some(p => p.area === nome)){ if(msg) msg.innerText = 'Não é possível excluir uma área que possui produtos cadastrados.'; return; } areas = areas.filter(a => a !== nome); if(msg) msg.innerText = 'Área excluída com sucesso.'; renderExcluirAreas(); atualizarPainelAdministrativo(); }
-function renderExcluirAreas(){ const box = safe('listaExcluirAreas'); if(!box) return; box.innerHTML = areas.length ? areas.map(area => `<div class="linha-admin"><span>${area}</span><button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button></div>`).join('') : '<div class="empty">Nenhuma área cadastrada.</div>'; }
+async function excluirArea(nome){
+  const msg = safe('excluirAreaMsg');
+
+  if (produtos.some(p => p.area === nome)) {
+    if (msg) msg.innerText = 'Não é possível excluir uma área que possui produtos cadastrados.';
+    return;
+  }
+
+  try {
+    const resposta = await fetch('/api/areas/' + encodeURIComponent(nome), {
+      method: 'DELETE'
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      if (msg) msg.innerText = dados.erro || 'Erro ao excluir área.';
+      return;
+    }
+
+    areas = areas.filter(a => a !== nome);
+
+    if (msg) msg.innerText = 'Área excluída com sucesso.';
+    renderExcluirAreas();
+    atualizarPainelAdministrativo();
+  } catch (error) {
+    console.error(error);
+    if (msg) msg.innerText = 'Erro de conexão ao excluir área.';
+  }
+}
+  function renderExcluirAreas(){ const box = safe('listaExcluirAreas'); if(!box) return; box.innerHTML = areas.length ? areas.map(area => `<div class="linha-admin"><span>${area}</span><button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button></div>`).join('') : '<div class="empty">Nenhuma área cadastrada.</div>'; }
 
 fasync function cadastrarProduto(){
   const area = safe('prod_area')?.value;
