@@ -1244,7 +1244,28 @@ let fotoTelaInicial = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/200
 function safe(id){ return document.getElementById(id); }
 function hideAllScreens(){ document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); }
 function moedaUS(v){ return 'US$ ' + Number(v || 0).toFixed(2); }
-function precoHtml(v){ return 'US$ ' + Number(v || 0).toFixed(2) + ' <small>(preço nos EUA)</small>'; }
+function precoHtml(preco, precoOriginal){
+  const precoFormatado = 'US$ ' + Number(preco || 0).toFixed(2);
+
+  if (precoOriginal && precoOriginal > preco) {
+    const original = 'US$ ' + Number(precoOriginal).toFixed(2);
+
+    return `
+      <div style="display:flex; flex-direction:column; align-items:center;">
+        <span style="text-decoration:line-through; color:#999; font-size:12px;">
+          ${original}
+        </span>
+        <span style="color:#0a7f5a; font-weight:bold;">
+          ${precoFormatado}
+        </span>
+        <small>(preço nos EUA)</small>
+      </div>
+    `;
+  }
+
+  return `${precoFormatado} <small>(preço nos EUA)</small>`;
+}
+  
 function percentualTaxaServico(valor){ const preco = Number(valor || 0); if (preco <= 100) return 0.20; if (preco <= 300) return 0.15; return 0.12; }
 function calcularFrete(pesoGramas){ const peso = Number(pesoGramas || 0); if (peso <= 0) return 0; const pesoCobrado = Math.ceil(peso / 100) * 100; return (pesoCobrado / 100) * 2; }
 function calcularResumoFinanceiro(precoUSA, pesoGramas){
