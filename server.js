@@ -203,7 +203,35 @@ app.post("/api/login", async (req, res) => {
     res.status(500).json({ erro: "Erro no login" });
   }
 });
+app.put("/api/produtos/:codigo", async (req, res) => {
+  try {
+    const { codigo } = req.params;
+    const { area, nome, descricao, preco, peso, status, foto_url } = req.body;
 
+    const result = await pool.query(
+      `UPDATE produtos
+       SET area = $1,
+           nome = $2,
+           descricao = $3,
+           preco = $4,
+           peso = $5,
+           status = $6,
+           foto_url = $7
+       WHERE codigo = $8
+       RETURNING *`,
+      [area, nome, descricao, preco, peso, status, foto_url, codigo]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ erro: "Produto não encontrado" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao atualizar produto" });
+  }
+});
 
 app.post("/api/produtos", async (req, res) => {
   try {
