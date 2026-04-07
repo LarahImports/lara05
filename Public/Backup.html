@@ -1893,9 +1893,59 @@ function salvarEdicaoProduto(){ const p = produtos.find(x => x.codigo === codigo
 function excluirProduto(codigo){ produtos = produtos.filter(p => p.codigo !== codigo); renderGerenciarProdutos(); atualizarPainelAdministrativo(); }
 
 function previewFotoTelaPrincipal(){ const input = safe('foto_tela_principal_input'); const box = safe('previewFotoTelaPrincipal'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
-function salvarFotoTelaPrincipal(){ const input = safe('foto_tela_principal_input'); const msg = safe('fotoTelaPrincipalMsg'); if(!input || !input.files || !input.files[0]){ if(msg) msg.innerText = 'Selecione uma foto.'; return; } const reader = new FileReader(); reader.onload = e => { fotoTelaInicial = e.target.result; restaurarSessaoCliente();
-renderAreasPublicas();
-renderAaplicarFotoTelaInicial(); if(msg) msg.innerText = 'Foto da tela principal salva com sucesso.'; }; reader.readAsDataURL(input.files[0]); }
+async function salvarFotoTelaPrincipal(){ 
+  const input = safe('foto_tela_principal_input'); 
+  const msg = safe('fotoTelaPrincipalMsg'); 
+
+  if(!input || !input.files || !input.files[0]){ 
+    if(msg) msg.innerText = 'Selecione uma foto.'; 
+    return; 
+  } 
+
+  const reader = new FileReader(); 
+
+  reader.onload = async e => { 
+    try {
+      fotoTelaInicial = e.target.result;
+
+      const resposta = await fetch('/api/foto-tela-principal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ foto: fotoTelaInicial })
+      });
+
+      const dados = await resposta.json();
+
+      if (!resposta.ok) {
+        if(msg) msg.innerText = dados.erro || 'Erro ao salvar foto.';
+        return;
+      }
+
+      aplicarFotoTelaInicial(); 
+      if(msg) msg.innerText = 'Foto da tela principal salva com sucesso.'; 
+    } catch (error) {
+      console.error(error);
+      if(msg) msg.innerText = 'Erro ao salvar foto.';
+    }
+  }; 
+
+  reader.readAsDataURL(input.files[0]); 
+}
+  async function carregarFotoTelaPrincipalDoBanco() {
+  try {
+    const resposta = await fetch('/api/foto-tela-principal');
+    const dados = await resposta.json();
+
+    if (dados.foto) {
+      fotoTelaInicial = dados.foto;
+    }
+
+    aplicarFotoTelaInicial();
+  } catch (error) {
+    console.error('Erro ao carregar foto da tela principal:', error);
+    aplicarFotoTelaInicial();
+  }
+}
 function carregarPreviewFotoPrincipalAtual(){ const box = safe('previewFotoTelaPrincipal'); if(box) box.innerHTML = fotoTelaInicial ? `<img src="${fotoTelaInicial}">` : 'Sem foto'; }
 function previewFotoProduto(){ const input = safe('prod_imagem_arquivo'); const box = safe('previewFotoProduto'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
 function previewFotoProdutoEdicao(){ const input = safe('edit_prod_imagem_arquivo'); const box = safe('previewFotoProdutoEdicao'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
@@ -1903,7 +1953,7 @@ function previewFotoProdutoEdicao(){ const input = safe('edit_prod_imagem_arquiv
 window.addEventListener('DOMContentLoaded', () => {
   hideAllScreens();
   restaurarSessaoCliente();
-  aplicarFotoTelaInicial();
+  carregarFotoTelaPrincipalDoBanco();
   atualizarPainelAdministrativo();
   carregarPromocoes();
   renderFeaturedHome();
