@@ -630,16 +630,17 @@
       align-items: stretch;
       padding-bottom: 0;
     }
-    .produto {
-      cursor: pointer;
-      flex: 0 0 80px;
-      background: #fbfdfc;
-      border: 1px solid #dce8e2;
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--shadow);
+   .produto {
+     cursor: pointer;
+     flex: 0 0 80px;
+     background: #fbfdfc;
+     border: 1px solid #dce8e2;
+     border-radius: 12px;
+     overflow: visible; /* 🔥 MUDAR AQUI */
+     display: flex;
+     flex-direction: column;
+     box-shadow: var(--shadow);
+     position: relative; /* 🔥 IMPORTANTE */
     }
     .foto {
       height: 48px;
