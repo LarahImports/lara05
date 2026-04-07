@@ -76,6 +76,16 @@ app.get("/criar-tabelas", async (req, res) => {
         forma_pagamento TEXT,
         total NUMERIC
       );
+
+      CREATE TABLE IF NOT EXISTS areas (
+        id SERIAL PRIMARY KEY,
+        nome TEXT UNIQUE
+      );
+
+      CREATE TABLE IF NOT EXISTS configuracoes (
+        chave TEXT PRIMARY KEY,
+        valor TEXT
+      );
     `);
 
     res.send("Tabelas criadas com sucesso 🚀");
@@ -84,7 +94,6 @@ app.get("/criar-tabelas", async (req, res) => {
     res.status(500).send("Erro ao criar tabelas");
   }
 });
-
 app.post("/api/clientes", async (req, res) => {
   try {
     const { nome, endereco, cidade, estado, cep, cpf, login, senha } = req.body;
@@ -271,6 +280,13 @@ app.post("/api/areas", async (req, res) => {
 app.delete("/api/areas/:nome", async (req, res) => {
   try {
     const { nome } = req.params;
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS areas (
+        id SERIAL PRIMARY KEY,
+        nome TEXT UNIQUE
+      )
+    `);
 
     const result = await pool.query(
       `DELETE FROM areas WHERE nome = $1 RETURNING *`,
