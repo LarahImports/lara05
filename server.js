@@ -388,16 +388,10 @@ app.post("/api/pagamento/pix", async (req, res) => {
         description: descricao,
         payment_method_id: "pix",
         payer: {
-           email: "athomazg@gmail.com",
-           first_name: "Alberto",
-           last_name: "Goncalves",
-           identification: {
-           type: "CPF",
-           number: "64148157720"
-           }
+           email: "teste@larahimports.com"
+               }
            }
         }
-      
     });
 
     res.json({
