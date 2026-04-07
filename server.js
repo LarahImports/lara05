@@ -328,10 +328,10 @@ app.post("/api/pedidos", async (req, res) => {
     const { cliente_id, produto_id, forma_pagamento, total } = req.body;
 
     const result = await pool.query(
-      `INSERT INTO pedidos (cliente_id, produto_id, forma_pagamento, total)
-       VALUES ($1,$2,$3,$4)
+      `INSERT INTO pedidos (cliente_id, produto_id, forma_pagamento, total, status)
+       VALUES ($1,$2,$3,$4,$5)
        RETURNING *`,
-      [cliente_id, produto_id, forma_pagamento, total]
+      [cliente_id, produto_id, forma_pagamento, total, 'pendente']
     );
 
     res.json(result.rows[0]);
@@ -461,9 +461,22 @@ app.post("/webhook", async (req, res) => {
       console.log("Status do pagamento:", pagamento.status);
 
       if (pagamento.status === "approved") {
-        console.log("PAGAMENTO APROVADO:", pagamento.id);
-        pagamentosAprovados[pagamento.id] = true;
-      }
+  console.log("PAGAMENTO APROVADO:", pagamento.id);
+
+  pagamentosAprovados[pagamento.id] = true;
+
+  // 🔥 NOVO: atualizar pedido no banco
+  try {
+    await pool.query(
+      `UPDATE pedidos
+       SET status = 'pago'
+       WHERE id = $1`,
+      [pagamento.id]
+    );
+  } catch (e) {
+    console.error("Erro ao atualizar pedido:", e);
+  }
+}
     }
 
     res.sendStatus(200);
@@ -492,7 +505,25 @@ app.get("/criar-status-pedidos", async (req, res) => {
     res.send("Erro: " + e.message);
   }
 });
+app.get("/api/pedidos/:id/status", async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    const result = await pool.query(
+      `SELECT id, status FROM pedidos WHERE id = $1`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ erro: "Pedido não encontrado" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar status do pedido" });
+  }
+});
 
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000");
