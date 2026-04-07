@@ -409,7 +409,7 @@ app.post("/api/pagamento/pix", async (req, res) => {
   } catch (error) {
     console.error('ERRO MP COMPLETO:', JSON.stringify(error, null, 2));
     console.error('ERRO MP OBJETO:', error);
-    res.status(500).json({ erro: "Erro ao gerar PIX" });
+    res.status(500).json({ erro: JSON.stringify(error, null, 2) });
   }
 });
 
