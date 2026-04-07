@@ -1658,7 +1658,13 @@ function abrirDetalheProduto(codigo, telaOrigem = 'screen-catalogo'){
   if(safe('detalheProdutoNome')) safe('detalheProdutoNome').innerText = produtoDetalheAtual.nome;
   if(safe('detalheProdutoDescricao')) safe('detalheProdutoDescricao').innerText = produtoDetalheAtual.descricao;
   if(safe('detalheProdutoArea')) safe('detalheProdutoArea').innerText = produtoDetalheAtual.area;
-  if(safe('detalheProdutoPreco')) safe('detalheProdutoPreco').innerText = moedaUS(produtoDetalheAtual.preco);
+  if (safe('detalheProdutoPreco')) {
+  const precoOriginal = produtoDetalheAtual.status === 'P'
+    ? produtoDetalheAtual.preco * 1.3
+    : null;
+
+  safe('detalheProdutoPreco').innerHTML = precoHtml(produtoDetalheAtual.preco, precoOriginal);
+}
   if(safe('detalheProdutoPeso')) safe('detalheProdutoPeso').innerText = Number(produtoDetalheAtual.pesoGramas || 0).toFixed(0) + ' g';
   if(safe('detalheProdutoFrete')) safe('detalheProdutoFrete').innerText = moedaUS(resumo.freteDoor);
   if(safe('detalheProdutoTaxa')) safe('detalheProdutoTaxa').innerText = moedaUS(resumo.taxaServico);
