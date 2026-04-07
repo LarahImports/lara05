@@ -1943,7 +1943,7 @@ async function excluirArea(nome){
 }
   function renderExcluirAreas(){ const box = safe('listaExcluirAreas'); if(!box) return; box.innerHTML = areas.length ? areas.map(area => `<div class="linha-admin"><span>${area}</span><button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button></div>`).join('') : '<div class="empty">Nenhuma área cadastrada.</div>'; }
 
-fasync function cadastrarProduto(){
+async function cadastrarProduto(){
   const area = safe('prod_area')?.value;
   const nome = safe('prod_nome')?.value?.trim();
   const descricao = safe('prod_descricao')?.value?.trim();
