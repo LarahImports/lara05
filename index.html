@@ -1303,7 +1303,7 @@ async function carregarDolarTurismo() {
 
     const dataBCB = `${mm}-${dd}-${yyyy}`;
 
-    const url = 'https://economia.awesomeapi.com.br/json/last/USD-BRLT';
+    const url = '/api/dolar-turismo';
 
     const res = await fetch(url);
     const text = await res.text();
