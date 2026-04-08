@@ -544,8 +544,16 @@ app.get('/api/dolar', async (req, res) => {
 
 app.get("/api/dolar-turismo", async (req, res) => {
   try {
-    const resposta = await fetch("https://economia.awesomeapi.com.br/json/last/USD-BRLT");
+    const hoje = new Date();
+    const dd = String(hoje.getDate()).padStart(2, "0");
+    const mm = String(hoje.getMonth() + 1).padStart(2, "0");
+    const yyyy = hoje.getFullYear();
 
+    const dataBCB = `${mm}-${dd}-${yyyy}`;
+
+    const url = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${dataBCB}'&$top=1&$format=json`;
+
+    const resposta = await fetch(url);
     const dolarData = await resposta.json();
     return res.json(dolarData);
   } catch (error) {
