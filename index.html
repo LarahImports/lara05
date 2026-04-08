@@ -2370,14 +2370,17 @@ async function finalizarPagamentoCartao() {
     });
 
     if (msg) msg.innerText = 'Enviando pagamento...';
-
+    
+    const valorTexto = safe('detalheProdutoTotalBRL')?.innerText || '';
+    const valorLimpo = valorTexto.replace(/[^0-9.,]/g, '').replace(',', '.');
+    const valor = Number(valorLimpo);
     const res = await fetch('/api/pagamento/cartao', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        valor: 100,
+        valor: valor,
         descricao: 'Pagamento teste cartão',
         token: tokenResponse.id,
         parcelas: 1,
