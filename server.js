@@ -544,7 +544,7 @@ app.get('/api/dolar', async (req, res) => {
 
 app.get("/api/dolar-turismo", async (req, res) => {
   try {
-    const resposta = await fetch("https://economia.awesomeapi.com.br/json/last/USD-BRLT");
+    const resposta = await fetch("https://economia.awesomeapi.com.br/json/USD-BRL");
     const dolarData = await resposta.json();
     return res.json(dolarData);
   } catch (error) {
