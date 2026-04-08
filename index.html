@@ -1317,6 +1317,37 @@ async function carregarDolarTurismo() {
   
 function imagemProdutoHtml(base64){ return base64 ? '<img src="' + base64 + '" alt="Produto">' : 'Imagem'; }
 
+function excluirCliente() {
+  const cpf = document.getElementById("cpfExcluirCliente").value.trim();
+  const nome = document.getElementById("nomeExcluirCliente").value.trim();
+  const msg = document.getElementById("excluirClienteMsg");
+
+  if (!cpf && !nome) {
+    msg.innerText = "Informe o CPF ou o nome do cliente.";
+    return;
+  }
+
+  let clientes = JSON.parse(localStorage.getItem("clientes")) || [];
+
+  const totalAntes = clientes.length;
+
+  clientes = clientes.filter(c => {
+    if (cpf && c.cpf === cpf) return false;
+    if (nome && c.nome.toLowerCase().includes(nome.toLowerCase())) return false;
+    return true;
+  });
+
+  localStorage.setItem("clientes", JSON.stringify(clientes));
+
+  const totalDepois = clientes.length;
+
+  if (totalDepois < totalAntes) {
+    msg.innerText = "Cliente(s) excluído(s) com sucesso.";
+  } else {
+    msg.innerText = "Nenhum cliente encontrado.";
+  }
+}
+  
 function salvarSessaoCliente(){
   try {
     if(clienteAtual) localStorage.setItem('larah_cliente_logado', JSON.stringify(clienteAtual));
