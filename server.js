@@ -555,6 +555,7 @@ app.get("/api/dolar-turismo", async (req, res) => {
 
     const resposta = await fetch(url);
     const dolarData = await resposta.json();
+
     return res.json(dolarData);
   } catch (error) {
     console.error("Erro ao buscar dólar turismo:", error);
