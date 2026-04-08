@@ -1312,8 +1312,7 @@ async function carregarDolarTurismo() {
     const data = JSON.parse(text);
     
 
-    const cotacaoVenda = Number(data?.USDBRLT?.ask || data?.USDBRL?.ask);
-
+    const cotacaoVenda = Number(data?.USDBRLT?.bid);
     if (!cotacaoVenda) {
       throw new Error('Cotação não encontrada para hoje');
     }
