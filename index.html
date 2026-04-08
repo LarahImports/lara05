@@ -1303,6 +1303,7 @@ async function carregarDolarTurismo() {
 
     const data = JSON.parse(text);
     const cotacaoVenda = Number(data?.value?.[0]?.cotacaoVenda) * 1.04;
+    window.dolarAtual = cotacaoVenda;
 
     if (!cotacaoVenda) {
       throw new Error('Cotação não encontrada para hoje');
