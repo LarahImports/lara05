@@ -47,9 +47,11 @@ app.delete('/api/clientes', async (req, res) => {
     let result;
 
     if (cpf) {
-      result = await pool.query(
-        'DELETE FROM clientes WHERE cpf = $1',
-        [cpf]
+      const cpfLimpo = cpf.replace(/\D/g, '');
+
+     result = await pool.query(
+          "DELETE FROM clientes WHERE regexp_replace(cpf, '\\D', '', 'g') = $1",
+         [cpfLimpo]
       );
     } else {
       result = await pool.query(
