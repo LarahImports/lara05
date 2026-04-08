@@ -633,7 +633,9 @@ app.post("/api/pagamento/cartao", async (req, res) => {
 
     return res.status(400).json({
       sucesso: false,
-      erro: `Pagamento não aprovado: ${detail || status}`,
+     erro: detail === "cc_rejected_high_risk"
+     ? "Pagamento recusado por análise de risco. Tente outro cartão ou revise os dados do pagador."
+     : `Pagamento não aprovado: ${detail || status}`,
       status,
       detalhe: detail,
       id: resposta.id
