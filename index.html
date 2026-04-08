@@ -2427,7 +2427,7 @@ async function finalizarPagamentoCartao() {
         token: tokenResponse.id,
         parcelas: 1,
         metodo_pagamento: tokenResponse.payment_method_id,
-        email: emailValido,
+       email: 'teste@larahimports.com',
         nome: clienteAtual?.nome || 'Cliente Larah Imports',
         cpf: clienteAtual?.cpf || '00000000000'
       })
