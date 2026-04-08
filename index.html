@@ -2411,6 +2411,11 @@ async function finalizarPagamentoCartao() {
     const valorLimpo = valorTexto.replace(/[^0-9.,]/g, '').replace(',', '.');
     const valor = Number(valorLimpo);
 
+    const emailCliente = clienteAtual?.login;
+    const emailValido = emailCliente && emailCliente.includes('@')
+      ? emailCliente
+      : 'cliente@larahimports.com';
+
     const res = await fetch('/api/pagamento/cartao', {
       method: 'POST',
       headers: {
@@ -2422,7 +2427,7 @@ async function finalizarPagamentoCartao() {
         token: tokenResponse.id,
         parcelas: 1,
         metodo_pagamento: tokenResponse.payment_method_id,
-        email: clienteAtual?.login || 'cliente@larahimports.com',
+        email: emailValido,
         nome: clienteAtual?.nome || 'Cliente Larah Imports',
         cpf: clienteAtual?.cpf || '00000000000'
       })
