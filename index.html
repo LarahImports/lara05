@@ -1296,32 +1296,25 @@ function calcularResumoFinanceiro(precoUSA, pesoGramas){
 }
 async function carregarDolarTurismo() {
   try {
-    const hoje = new Date();
-    const dd = String(hoje.getDate()).padStart(2, '0');
-    const mm = String(hoje.getMonth() + 1).padStart(2, '0');
-    const yyyy = hoje.getFullYear();
-
-    const dataBCB = `${mm}-${dd}-${yyyy}`;
-
     const url = '/api/dolar-turismo';
-
     const res = await fetch(url);
     const text = await res.text();
     console.log('RESPOSTA API DOLAR:', text);
 
     const data = JSON.parse(text);
-    
-
     const cotacaoVenda = Number(data?.value?.[0]?.cotacaoVenda) * 1.04;
+
     if (!cotacaoVenda) {
       throw new Error('Cotação não encontrada para hoje');
     }
 
-    dolarTurismo = cotacaoVenda;
-
     const el = document.getElementById('valorDolarTopo');
+    console.log('Elemento encontrado:', el);
+
     if (el) {
       el.innerText = `Dólar turismo: R$ ${cotacaoVenda.toFixed(2)}`;
+    } else {
+      console.error('Elemento valorDolarTopo não encontrado no HTML');
     }
 
     console.log('Dólar turismo atualizado:', cotacaoVenda);
