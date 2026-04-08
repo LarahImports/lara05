@@ -548,7 +548,7 @@ app.get("/api/dolar-turismo", async (req, res) => {
       "https://economia.awesomeapi.com.br/json/last/USD-BRLT",
       {
         headers: {
-          "x-api-key": process.env.AWESOMEAPI_KEY
+          "x-api-key": "SUA_CHAVE_AQUI"
         }
       }
     );
