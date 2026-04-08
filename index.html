@@ -2406,10 +2406,11 @@ async function finalizarPagamentoCartao() {
     });
 
     if (msg) msg.innerText = 'Enviando pagamento...';
-    
+
     const valorTexto = safe('detalheProdutoTotalBRL')?.innerText || '';
     const valorLimpo = valorTexto.replace(/[^0-9.,]/g, '').replace(',', '.');
     const valor = Number(valorLimpo);
+
     const res = await fetch('/api/pagamento/cartao', {
       method: 'POST',
       headers: {
@@ -2429,13 +2430,25 @@ async function finalizarPagamentoCartao() {
 
     const data = await res.json();
     console.log('RETORNO PAGAMENTO CARTAO:', data);
-    if (msg) msg.innerText = 'Pagamento enviado! Verifique o console.';
+
+    if (!res.ok) {
+      throw new Error(data?.erro || `Erro HTTP ${res.status}`);
+    }
+
+    if (data.erro) {
+      throw new Error(data.erro);
+    }
+
+    if (msg) {
+      msg.innerText = data.mensagem || 'Pagamento aprovado com sucesso!';
+    }
 
   } catch (err) {
-  console.error('ERRO COMPLETO CARTAO:', err);
-  if (msg) msg.innerText = 'Erro: ' + JSON.stringify(err);
+    console.error('ERRO COMPLETO CARTAO:', err);
+    if (msg) msg.innerText = 'Erro ao processar pagamento: ' + (err.message || 'Erro desconhecido');
   }
 }
+  
 window.onload = function() {
   carregarAreasDoBanco();
   carregarProdutosDoBanco();
