@@ -2428,7 +2428,8 @@ async function finalizarPagamentoCartao() {
     });
 
     const data = await res.json();
-    if (msg) msg.innerText = 'Pagamento enviado! Status: ' + data.status;
+    console.log('RETORNO PAGAMENTO CARTAO:', data);
+    if (msg) msg.innerText = 'Pagamento enviado! Verifique o console.';
 
   } catch (err) {
   console.error('ERRO COMPLETO CARTAO:', err);
