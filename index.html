@@ -1303,7 +1303,7 @@ async function carregarDolarTurismo() {
 
     const dataBCB = `${mm}-${dd}-${yyyy}`;
 
-    const url = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${dataBCB}'&$top=1&$format=json`;
+    const url = 'https://economia.awesomeapi.com.br/json/last/USD-BRLT';
 
     const res = await fetch(url);
     const data = await res.json();
