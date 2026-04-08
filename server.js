@@ -542,6 +542,17 @@ app.get('/api/dolar', async (req, res) => {
   }
 });
 
+app.get("/api/dolar-turismo", async (req, res) => {
+  try {
+    const resposta = await fetch("https://economia.awesomeapi.com.br/json/last/USD-BRLT");
+    const data = await resposta.json();
+    return res.json(data);
+  } catch (error) {
+    console.error("Erro ao buscar dólar turismo:", error);
+    return res.status(500).json({ erro: "Erro ao buscar dólar turismo" });
+  }
+});
+
 app.post("/api/pagamento/pix", async (req, res) => {
   try {
     const { valor, descricao } = req.body;
