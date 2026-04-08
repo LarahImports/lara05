@@ -36,6 +36,40 @@ app.get("/teste-db", async (req, res) => {
   }
 });
 
+app.delete('/api/clientes', async (req, res) => {
+  try {
+    const { cpf, nome } = req.body;
+
+    if (!cpf && !nome) {
+      return res.status(400).json({ erro: 'Informe CPF ou nome.' });
+    }
+
+    let result;
+
+    if (cpf) {
+      result = await pool.query(
+        'DELETE FROM clientes WHERE cpf = $1',
+        [cpf]
+      );
+    } else {
+      result = await pool.query(
+        'DELETE FROM clientes WHERE nome ILIKE $1',
+        [`%${nome}%`]
+      );
+    }
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ erro: 'Nenhum cliente encontrado.' });
+    }
+
+    return res.json({ ok: true, removidos: result.rowCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: 'Erro ao excluir cliente.' });
+  }
+});
+
+
 app.get("/criar-tabelas", async (req, res) => {
   try {
     await pool.query(`
