@@ -2431,12 +2431,8 @@ async function finalizarPagamentoCartao() {
     const data = await res.json();
     console.log('RETORNO PAGAMENTO CARTAO:', data);
 
-    if (!res.ok) {
+    if (!res.ok || data.sucesso === false) {
       throw new Error(data?.erro || `Erro HTTP ${res.status}`);
-    }
-
-    if (data.erro) {
-      throw new Error(data.erro);
     }
 
     if (msg) {
@@ -2445,7 +2441,9 @@ async function finalizarPagamentoCartao() {
 
   } catch (err) {
     console.error('ERRO COMPLETO CARTAO:', err);
-    if (msg) msg.innerText = 'Erro ao processar pagamento: ' + (err.message || 'Erro desconhecido');
+    if (msg) {
+      msg.innerText = 'Erro ao processar pagamento: ' + (err.message || 'Erro desconhecido');
+    }
   }
 }
   
