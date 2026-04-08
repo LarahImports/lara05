@@ -1296,21 +1296,34 @@ function calcularResumoFinanceiro(precoUSA, pesoGramas){
 }
 async function carregarDolarTurismo() {
   try {
-    const resposta = await fetch('/api/dolar');
-    const dados = await resposta.json();
+    const hoje = new Date();
+    const dd = String(hoje.getDate()).padStart(2, '0');
+    const mm = String(hoje.getMonth() + 1).padStart(2, '0');
+    const yyyy = hoje.getFullYear();
 
-    const box = document.getElementById('cotacaoTurismoBox');
+    const dataBCB = `${mm}-${dd}-${yyyy}`;
 
-    if (box && dados.valor) {
-      window.dolarAtual = Number(dados.valor);
-      box.innerText = 'Dólar Turismo: R$ ' + Number(dados.valor).toFixed(2);
-    } else {
-      box.innerText = 'Erro ao carregar dólar';
+    const url = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${dataBCB}'&$top=1&$format=json`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const cotacaoVenda = data?.value?.[0]?.cotacaoVenda;
+
+    if (!cotacaoVenda) {
+      throw new Error('Cotação não encontrada para hoje');
     }
 
-  } catch (e) {
-    console.error(e);
-    document.getElementById('cotacaoTurismoBox').innerText = 'Erro ao carregar dólar';
+    dolarTurismo = cotacaoVenda;
+
+    const el = document.getElementById('valorDolarTopo');
+    if (el) {
+      el.innerText = `Dólar turismo: R$ ${cotacaoVenda.toFixed(2)}`;
+    }
+
+    console.log('Dólar turismo atualizado:', cotacaoVenda);
+  } catch (error) {
+    console.error('Erro ao carregar dólar turismo:', error);
   }
 }
   
