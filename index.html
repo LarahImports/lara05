@@ -1309,8 +1309,8 @@ async function carregarDolarTurismo() {
     const text = await res.text();
     console.log('RESPOSTA API DOLAR:', text);
 
-const data = JSON.parse(text);
-    const data = await res.json();
+    const data = JSON.parse(text);
+    
 
     const cotacaoVenda = Number(data?.USDBRLT?.ask || data?.USDBRL?.ask);
 
