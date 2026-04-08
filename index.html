@@ -1308,7 +1308,7 @@ async function carregarDolarTurismo() {
     const res = await fetch(url);
     const data = await res.json();
 
-    const cotacaoVenda = data?.value?.[0]?.cotacaoVenda;
+    const cotacaoVenda = Number(data?.USDBRLT?.ask);
 
     if (!cotacaoVenda) {
       throw new Error('Cotação não encontrada para hoje');
