@@ -2366,7 +2366,7 @@ async function finalizarPagamentoCartao() {
       cardExpirationYear: document.getElementById("cardYear").value,
       securityCode: document.getElementById("cardCvv").value,
       identificationType: "CPF",
-      identificationNumber: "12345678909"
+      identificationNumber: clienteAtual?.cpf || ""
     });
 
     if (msg) msg.innerText = 'Enviando pagamento...';
@@ -2384,10 +2384,10 @@ async function finalizarPagamentoCartao() {
         descricao: 'Pagamento teste cartão',
         token: tokenResponse.id,
         parcelas: 1,
-        metodo_pagamento: 'visa',
-        email: 'teste@test.com',
-        nome: 'Teste',
-        cpf: '12345678909'
+        metodo_pagamento: tokenResponse.payment_method_id,
+        email: clienteAtual?.login || 'cliente@larahimports.com',
+        nome: clienteAtual?.nome || 'Cliente Larah Imports',
+        cpf: clienteAtual?.cpf || '00000000000'
       })
     });
 
