@@ -1707,7 +1707,7 @@ async function comprarAgoraDetalhe() {
     const msg = safe('detalheProdutoMsg');
     if (msg) msg.innerText = 'Gerando PIX...';
 
-    const valorTexto = safe('detalheProdutoTotal')?.innerText || '';
+    const valorTexto = safe('detalheProdutoTotalBRL')?.innerText || '';
     const valorLimpo = valorTexto.replace(/[^0-9.,]/g, '').replace(',', '.');
     const valor = Number(valorLimpo);
 
