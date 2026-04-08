@@ -2498,8 +2498,48 @@ async function finalizarPagamentoCartao() {
     }
   }
 }
+
+  </section>
+
+
+<div id="modalTermosCadastro" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Termos de Uso e Condições</h3>
+    </div>
+
+    <div class="modal-body">
+      <p>Ao utilizar a plataforma Larah Imports, o usuário declara estar de acordo...</p>
+      <p>Os valores apresentados no sistema podem incluir estimativas...</p>
+      <p>O cliente é responsável pela veracidade das informações...</p>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="secundario-btn" onclick="fecharModalTermosCadastro()">Cancelar</button>
+      <button type="button" class="btn" onclick="confirmarTermosECadastrar()">Concordo com os termos</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  function abrirModalTermosCadastro(){
+  const modal = document.getElementById('modalTermosCadastro');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function fecharModalTermosCadastro(){
+  const modal = document.getElementById('modalTermosCadastro');
+  if (modal) modal.classList.add('hidden');
+}
+
+async function confirmarTermosECadastrar(){
+  fecharModalTermosCadastro();
+  await cadastrarCliente();
+}
   
 window.onload = function() {
+ 
   carregarAreasDoBanco();
   carregarProdutosDoBanco();
   carregarDolarTurismo();
