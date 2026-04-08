@@ -596,7 +596,8 @@ app.post("/api/pagamento/cartao", async (req, res) => {
         payment_method_id: metodo_pagamento,
         payer: {
           email: email,
-          first_name: nome,
+          first_name: (nome || "").split(" ")[0],
+          last_name: (nome || "").split(" ").slice(1).join(" ") || ".",
           identification: {
             type: "CPF",
             number: cpf
@@ -605,17 +606,49 @@ app.post("/api/pagamento/cartao", async (req, res) => {
       }
     });
 
-    res.json({
-      id: resposta.id,
-      status: resposta.status
+    console.log("RESPOSTA MERCADO PAGO:", JSON.stringify(resposta, null, 2));
+
+    const status = resposta.status;
+    const detail = resposta.status_detail;
+
+    if (status === "approved") {
+      return res.status(200).json({
+        sucesso: true,
+        mensagem: "Pagamento aprovado com sucesso!",
+        status,
+        detalhe: detail,
+        id: resposta.id
+      });
+    }
+
+    if (status === "in_process" || status === "pending") {
+      return res.status(200).json({
+        sucesso: true,
+        mensagem: "Pagamento em análise.",
+        status,
+        detalhe: detail,
+        id: resposta.id
+      });
+    }
+
+    return res.status(400).json({
+      sucesso: false,
+      erro: `Pagamento não aprovado: ${detail || status}`,
+      status,
+      detalhe: detail,
+      id: resposta.id
     });
 
   } catch (error) {
-    console.error("ERRO CARTAO:", JSON.stringify(error, null, 2));
-    res.status(500).json({ erro: "Erro no pagamento com cartão" });
+    console.error("ERRO AO CRIAR PAGAMENTO CARTAO:", error);
+
+    return res.status(500).json({
+      sucesso: false,
+      erro: error?.message || "Erro interno ao processar pagamento com cartão"
+    });
   }
 });
-   
+
 app.post("/webhook", async (req, res) => {
   console.log("Webhook recebido:", req.body);
 
@@ -627,28 +660,27 @@ app.post("/webhook", async (req, res) => {
       console.log("Status do pagamento:", pagamento.status);
 
       if (pagamento.status === "approved") {
-  console.log("PAGAMENTO APROVADO:", pagamento.id);
+        console.log("PAGAMENTO APROVADO:", pagamento.id);
 
-  pagamentosAprovados[pagamento.id] = true;
+        pagamentosAprovados[pagamento.id] = true;
 
-  // 🔥 NOVO: atualizar pedido no banco
-  try {
-    await pool.query(
-      `UPDATE pedidos
-       SET status = 'pago'
-       WHERE id = $1`,
-      [pagamento.id]
-    );
-  } catch (e) {
-    console.error("Erro ao atualizar pedido:", e);
-  }
-}
+        try {
+          await pool.query(
+            `UPDATE pedidos
+             SET status = 'pago'
+             WHERE id = $1`,
+            [pagamento.id]
+          );
+        } catch (e) {
+          console.error("Erro ao atualizar pedido:", e);
+        }
+      }
     }
 
-    res.sendStatus(200);
+    return res.sendStatus(200);
   } catch (error) {
     console.error("Erro no webhook:", error);
-    res.status(200).json({ erro: String(error?.message || error) });
+    return res.status(200).json({ erro: String(error?.message || error) });
   }
 });
 
@@ -659,18 +691,19 @@ app.get("/api/verificar-pagamento/:id", (req, res) => {
     return res.json({ aprovado: true });
   }
 
-  res.json({ aprovado: false });
+  return res.json({ aprovado: false });
 });
 
 app.get("/criar-status-pedidos", async (req, res) => {
   try {
     await pool.query("ALTER TABLE pedidos ADD COLUMN status TEXT DEFAULT 'pendente'");
-    res.send("Coluna status criada com sucesso!");
+    return res.send("Coluna status criada com sucesso!");
   } catch (e) {
     console.error(e);
-    res.send("Erro: " + e.message);
+    return res.send("Erro: " + e.message);
   }
 });
+
 app.get("/api/pedidos/:id/status", async (req, res) => {
   try {
     const { id } = req.params;
@@ -684,21 +717,23 @@ app.get("/api/pedidos/:id/status", async (req, res) => {
       return res.status(404).json({ erro: "Pedido não encontrado" });
     }
 
-    res.json(result.rows[0]);
+    return res.json(result.rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ erro: "Erro ao buscar status do pedido" });
+    return res.status(500).json({ erro: "Erro ao buscar status do pedido" });
   }
 });
+
 app.get("/criar-forma-pagamento-pedidos", async (req, res) => {
   try {
     await pool.query("ALTER TABLE pedidos ADD COLUMN forma_pagamento TEXT");
-    res.send("Coluna forma_pagamento criada com sucesso!");
+    return res.send("Coluna forma_pagamento criada com sucesso!");
   } catch (e) {
     console.error(e);
-    res.send("Erro: " + e.message);
+    return res.send("Erro: " + e.message);
   }
 });
+
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000");
 });
