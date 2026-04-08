@@ -1146,7 +1146,44 @@
     </div>
   </section>
 
-  <section id="screen-cadastro-cliente" class="screen hidden"><div class="page"><div class="toolbar"><h2>Cadastro de Cliente</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card form-area"><div class="grid-2"><div><label>Nome</label><input id="cad_nome" /></div><div><label>Endereço</label><input id="cad_endereco" /></div><div><label>Cidade</label><input id="cad_cidade" /></div><div><label>Estado</label><input id="cad_estado" /></div><div><label>CEP</label><input id="cad_cep" /></div><div><label>CPF</label><input id="cad_cpf" /></div><div><label>Login</label><input id="cad_login" /></div><div><label>Senha</label><input id="cad_senha" type="password" /></div></div><div><label>Confirma Senha</label><input id="cad_senha2" type="password" /></div><button class="btn" onclick="cadastrarCliente()">Cadastrar Cliente</button><div class="msg" id="cadastroClienteMsg"></div></div></div></section>
+
+  
+ <section id="screen-cadastro-cliente" class="screen hidden">
+  <div class="page">
+    <div class="toolbar">
+      <h2>Cadastro de Cliente</h2>
+      <button class="btn back" onclick="voltarHome()">Voltar</button>
+    </div>
+
+    <div class="card form-area">
+      <div class="grid-2">
+        <div><label>Nome</label><input id="cad_nome" /></div>
+        <div><label>Endereço</label><input id="cad_endereco" /></div>
+        <div><label>Cidade</label><input id="cad_cidade" /></div>
+        <div><label>Estado</label><input id="cad_estado" /></div>
+        <div><label>CEP</label><input id="cad_cep" /></div>
+        <div><label>CPF</label><input id="cad_cpf" /></div>
+        <div><label>Login</label><input id="cad_login" /></div>
+        <div><label>Senha</label><input id="cad_senha" type="password" /></div>
+      </div>
+
+      <div>
+        <label>Confirma Senha</label>
+        <input id="cad_senha2" type="password" />
+      </div>
+
+      <!-- ALTERAÇÃO AQUI -->
+      <button class="btn" onclick="abrirModalTermosCadastro()">
+        Cadastrar Cliente
+      </button>
+
+      <div class="msg" id="cadastroClienteMsg"></div>
+    </div>
+  </div>
+</section>
+  
+  
+  
   <section id="screen-faq" class="screen hidden"><div class="page"><div class="toolbar"><h2>Perguntas Frequentes</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card faq-lista"><div class="faq-item"><div class="faq-pergunta">Como funciona a entrega?</div><div class="faq-resposta">A entrega é realizada em até <strong>12 dias úteis</strong>, contados a partir da confirmação da compra e envio do produto.</div></div><div class="faq-item"><div class="faq-pergunta">Como é calculado o frete?</div><div class="faq-resposta">O frete é calculado com base na <strong>tabela dos Correios</strong>, considerando o <strong>peso do produto</strong> e o <strong>local de entrega no Brasil</strong>.</div></div><div class="faq-item"><div class="faq-pergunta">Os impostos já aparecem antes da compra?</div><div class="faq-resposta">Sim. Todos os <strong>impostos e custos estão discriminados no momento da escolha do produto</strong>, garantindo total transparência antes da finalização da compra.</div></div><div class="faq-item"><div class="faq-pergunta">Como acompanho meu pedido?</div><div class="faq-resposta">Assim que o produto chega ao Brasil, você recebe o <strong>código de rastreamento (tracking)</strong> dos Correios para acompanhar a entrega.</div></div><div class="faq-item"><div class="faq-pergunta">Quais formas de pagamento são aceitas?</div><div class="faq-resposta">Aceitamos <strong>cartões de crédito nacionais</strong>, <strong>cartões de crédito internacionais</strong> e <strong>PIX</strong>.</div></div></div></div></section>
   <section id="screen-termos" class="screen hidden"><div class="page"><div class="toolbar"><h2>Termos e Condições</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card" style="line-height:1.7; color:#586d64;"><p>Ao utilizar a plataforma Larah Imports, o usuário declara estar de acordo com as regras de uso do sistema, políticas comerciais, prazos operacionais e condições de compra aplicáveis.</p><p>Os valores apresentados no sistema podem incluir estimativas de frete e tributos, sujeitos à conferência final conforme a operação.</p><p>O cliente é responsável pela veracidade das informações fornecidas no cadastro e nos pedidos realizados.</p></div></div></section>
   <section id="screen-privacidade" class="screen hidden"><div class="page"><div class="toolbar"><h2>Política de Privacidade</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card" style="line-height:1.7; color:#586d64;"><p>A Larah Imports poderá utilizar os dados informados pelo cliente exclusivamente para cadastro, processamento de pedidos, comunicação operacional e melhorias da experiência no sistema.</p><p>As informações pessoais não devem ser compartilhadas com terceiros fora das hipóteses necessárias para a operação logística, financeira e legal do serviço.</p><p>Ao utilizar a plataforma, o usuário concorda com o tratamento de seus dados nos termos desta política.</p></div></div></section>
