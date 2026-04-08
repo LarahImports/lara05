@@ -2396,7 +2396,7 @@ async function finalizarPagamentoCartao() {
     if (msg) msg.innerText = 'Gerando token do cartão...';
 
     const tokenResponse = await mp.createCardToken({
-      cardNumber: document.getElementById("cardNumber").value,
+      cardNumber: document.getElementById("cardNumber").value.replace(/\s|-/g, ''),
       cardholderName: document.getElementById("cardName").value,
       cardExpirationMonth: document.getElementById("cardMonth").value,
       cardExpirationYear: document.getElementById("cardYear").value,
