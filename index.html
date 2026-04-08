@@ -1317,7 +1317,7 @@ async function carregarDolarTurismo() {
   
 function imagemProdutoHtml(base64){ return base64 ? '<img src="' + base64 + '" alt="Produto">' : 'Imagem'; }
 
-function excluirCliente() {
+async function excluirCliente() {
   const cpf = document.getElementById("cpfExcluirCliente").value.trim();
   const nome = document.getElementById("nomeExcluirCliente").value.trim();
   const msg = document.getElementById("excluirClienteMsg");
@@ -1327,24 +1327,27 @@ function excluirCliente() {
     return;
   }
 
-  let clientes = JSON.parse(localStorage.getItem("clientes")) || [];
+  try {
+    const resposta = await fetch('/api/clientes', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cpf, nome })
+    });
 
-  const totalAntes = clientes.length;
+    const dados = await resposta.json();
 
-  clientes = clientes.filter(c => {
-    if (cpf && c.cpf === cpf) return false;
-    if (nome && c.nome.toLowerCase().includes(nome.toLowerCase())) return false;
-    return true;
-  });
+    if (!resposta.ok) {
+      msg.innerText = dados.erro || 'Erro ao excluir cliente.';
+      return;
+    }
 
-  localStorage.setItem("clientes", JSON.stringify(clientes));
-
-  const totalDepois = clientes.length;
-
-  if (totalDepois < totalAntes) {
-    msg.innerText = "Cliente(s) excluído(s) com sucesso.";
-  } else {
-    msg.innerText = "Nenhum cliente encontrado.";
+    msg.innerText = `Cliente(s) excluído(s) com sucesso. Total removido: ${dados.removidos}`;
+    
+    document.getElementById("cpfExcluirCliente").value = '';
+    document.getElementById("nomeExcluirCliente").value = '';
+  } catch (error) {
+    console.error(error);
+    msg.innerText = 'Erro de conexão ao excluir cliente.';
   }
 }
   
