@@ -1503,6 +1503,7 @@ async function loginSistema(){
 }
 
 function logoutSistema(){
+  esconderFaleConosco();
   clienteAtual = null;
   adminLogado = false;
   salvarSessaoCliente();
