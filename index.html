@@ -1329,8 +1329,18 @@ async function carregarDolarTurismo() {
   }
 }
 function mostrarFaleConosco() {
+  const btn = document.getElementById("btnFaleConosco");
 
-  document.getElementById("btnFaleConosco").classList.remove("hidden");
+  btn.classList.remove("hidden");
+
+  // se estiver na tela do cliente, empurra mais pra esquerda
+  const telaCliente = document.getElementById("screen-cliente");
+  
+  if (!telaCliente.classList.contains("hidden")) {
+    btn.style.right = "140px";
+  } else {
+    btn.style.right = "18px";
+  }
 }
 
 function esconderFaleConosco() {
