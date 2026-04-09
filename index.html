@@ -1329,6 +1329,13 @@ async function carregarDolarTurismo() {
   }
 }
   
+function mostrarFaleConosco() {
+  document.getElementById("btnFaleConosco").classList.remove("hidden");
+   }
+
+function esconderFaleConosco() {
+  document.getElementById("btnFaleConosco").classList.add("hidden");
+  }
   
 function imagemProdutoHtml(base64){ return base64 ? '<img src="' + base64 + '" alt="Produto">' : 'Imagem'; }
 
@@ -1448,6 +1455,7 @@ async function loginSistema(){
   if (login === LOGIN_ADM && senha === SENHA_ADM){
     adminLogado = true;
     clienteAtual = null;
+    esconderFaleConosco(); // AQUI
     if (msg) msg.innerText = '';
     atualizarPainelAdministrativo();
     abrirTela('screen-admin');
@@ -1476,6 +1484,8 @@ async function loginSistema(){
     renderAreasCliente();
     carregarPromocoes();
     renderFeaturedHome();
+
+    mostrarFaleConosco(); // AQUI
 
     if (msg) msg.innerText = '';
 
@@ -2476,6 +2486,7 @@ window.onload = function() {
   carregarAreasDoBanco();
   carregarProdutosDoBanco();
   carregarDolarTurismo();
+  esconderFaleConosco();
 }
 
 </script>
