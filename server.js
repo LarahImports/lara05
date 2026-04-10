@@ -564,6 +564,38 @@ app.get('/api/dolar', async (req, res) => {
   }
 });
 
+
+app.get("/api/pedidos/cliente/:clienteId", async (req, res) => {
+  try {
+    const { clienteId } = req.params;
+
+    const result = await pool.query(
+      `SELECT 
+          pe.id,
+          pe.cliente_id,
+          pe.produto_id,
+          pe.total,
+          pe.status,
+          pe.codigo_rastreio,
+          pe.local_despacho,
+          pe.ultima_atualizacao,
+          pe.observacao_envio,
+          p.nome
+       FROM pedidos pe
+       JOIN produtos p ON p.id = pe.produto_id
+       WHERE pe.cliente_id = $1
+       ORDER BY pe.id DESC`,
+      [Number(clienteId)]
+    );
+
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar pedidos do cliente" });
+  }
+});
+
 app.get("/api/dolar-turismo", async (req, res) => {
   try {
     const hoje = new Date();
