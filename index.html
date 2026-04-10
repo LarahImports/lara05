@@ -2541,6 +2541,28 @@ async function finalizarPagamentoCartao() {
       msg.innerText = data.mensagem || 'Pagamento aprovado com sucesso!';
     }
 
+    const respostaPedido = await fetch('/api/pedidos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        cliente_id: Number(clienteAtual.id),
+        produto_id: Number(produtoDetalheAtual.id),
+        forma_pagamento: 'CARTAO',
+        total: valor
+      })
+    });
+
+    const pedido = await respostaPedido.json();
+    console.log('PEDIDO CARTAO SALVO:', pedido);
+
+    if (!respostaPedido.ok) {
+      throw new Error(pedido.erro || 'Erro ao salvar pedido do cartão');
+    }
+
+    ultimoPedidoId = pedido.id;
+
   } catch (err) {
     console.error('ERRO COMPLETO CARTAO:', err);
     if (msg) {
@@ -2548,6 +2570,8 @@ async function finalizarPagamentoCartao() {
     }
   }
 }
+
+  
 function aceitarTermosCadastro() {
   cadastrarCliente();
 }
