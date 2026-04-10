@@ -545,18 +545,28 @@ app.get('/api/dolar', async (req, res) => {
 app.get("/api/dolar-turismo", async (req, res) => {
   try {
     const hoje = new Date();
-    const dd = String(hoje.getDate()).padStart(2, "0");
-    const mm = String(hoje.getMonth() + 1).padStart(2, "0");
-    const yyyy = hoje.getFullYear();
 
-    const dataBCB = `${mm}-${dd}-${yyyy}`;
+    for (let i = 0; i < 7; i++) {
+      const dataTeste = new Date(hoje);
+      dataTeste.setDate(hoje.getDate() - i);
 
-    const url = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${dataBCB}'&$top=1&$format=json`;
+      const dd = String(dataTeste.getDate()).padStart(2, "0");
+      const mm = String(dataTeste.getMonth() + 1).padStart(2, "0");
+      const yyyy = dataTeste.getFullYear();
 
-    const resposta = await fetch(url);
-    const dolarData = await resposta.json();
+      const dataBCB = `${mm}-${dd}-${yyyy}`;
 
-    return res.json(dolarData);
+      const url = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${dataBCB}'&$top=1&$format=json`;
+
+      const resposta = await fetch(url);
+      const dolarData = await resposta.json();
+
+      if (dolarData?.value?.length) {
+        return res.json(dolarData);
+      }
+    }
+
+    return res.status(404).json({ erro: "Cotação não encontrada nos últimos 7 dias." });
   } catch (error) {
     console.error("Erro ao buscar dólar turismo:", error);
     return res.status(500).json({ erro: "Erro ao buscar dólar turismo" });
