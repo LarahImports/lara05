@@ -1315,7 +1315,7 @@ async function carregarDolarTurismo() {
     console.log('RESPOSTA API DOLAR:', text);
 
     const data = JSON.parse(text);
-    const cotacaoVenda = Number(data?.value?.[0]?.cotacaoVenda) * 1.04;
+    const cotacaoVenda = Number(data?.value?.[0]?.cotacaoVenda) * 1.08;
     window.dolarAtual = cotacaoVenda;
 
     if (!cotacaoVenda) {
