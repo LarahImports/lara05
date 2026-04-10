@@ -104,13 +104,17 @@ app.get("/criar-tabelas", async (req, res) => {
         cliente_id INTEGER,
         produto_id INTEGER
       );
-
       CREATE TABLE IF NOT EXISTS pedidos (
         id SERIAL PRIMARY KEY,
         cliente_id INTEGER,
         produto_id INTEGER,
         forma_pagamento TEXT,
-        total NUMERIC
+        total NUMERIC,
+        status TEXT DEFAULT 'pendente',
+        codigo_rastreio TEXT,
+        local_despacho TEXT,
+        ultima_atualizacao TEXT,
+        observacao_envio TEXT
       );
 
       CREATE TABLE IF NOT EXISTS areas (
@@ -123,8 +127,26 @@ app.get("/criar-tabelas", async (req, res) => {
         valor TEXT
       );
     `);
+     await pool.query(`
+       ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pendente';
+     `);
 
-    res.send("Tabelas criadas com sucesso 🚀");
+     await pool.query(`
+       ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS codigo_rastreio TEXT;
+     `);
+
+     await pool.query(`
+      ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS local_despacho TEXT;
+     `);
+
+     await pool.query(`
+      ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS ultima_atualizacao TEXT;
+     `);
+
+     await pool.query(`
+       ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS observacao_envio TEXT;
+     `);
+    res.send("Tabelas criadas/atualizadas com sucesso 🚀");
   } catch (error) {
     console.error(error);
     res.status(500).send("Erro ao criar tabelas");
