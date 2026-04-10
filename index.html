@@ -1932,41 +1932,54 @@ async function verificarPagamentoAprovado(id) {
 async function renderCarrinhoCliente() {
   const conteudo = safe('carrinhoClienteConteudo');
   const resumo = safe('carrinhoResumoBox');
+  const historico = safe('historicoPedidosCliente');
 
-  if (!conteudo || !resumo) return;
+  if (!conteudo || !resumo || !historico) return;
 
   if (!clienteAtual || !clienteAtual.id) {
     conteudo.innerHTML = '<div class="empty">Cliente não identificado.</div>';
     resumo.innerHTML = '';
+    historico.innerHTML = '<div class="empty">Cliente não identificado.</div>';
     return;
   }
 
   let itens = [];
+  let pedidosCliente = [];
 
   try {
-    const resposta = await fetch(`/api/carrinho/${Number(clienteAtual.id)}`);
-    const dados = await resposta.json();
+    const [respostaCarrinho, respostaPedidos] = await Promise.all([
+      fetch(`/api/carrinho/${Number(clienteAtual.id)}`),
+      fetch(`/api/pedidos/cliente/${Number(clienteAtual.id)}`)
+    ]);
+
+    const dadosCarrinho = await respostaCarrinho.json();
+    const dadosPedidos = await respostaPedidos.json();
 
     console.log('GET CARRINHO:', {
       clienteId: Number(clienteAtual.id),
-      retorno: dados
+      retorno: dadosCarrinho
     });
 
-    if (!resposta.ok) {
-      conteudo.innerHTML = `<div class="empty">${dados.erro || 'Erro ao carregar carrinho.'}</div>`;
+    console.log('GET PEDIDOS CLIENTE:', {
+      clienteId: Number(clienteAtual.id),
+      retorno: dadosPedidos
+    });
+
+    if (!respostaCarrinho.ok) {
+      conteudo.innerHTML = `<div class="empty">${dadosCarrinho.erro || 'Erro ao carregar carrinho.'}</div>`;
       resumo.innerHTML = '';
       return;
     }
 
-    itens = Array.isArray(dados) ? dados : [];
+    itens = Array.isArray(dadosCarrinho) ? dadosCarrinho : [];
+    pedidosCliente = Array.isArray(dadosPedidos) ? dadosPedidos : [];
   } catch (error) {
-    console.error('Erro ao carregar carrinho:', error);
+    console.error('Erro ao carregar carrinho/pedidos:', error);
     conteudo.innerHTML = '<div class="empty">Erro ao carregar carrinho.</div>';
     resumo.innerHTML = '';
+    historico.innerHTML = '<div class="empty">Erro ao carregar compras realizadas.</div>';
     return;
   }
-
-  const pedidosCliente = clienteAtual ? (pedidos[clienteAtual.login] || []) : [];
 
   if (!itens.length) {
     conteudo.innerHTML = '<div class="empty">Carrinho vazio.</div>';
@@ -2012,8 +2025,50 @@ async function renderCarrinhoCliente() {
     <div class="resumo-linha"><span>Total Final (R$)</span><strong>R$ ${(resumoCarrinho.total * (window.dolarAtual || 0)).toFixed(2).replace('.', ',')}</strong></div>
     <div class="resumo-linha"><span>Comprados</span><strong>${pedidosCliente.length}</strong></div>
   `;
+
+  if (!pedidosCliente.length) {
+    historico.innerHTML = '<div class="empty">Nenhuma compra realizada até agora.</div>';
+    return;
+  }
+
+  historico.innerHTML = pedidosCliente.map((p) => `
+    <div class="card" style="margin-bottom:12px; padding:14px;">
+      <div class="linha-admin">
+        <div>
+          <strong>Pedido #${p.id}</strong><br>
+          <span>${p.nome}</span>
+        </div>
+        <div style="text-align:right;">
+          <strong>R$ ${Number(p.total || 0).toFixed(2).replace('.', ',')}</strong><br>
+          <span>${traduzirStatusPedido(p.status)}</span>
+        </div>
+      </div>
+
+      <div style="margin-top:10px; color:#7a5a48; line-height:1.6;">
+        <div><strong>Status:</strong> ${traduzirStatusPedido(p.status)}</div>
+        <div><strong>Onde está:</strong> ${p.local_despacho || 'Aguardando atualização'}</div>
+        <div><strong>Rastreio:</strong> ${p.codigo_rastreio || 'Ainda não informado'}</div>
+        <div><strong>Última atualização:</strong> ${p.ultima_atualizacao || 'Sem atualização'}</div>
+        ${p.observacao_envio ? `<div><strong>Obs.:</strong> ${p.observacao_envio}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
 }
 
+function traduzirStatusPedido(status) {
+  const mapa = {
+    pendente: 'Pendente',
+    pago: 'Pago',
+    separando: 'Separando produto',
+    despachado: 'Despachado',
+    a_caminho: 'A caminho',
+    entregue: 'Entregue'
+  };
+
+  return mapa[status] || status || 'Pendente';
+}
+
+  
 function atualizarPainelAdministrativo(){
   if(safe('kpiTotalProdutos')) safe('kpiTotalProdutos').innerText = produtos.length;
   if(safe('kpiPromocoes')) safe('kpiPromocoes').innerText = produtos.filter(p => p.status === 'P').length;
