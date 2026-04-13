@@ -2950,7 +2950,7 @@ function fecharModalConfirmacaoCadastro() {
     fecharModalConfirmacaoCadastro();
 
     // opcional: já logar o cliente
-    clienteAtual = data;
+    clienteAtual = { ...cadastroPendente, id: data.id || null };
 
     abrirTela('screen-cliente');
 
@@ -2961,6 +2961,7 @@ function fecharModalConfirmacaoCadastro() {
 }
   
   async function iniciarCadastroComConfirmacao() {
+  
   const nome = document.getElementById('cad_nome')?.value?.trim();
   const endereco = document.getElementById('cad_endereco')?.value?.trim();
   const cidade = document.getElementById('cad_cidade')?.value?.trim();
