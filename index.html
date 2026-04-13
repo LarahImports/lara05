@@ -2669,14 +2669,38 @@ function fecharModalConfirmacaoCadastro() {
   };
 
 
-  console.log("Cadastro pendente:", cadastroPendente);
+  try {
+  const resposta = await fetch('/api/cadastro/enviar-codigo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      email: login,
+      nome: nome
+    })
+  });
+
+  const dados = await resposta.json();
+
+  if (!resposta.ok) {
+    if (msg) msg.innerText = dados.erro || 'Erro ao enviar o código.';
+    abrirTela('screen-cadastro-cliente');
+    return;
+  }
 
   abrirTela('screen-cadastro-cliente');
   abrirModalConfirmacaoCadastro();
 
   if (msg) {
-    msg.innerText = 'Cadastro preparado. Agora informe o código no pop-up.';
+    msg.innerText = 'Código enviado para o seu e-mail.';
   }
+
+} catch (error) {
+  console.error(error);
+  if (msg) msg.innerText = 'Erro ao conectar com o servidor.';
+  abrirTela('screen-cadastro-cliente');
+}
 }
 
 </script>
