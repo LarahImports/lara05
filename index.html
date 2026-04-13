@@ -1929,6 +1929,20 @@ async function verificarPagamentoAprovado(id) {
     }
   }, 3000);
 }
+function comprarSelecionadosCarrinho() {
+  const checks = document.querySelectorAll('.check-carrinho-compra:checked');
+
+  if (!checks.length) {
+    alert('Selecione pelo menos um produto.');
+    return;
+  }
+
+  const idsSelecionados = Array.from(checks).map(c => Number(c.value));
+
+  console.log("Selecionados para compra:", idsSelecionados);
+
+  alert("Próximo passo: vamos enviar esses produtos para o checkout.");
+}
 async function renderCarrinhoCliente() {
   const conteudo = safe('carrinhoClienteConteudo');
   const resumo = safe('carrinhoResumoBox');
@@ -1985,16 +1999,28 @@ async function renderCarrinhoCliente() {
     conteudo.innerHTML = '<div class="empty">Carrinho vazio.</div>';
   } else {
     conteudo.innerHTML = itens.map((p, i) => `
-      <div class="linha-admin">
-        <span>${i + 1}. ${p.nome}</span>
-        <div style="display:flex; align-items:center; gap:10px;">
-          <strong>${moedaUS(p.preco)}</strong>
-          <button class="btn-mini excluir" onclick="removerDoCarrinho(${p.id})">
-            Cancelar
-          </button>
-        </div>
-      </div>
-    `).join('');
+  <div class="linha-admin">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <input type="checkbox" class="check-carrinho-compra" value="${p.id}">
+      <span>${i + 1}. ${p.nome}</span>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:10px;">
+      <strong>${moedaUS(p.preco)}</strong>
+      <button class="btn-mini excluir" onclick="removerDoCarrinho(${p.id})">
+        Cancelar
+      </button>
+    </div>
+    </div>
+   `).join('');
+     // 🔥 ADICIONAR AQUI
+  conteudo.innerHTML += `
+    <div style="margin-top:16px; display:flex; justify-content:flex-end;">
+      <button class="btn" style="width:auto;" onclick="comprarSelecionadosCarrinho()">
+        Comprar selecionados
+      </button>
+    </div>
+  `;
   }
 
   const resumoCarrinho = itens.reduce((acc, p) => {
