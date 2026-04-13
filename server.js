@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
+const nodemailer = require("nodemailer");
 
 const { MercadoPagoConfig, Payment } = require("mercadopago");
 
@@ -12,8 +13,19 @@ const mpClient = new MercadoPagoConfig({
 });
 
 let pagamentosAprovados = {};
+let codigosCadastro = {};
 
 const app = express();
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT || 587),
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+});
+
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.static(__dirname));
@@ -824,3 +836,54 @@ app.get("/criar-forma-pagamento-pedidos", async (req, res) => {
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000");
 });
+
+app.post("/api/cadastro/enviar-codigo", async (req, res) => {
+  try {
+    const { email, nome } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ erro: "E-mail não informado." });
+    }
+
+    // 🔥 gera código de 5 dígitos
+    const codigo = String(Math.floor(Math.random() * 100000)).padStart(5, "0");
+
+    // guarda em memória
+    codigosCadastro[email.toLowerCase()] = {
+      codigo,
+      expiraEm: Date.now() + 10 * 60 * 1000 // 10 minutos
+    };
+
+    console.log("CODIGO GERADO PARA:", email, codigo);
+
+    // envia e-mail
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM,
+      to: email,
+      subject: "Codigo de Confirmacao de seu cadastro no Site Larahimports.com",
+      text:
+`Olá ${nome || ""},
+
+Seu código de confirmação é: ${codigo}
+
+Digite esse código no site para concluir seu cadastro.
+
+Larah Imports`
+    });
+
+    res.json({ sucesso: true });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao enviar código." });
+  }
+});
+
+
+
+
+
+
+
+
+
