@@ -1903,7 +1903,8 @@ async function colocarNoCarrinhoDetalhe() {
 }
 
 async function verificarPagamentoAprovado(id) {
-  const msg = safe('detalheProdutoMsg');
+  const msgDetalhe = safe('detalheProdutoMsg');
+  const msgCarrinho = safe('pagamentoSelecionadosMsg');
 
   const intervalo = setInterval(async () => {
     try {
@@ -1913,21 +1914,38 @@ async function verificarPagamentoAprovado(id) {
       if (dados.aprovado) {
         clearInterval(intervalo);
 
-        // 🔥 NOVO: atualizar mensagem na tela
-        if (msg) {
-          msg.innerHTML = `
-            <strong style="color:green;">Pagamento aprovado!</strong><br><br>
-            Seu pedido foi confirmado com sucesso.<br>
-            Já está sendo preparado para redespacho.<br><br>
-            <small>Em breve você receberá atualizações do envio.</small>
-          `;
-        }
+        if (itensSelecionadosParaCompra && itensSelecionadosParaCompra.length) {
+          const valor = obterTotalSelecionadosBRL();
 
-        // 🔥 opcional: atualizar também no banco (garantia)
-        if (ultimoPedidoId) {
-          fetch('/api/pedidos/' + ultimoPedidoId + '/status')
-            .then(r => r.json())
-            .then(p => console.log('Status do pedido:', p.status));
+          await salvarPedidosSelecionados(valor);
+          await removerSelecionadosDoCarrinho();
+
+          if (msgCarrinho) {
+            msgCarrinho.innerHTML = `
+              <strong style="color:green;">Pagamento aprovado!</strong><br><br>
+              Seu pedido foi confirmado com sucesso.<br>
+              Já está sendo preparado para redespacho.<br><br>
+              <small>Em breve você receberá atualizações do envio.</small>
+            `;
+          }
+
+          itensSelecionadosParaCompra = [];
+          renderCarrinhoCliente();
+        } else {
+          if (msgDetalhe) {
+            msgDetalhe.innerHTML = `
+              <strong style="color:green;">Pagamento aprovado!</strong><br><br>
+              Seu pedido foi confirmado com sucesso.<br>
+              Já está sendo preparado para redespacho.<br><br>
+              <small>Em breve você receberá atualizações do envio.</small>
+            `;
+          }
+
+          if (ultimoPedidoId) {
+            fetch('/api/pedidos/' + ultimoPedidoId + '/status')
+              .then(r => r.json())
+              .then(p => console.log('Status do pedido:', p.status));
+          }
         }
       }
 
@@ -1936,7 +1954,6 @@ async function verificarPagamentoAprovado(id) {
     }
   }, 3000);
 }
-
   function abrirPagamentoSelecionadosCarrinho() {
   if (!itensSelecionadosParaCompra.length) {
     alert('Selecione pelo menos um produto no carrinho.');
@@ -2018,7 +2035,8 @@ async function iniciarPagamentoPixSelecionados() {
         <textarea style="width:100%; min-height:120px; margin-top:8px;">${dados.qr_code}</textarea>
       `;
     }
-
+    window.ultimoPagamentoGerado = dados.id;
+    verificarPagamentoAprovado(dados.id);
   } catch (error) {
     console.error(error);
     if (msg) msg.innerText = error.message || 'Erro ao gerar PIX.';
@@ -2079,12 +2097,67 @@ async function finalizarPagamentoCartaoSelecionados() {
       throw new Error(data?.erro || 'Erro no pagamento');
     }
 
-    if (msg) msg.innerText = data.mensagem || 'Pagamento aprovado!';
+   await salvarPedidosSelecionados(valor);
+   await removerSelecionadosDoCarrinho();
 
+   if (msg) {
+     msg.innerText = `Pagamento aprovado!
+
+     Seu pedido foi confirmado com sucesso.
+     Já está sendo preparado para redespacho.
+
+      Em breve você receberá atualizações do envio.`;
+    }
+
+itensSelecionadosParaCompra = [];
+renderCarrinhoCliente();
   } catch (err) {
     console.error(err);
     if (msg) {
       msg.innerText = 'Erro no pagamento: ' + (err.message || 'Erro desconhecido');
+    }
+  }
+}
+
+  async function salvarPedidosSelecionados(totalPago) {
+  if (!clienteAtual || !clienteAtual.id) {
+    throw new Error('Cliente não identificado.');
+  }
+
+  if (!itensSelecionadosParaCompra.length) {
+    throw new Error('Nenhum item selecionado para salvar pedido.');
+  }
+
+  for (const item of itensSelecionadosParaCompra) {
+    const respostaPedido = await fetch('/api/pedidos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cliente_id: Number(clienteAtual.id),
+        produto_id: Number(item.produto_id || item.id),
+        forma_pagamento: 'CARRINHO',
+        total: Number(totalPago || 0)
+      })
+    });
+
+    const pedido = await respostaPedido.json();
+
+    if (!respostaPedido.ok) {
+      throw new Error(pedido.erro || 'Erro ao salvar pedido do carrinho');
+    }
+  }
+}
+
+async function removerSelecionadosDoCarrinho() {
+  for (const item of itensSelecionadosParaCompra) {
+    const resposta = await fetch(`/api/carrinho/${Number(item.id)}`, {
+      method: 'DELETE'
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      throw new Error(dados.erro || 'Erro ao remover item do carrinho.');
     }
   }
 }
