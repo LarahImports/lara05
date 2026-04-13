@@ -2908,7 +2908,7 @@ function fecharModalConfirmacaoCadastro() {
   modal.style.display = 'none';
 }
 
-  function confirmarCodigoCadastro() {
+  async function confirmarCodigoCadastro() {
   const codigo = document.getElementById('codigoConfirmacaoCadastro')?.value?.trim();
   const msg = document.getElementById('msgCodigoConfirmacaoCadastro');
 
@@ -2922,11 +2922,42 @@ function fecharModalConfirmacaoCadastro() {
     return;
   }
 
-  if (msg) {
-    msg.innerText = 'Código recebido. No próximo passo vamos validar e concluir o cadastro.';
+  // 🔥 valida com o código gerado
+  if (codigo !== window.codigoGeradoCadastro) {
+    if (msg) msg.innerText = 'Código inválido.';
+    return;
   }
 
-  console.log('Código digitado:', codigo);
+  try {
+    if (msg) msg.innerText = 'Finalizando cadastro...';
+
+    const res = await fetch('/api/clientes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cadastroPendente)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.erro || 'Erro ao cadastrar cliente');
+    }
+
+    if (msg) {
+      msg.innerText = 'Cadastro realizado com sucesso!';
+    }
+
+    fecharModalConfirmacaoCadastro();
+
+    // opcional: já logar o cliente
+    clienteAtual = data;
+
+    abrirTela('screen-cliente');
+
+  } catch (e) {
+    console.error(e);
+    if (msg) msg.innerText = 'Erro ao finalizar cadastro.';
+  }
 }
   
   async function iniciarCadastroComConfirmacao() {
