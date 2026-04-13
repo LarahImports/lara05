@@ -1205,9 +1205,16 @@
       <div class="card">
         <div id="carrinhoClienteConteudo"></div>
       </div>
+
       <div class="card">
         <h3 style="margin-top:0; color:#167a5d;">Resumo da Compra</h3>
         <div class="resumo-box" id="carrinhoResumoBox"></div>
+
+        <div style="margin-top:14px; display:flex; justify-content:flex-end;">
+          <button class="btn" style="width:auto;" onclick="abrirPagamentoSelecionadosCarrinho()">
+            Ir para pagamento
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1218,8 +1225,7 @@
   </div>
 </section>
 
-<script> 
-
+<script>
 // preview refresh
 const LOGIN_ADM = 'admin';
 const SENHA_ADM = '1234';
@@ -1929,6 +1935,15 @@ async function verificarPagamentoAprovado(id) {
       console.error('Erro ao verificar pagamento:', e);
     }
   }, 3000);
+}
+
+  function abrirPagamentoSelecionadosCarrinho() {
+  if (!itensSelecionadosParaCompra.length) {
+    alert('Selecione pelo menos um produto no carrinho.');
+    return;
+  }
+
+  alert('Próximo passo: vamos abrir a tela de pagamento dos itens selecionados.');
 }
 function comprarSelecionadosCarrinho() {
   const checks = document.querySelectorAll('.check-carrinho-compra:checked');
