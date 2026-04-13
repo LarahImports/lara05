@@ -1210,11 +1210,11 @@
         <h3 style="margin-top:0; color:#167a5d;">Resumo da Compra</h3>
         <div class="resumo-box" id="carrinhoResumoBox"></div>
 
-        <div style="margin-top:14px; display:flex; justify-content:flex-end;">
-          <button class="btn" style="width:auto;" onclick="abrirPagamentoSelecionadosCarrinho()">
-            Ir para pagamento
+        <div id="acoesPagamentoCarrinho" style="margin-top:14px; display:none; justify-content:flex-end;">
+           <button class="btn" style="width:auto;" onclick="abrirPagamentoSelecionadosCarrinho()">
+           Ir para pagamento
           </button>
-        </div>
+      </div>
       </div>
     </div>
 
@@ -1931,7 +1931,17 @@ async function verificarPagamentoAprovado(id) {
 
           itensSelecionadosParaCompra = [];
           renderCarrinhoCliente();
-        } else {
+
+          setTimeout(() => {
+            const resumo = safe('carrinhoResumoBox');
+          if (!resumo) return;
+ 
+           const botaoIrPagamento = resumo.querySelector('button[onclick="abrirPagamentoSelecionadosCarrinho()"]');
+          if (botaoIrPagamento) {
+             botaoIrPagamento.remove();
+           }
+           }, 100);
+           } else {
           if (msgDetalhe) {
             msgDetalhe.innerHTML = `
               <strong style="color:green;">Pagamento aprovado!</strong><br><br>
@@ -2208,6 +2218,10 @@ function comprarSelecionadosCarrinho() {
     <div class="resumo-linha"><span>Total Estimado (US$)</span><strong>${moedaUS(resumoSelecionado.total)}</strong></div>
     <div class="resumo-linha"><span>Total Final (R$)</span><strong>R$ ${(resumoSelecionado.total * (window.dolarAtual || 0)).toFixed(2).replace('.', ',')}</strong></div>
   `;
+  const acoes = safe('acoesPagamentoCarrinho');
+  if (acoes) {
+  acoes.style.display = 'flex';
+  }
 }
 
   
