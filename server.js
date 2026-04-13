@@ -175,8 +175,40 @@ app.post("/api/clientes", async (req, res) => {
       [nome, endereco, cidade, estado, cep, cpf, login, senha]
     );
 
+    // 🔥 ENVIO DE EMAIL DE BOAS-VINDAS
+    try {
+      await transporter.sendMail({
+        from: process.env.SMTP_FROM,
+        to: login,
+        subject: 'Bem-vindo à Larah Imports',
+        text: `Parabéns!
+
+Você acaba de acessar o sistema da Larah Imports, a melhor forma de realizar suas compras nos Estados Unidos com praticidade, segurança e transparência.
+
+Para sua tranquilidade, informamos que nossas operações no Brasil são representadas pela empresa Thomaz Assessoria em Organizações Ltda., responsável pelo gerenciamento dos recebimentos e suporte aos nossos clientes.
+
+Dessa forma, garantimos um atendimento seguro, confiável e respaldado por uma empresa com representação nacional, pronta para atender qualquer necessidade que você possa ter.
+
+Seus dados de acesso:
+Login: ${login}
+Senha: ${senha}
+
+Recomendamos que você mantenha essas informações em local seguro.
+
+Seja muito bem-vindo à Larah Imports.
+
+Atenciosamente,
+Equipe Larah Imports`
+      });
+
+      console.log('Email de boas-vindas enviado');
+    } catch (emailError) {
+      console.error('Erro ao enviar e-mail de boas-vindas:', emailError);
+    }
+
     res.json(result.rows[0]);
-    } catch (error) {
+
+  } catch (error) {
     console.error(error);
 
     if (error.code === '23505') {
@@ -192,6 +224,7 @@ app.post("/api/clientes", async (req, res) => {
     res.status(500).json({ erro: "Erro ao cadastrar cliente" });
   }
 });
+
 app.get("/api/foto-tela-principal", async (req, res) => {
   try {
     const result = await pool.query(`
