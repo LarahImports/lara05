@@ -1156,7 +1156,7 @@
     </div>
   </section>
 
-  <section id="screen-cadastro-cliente" class="screen hidden"><div class="page"><div class="toolbar"><h2>Cadastro de Cliente</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card form-area"><div class="grid-2"><div><label>Nome</label><input id="cad_nome" /></div><div><label>Endereço</label><input id="cad_endereco" /></div><div><label>Cidade</label><input id="cad_cidade" /></div><div><label>Estado</label><input id="cad_estado" /></div><div><label>CEP</label><input id="cad_cep" /></div><div><label>CPF</label><input id="cad_cpf" /></div><div><label>Login</label><input id="cad_login" /></div><div><label>Senha</label><input id="cad_senha" type="password" /></div></div><div><label>Confirma Senha</label><input id="cad_senha2" type="password" /></div><button class="btn" onclick="abrirTermosCadastro()">Cadastrar Cliente</button><div class="msg" id="cadastroClienteMsg"></div></div></div></section>
+  <section id="screen-cadastro-cliente" class="screen hidden"><div class="page"><div class="toolbar"><h2>Cadastro de Cliente</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card form-area"><div class="grid-2"><div><label>Nome</label><input id="cad_nome" /></div><div><label>Endereço</label><input id="cad_endereco" /></div><div><label>Cidade</label><input id="cad_cidade" /></div><div><label>Estado</label><input id="cad_estado" /></div><div><label>CEP</label><input id="cad_cep" /></div><div><label>CPF</label><input id="cad_cpf" /></div><div><label>Login (seu e-mail)</label><input id="cad_login" type="email" placeholder="seuemail@exemplo.com" /></div><div><label>Senha</label><input id="cad_senha" type="password" /></div></div><div><label>Confirma Senha</label><input id="cad_senha2" type="password" /></div><button class="btn" onclick="abrirTermosCadastro()">Cadastrar Cliente</button><div class="msg" id="cadastroClienteMsg"></div></div></div></section>
    <section id="screen-faq" class="screen hidden"><div class="page"><div class="toolbar"><h2>Perguntas Frequentes</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card faq-lista"><div class="faq-item"><div class="faq-pergunta">Como funciona a entrega?</div><div class="faq-resposta">A entrega é realizada em até <strong>12 dias úteis</strong>, contados a partir da confirmação da compra e envio do produto.</div></div><div class="faq-item"><div class="faq-pergunta">Como é calculado o frete?</div><div class="faq-resposta">O frete é calculado com base na <strong>tabela dos Correios</strong>, considerando o <strong>peso do produto</strong> e o <strong>local de entrega no Brasil</strong>.</div></div><div class="faq-item"><div class="faq-pergunta">Os impostos já aparecem antes da compra?</div><div class="faq-resposta">Sim. Todos os <strong>impostos e custos estão discriminados no momento da escolha do produto</strong>, garantindo total transparência antes da finalização da compra.</div></div><div class="faq-item"><div class="faq-pergunta">Como acompanho meu pedido?</div><div class="faq-resposta">Assim que o produto chega ao Brasil, você recebe o <strong>código de rastreamento (tracking)</strong> dos Correios para acompanhar a entrega.</div></div><div class="faq-item"><div class="faq-pergunta">Quais formas de pagamento são aceitas?</div><div class="faq-resposta">Aceitamos <strong>cartões de crédito nacionais</strong>, <strong>cartões de crédito internacionais</strong> e <strong>PIX</strong>.</div></div></div></div></section>
  
   <section id="screen-termos" class="screen hidden"><div class="page"><div class="toolbar"><h2>Termos e Condições</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="card" style="line-height:1.7; color:#586d64;"><p>Ao utilizar a plataforma Larah Imports, o usuário declara estar de acordo com as regras de uso do sistema, políticas comerciais, prazos operacionais e condições de compra aplicáveis.</p><p>Os valores apresentados no sistema podem incluir estimativas de frete e tributos, sujeitos à conferência final conforme a operação.</p><p>O cliente é responsável pela veracidade das informações fornecidas no cadastro e nos pedidos realizados.</p></div></div></section><section id="screen-termos-cadastro" class="screen hidden"><div class="page"><div class="toolbar"><h2>Termos e Condições</h2><button class="btn back" onclick="abrirTela('screen-cadastro-cliente')">Voltar</button></div><div class="card" style="line-height:1.7; color:#586d64;"><p>Ao utilizar a plataforma Larah Imports, o usuário declara estar de acordo com as regras de uso do sistema, políticas comerciais, prazos operacionais e condições de compra aplicáveis.</p><p>Os valores apresentados no sistema podem incluir estimativas de frete e tributos, sujeitos à conferência final conforme a operação.</p><p>O cliente é responsável pela veracidade das informações fornecidas no cadastro e nos pedidos realizados.</p><div style="display:flex; gap:12px; margin-top:18px; flex-wrap:wrap;"><button class="btn" style="width:auto;" onclick="aceitarTermosCadastro()">Aceito os termos</button><button class="secundario-btn" type="button" onclick="abrirTela('screen-cadastro-cliente')">Não aceito</button></div></div></div></section>
@@ -1259,7 +1259,7 @@ async function carregarProdutosDoBanco() {
   }
 }
 
-
+let cadastroPendente = null;
 let clienteAtual = null;
 let adminLogado = false;
 let contextoCatalogo = 'publico';
@@ -2571,9 +2571,8 @@ async function finalizarPagamentoCartao() {
   }
 }
 
-  
 function aceitarTermosCadastro() {
-  cadastrarCliente();
+  iniciarCadastroComConfirmacao();
 }
 function abrirTermosCadastro() {
   abrirTela('screen-termos-cadastro');
@@ -2583,6 +2582,101 @@ window.onload = function() {
   carregarProdutosDoBanco();
   carregarDolarTurismo();
   esconderFaleConosco();
+}
+
+  function emailValido(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+function abrirModalConfirmacaoCadastro() {
+  const modal = document.getElementById('modalConfirmacaoCadastro');
+  const campo = document.getElementById('codigoConfirmacaoCadastro');
+  const msg = document.getElementById('msgCodigoConfirmacaoCadastro');
+
+  if (msg) msg.innerText = '';
+  if (campo) campo.value = '';
+
+  modal.classList.remove('hidden');
+  modal.style.display = 'flex';
+}
+
+function fecharModalConfirmacaoCadastro() {
+  const modal = document.getElementById('modalConfirmacaoCadastro');
+  modal.classList.add('hidden');
+  modal.style.display = 'none';
+}
+
+  function confirmarCodigoCadastro() {
+  const codigo = document.getElementById('codigoConfirmacaoCadastro')?.value?.trim();
+  const msg = document.getElementById('msgCodigoConfirmacaoCadastro');
+
+  if (!codigo) {
+    if (msg) msg.innerText = 'Digite o código.';
+    return;
+  }
+
+  if (!/^\d{5}$/.test(codigo)) {
+    if (msg) msg.innerText = 'O código deve ter 5 dígitos.';
+    return;
+  }
+
+  if (msg) {
+    msg.innerText = 'Código recebido. No próximo passo vamos validar e concluir o cadastro.';
+  }
+
+  console.log('Código digitado:', codigo);
+}
+  
+  async function iniciarCadastroComConfirmacao() {
+  const nome = document.getElementById('cad_nome')?.value?.trim();
+  const endereco = document.getElementById('cad_endereco')?.value?.trim();
+  const cidade = document.getElementById('cad_cidade')?.value?.trim();
+  const estado = document.getElementById('cad_estado')?.value?.trim();
+  const cep = document.getElementById('cad_cep')?.value?.trim();
+  const cpf = document.getElementById('cad_cpf')?.value?.trim();
+  const login = document.getElementById('cad_login')?.value?.trim().toLowerCase();
+  const senha = document.getElementById('cad_senha')?.value || '';
+  const senha2 = document.getElementById('cad_senha2')?.value || '';
+  const msg = document.getElementById('cadastroClienteMsg');
+
+  if (!nome || !login || !senha) {
+    if (msg) msg.innerText = 'Preencha nome, e-mail e senha.';
+    abrirTela('screen-cadastro-cliente');
+    return;
+  }
+
+  if (!emailValido(login)) {
+    if (msg) msg.innerText = 'Digite um e-mail válido.';
+    abrirTela('screen-cadastro-cliente');
+    return;
+  }
+
+  if (senha !== senha2) {
+    if (msg) msg.innerText = 'As senhas não coincidem.';
+    abrirTela('screen-cadastro-cliente');
+    return;
+  }
+
+  // salva os dados temporariamente
+  cadastroPendente = {
+    nome,
+    endereco,
+    cidade,
+    estado,
+    cep,
+    cpf,
+    login,
+    senha
+  };
+
+  /  // 🔥 por enquanto só vamos testar isso
+  console.log("Cadastro pendente:", cadastroPendente);
+
+  abrirTela('screen-cadastro-cliente');
+  abrirModalConfirmacaoCadastro();
+
+  if (msg) {
+    msg.innerText = 'Cadastro preparado. Agora informe o código no pop-up.';
+  }
 }
 
 </script>
@@ -2615,6 +2709,67 @@ const mp = new MercadoPago("APP_USR-feaed208-9c21-427c-baef-889f599033dd");
   Fale Conosco
 </a>
 
+  <div id="modalConfirmacaoCadastro" class="hidden" style="
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+">
+  <div style="
+    width: 92%;
+    max-width: 420px;
+    background: #fffaf5;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    font-family: Arial, sans-serif;
+  ">
+    <h3 style="margin:0 0 10px 0; color:#8f562f; font-family:Georgia,serif;">
+      Confirmar cadastro
+    </h3>
+
+    <p style="margin:0 0 12px 0; color:#6f4a33; line-height:1.5;">
+      Digite o código de confirmação de 5 dígitos enviado para seu e-mail.
+    </p>
+
+    <input
+      id="codigoConfirmacaoCadastro"
+      maxlength="5"
+      placeholder="00000"
+      style="
+        width:100%;
+        padding:12px;
+        border:1px solid #dcc6b4;
+        border-radius:12px;
+        background:#fff;
+        font-size:16px;
+        margin-bottom:10px;
+        text-align:center;
+        letter-spacing:4px;
+      "
+    />
+
+    <div id="msgCodigoConfirmacaoCadastro" style="
+      min-height:18px;
+      font-size:14px;
+      color:#7a5a48;
+      margin-bottom:12px;
+    "></div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn" style="width:auto;" onclick="confirmarCodigoCadastro()">
+        Confirmar código
+      </button>
+
+      <button class="secundario-btn" type="button" onclick="fecharModalConfirmacaoCadastro()">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
   
 </body>
 </html>
