@@ -1226,7 +1226,7 @@ const SENHA_ADM = '1234';
 
 let areas = [];
 let clientes = [];
-
+let itensCarrinhoAtual = [];
 let produtos = [];
 
 async function carregarProdutosDoBanco() {
@@ -1939,10 +1939,17 @@ function comprarSelecionadosCarrinho() {
 
   const idsSelecionados = Array.from(checks).map(c => Number(c.value));
 
-  console.log("Selecionados para compra:", idsSelecionados);
+  // 🔥 pegar objetos completos
+  const produtosSelecionados = itensCarrinhoAtual.filter(p =>
+    idsSelecionados.includes(p.id)
+  );
 
-  alert("Próximo passo: vamos enviar esses produtos para o checkout.");
+  console.log("Produtos selecionados:", produtosSelecionados);
+
+  alert("Agora já temos os produtos completos para enviar ao checkout.");
 }
+
+  
 async function renderCarrinhoCliente() {
   const conteudo = safe('carrinhoClienteConteudo');
   const resumo = safe('carrinhoResumoBox');
@@ -1986,6 +1993,7 @@ async function renderCarrinhoCliente() {
     }
 
     itens = Array.isArray(dadosCarrinho) ? dadosCarrinho : [];
+    itensCarrinhoAtual = itens;
     pedidosCliente = Array.isArray(dadosPedidos) ? dadosPedidos : [];
   } catch (error) {
     console.error('Erro ao carregar carrinho/pedidos:', error);
