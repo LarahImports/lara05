@@ -3017,6 +3017,8 @@ function fecharModalConfirmacaoCadastro() {
   });
 
   const dados = await resposta.json();
+  console.log('CODIGO RECEBIDO DO SERVIDOR:', dados.codigo);
+  window.codigoGeradoCadastro = String(dados.codigo || '').padStart(5, '0');
 
   if (!resposta.ok) {
     if (msg) msg.innerText = dados.erro || 'Erro ao enviar o código.';
