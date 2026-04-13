@@ -1970,11 +1970,58 @@ async function verificarPagamentoAprovado(id) {
     <div class="msg" id="pagamentoSelecionadosMsg" style="margin-top:10px;"></div>
   `;
 }
+function obterTotalSelecionadosBRL() {
+  if (!itensSelecionadosParaCompra.length) return 0;
 
-function iniciarPagamentoPixSelecionados() {
+  const resumoSelecionado = itensSelecionadosParaCompra.reduce((acc, p) => {
+    const preco = Number(p.preco || 0);
+    const r = calcularResumoFinanceiro(preco, p.peso || p.pesoGramas);
+    acc.total += Number(r.total || 0);
+    return acc;
+  }, { total: 0 });
+
+  return Number((resumoSelecionado.total * (window.dolarAtual || 0)).toFixed(2));
+}
+async function iniciarPagamentoPixSelecionados() {
   const msg = safe('pagamentoSelecionadosMsg');
-  if (msg) {
-    msg.innerText = 'Próximo passo: vamos gerar o PIX dos itens selecionados.';
+
+  try {
+    const valor = obterTotalSelecionadosBRL();
+
+    if (!valor || valor <= 0) {
+      if (msg) msg.innerText = 'Valor inválido para pagamento.';
+      return;
+    }
+
+    if (msg) msg.innerText = 'Gerando PIX...';
+
+    const resposta = await fetch('/api/pagamento/pix', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        valor,
+        descricao: 'Pagamento carrinho Larah Imports'
+      })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      throw new Error(dados.erro || 'Erro ao gerar pagamento PIX');
+    }
+
+    if (msg) {
+      msg.innerHTML = `
+        PIX gerado com sucesso.<br>
+        <img src="data:image/png;base64,${dados.qr_code_base64}" style="max-width:220px; display:block; margin:12px 0;">
+        <strong>Copia e cola:</strong><br>
+        <textarea style="width:100%; min-height:120px; margin-top:8px;">${dados.qr_code}</textarea>
+      `;
+    }
+
+  } catch (error) {
+    console.error(error);
+    if (msg) msg.innerText = error.message || 'Erro ao gerar PIX.';
   }
 }
 
@@ -1986,10 +2033,59 @@ function iniciarPagamentoCartaoSelecionados() {
   if (area) area.classList.remove('hidden');
 }
 
-function finalizarPagamentoCartaoSelecionados() {
+async function finalizarPagamentoCartaoSelecionados() {
   const msg = safe('pagamentoSelecionadosMsg');
-  if (msg) {
-    msg.innerText = 'Próximo passo: vamos processar o cartão dos itens selecionados.';
+
+  try {
+    if (msg) msg.innerText = 'Gerando token do cartão...';
+
+    const tokenResponse = await mp.createCardToken({
+      cardNumber: document.getElementById("cardNumberSel").value.replace(/\s|-/g, ''),
+      cardholderName: document.getElementById("cardNameSel").value,
+      cardExpirationMonth: document.getElementById("cardMonthSel").value,
+      cardExpirationYear: document.getElementById("cardYearSel").value,
+      securityCode: document.getElementById("cardCvvSel").value,
+      identificationType: "CPF",
+      identificationNumber: clienteAtual?.cpf || ""
+    });
+
+    if (msg) msg.innerText = 'Enviando pagamento...';
+
+    const valor = obterTotalSelecionadosBRL();
+
+    const emailCliente = clienteAtual?.email || clienteAtual?.login;
+    const emailValido = emailCliente && emailCliente.includes('@')
+      ? emailCliente
+      : 'cliente@larahimports.com';
+
+    const res = await fetch('/api/pagamento/cartao', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        valor: valor,
+        descricao: 'Pagamento carrinho Larah Imports',
+        token: tokenResponse.id,
+        parcelas: 1,
+        metodo_pagamento: tokenResponse.payment_method_id,
+        email: emailValido,
+        nome: clienteAtual?.nome || 'Cliente',
+        cpf: clienteAtual?.cpf || '00000000000'
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || data.sucesso === false) {
+      throw new Error(data?.erro || 'Erro no pagamento');
+    }
+
+    if (msg) msg.innerText = data.mensagem || 'Pagamento aprovado!';
+
+  } catch (err) {
+    console.error(err);
+    if (msg) {
+      msg.innerText = 'Erro no pagamento: ' + (err.message || 'Erro desconhecido');
+    }
   }
 }
   
