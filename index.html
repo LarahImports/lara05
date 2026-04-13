@@ -1940,18 +1940,29 @@ function comprarSelecionadosCarrinho() {
 
   const idsSelecionados = Array.from(checks).map(c => Number(c.value));
 
-  // 🔥 pegar objetos completos
   const produtosSelecionados = itensCarrinhoAtual.filter(p =>
     idsSelecionados.includes(p.id)
   );
 
-  // 🔥 salvar globalmente
   itensSelecionadosParaCompra = produtosSelecionados;
 
-  console.log("Produtos selecionados:", produtosSelecionados);
+  const resumo = safe('carrinhoResumoBox');
+  if (!resumo) return;
 
-  // 🔥 atualizar tela (isso atualiza o resumo da direita)
-  renderCarrinhoCliente();
+  const totalSelecionado = itensSelecionadosParaCompra.reduce((acc, item) => {
+    return acc + Number(item.preco || 0);
+  }, 0);
+
+  resumo.innerHTML = `
+    <div class="resumo-linha">
+      <span>Itens selecionados</span>
+      <strong>${itensSelecionadosParaCompra.length}</strong>
+    </div>
+    <div class="resumo-linha">
+      <span>Total</span>
+      <strong>${moedaUS(totalSelecionado)}</strong>
+    </div>
+  `;
 }
 
   
