@@ -1949,19 +1949,32 @@ function comprarSelecionadosCarrinho() {
   const resumo = safe('carrinhoResumoBox');
   if (!resumo) return;
 
-  const totalSelecionado = itensSelecionadosParaCompra.reduce((acc, item) => {
-    return acc + Number(item.preco || 0);
-  }, 0);
+  const resumoSelecionado = produtosSelecionados.reduce((acc, p) => {
+    const preco = Number(p.preco || 0);
+    const r = calcularResumoFinanceiro(preco, p.peso || p.pesoGramas);
+
+    acc.produtos += preco;
+    acc.frete += Number(r.freteDoor || 0);
+    acc.taxa += Number(r.taxaServico || 0);
+    acc.impostos += Number(r.ii || 0) + Number(r.icms || 0);
+    acc.total += Number(r.total || 0);
+    return acc;
+  }, {
+    produtos: 0,
+    frete: 0,
+    taxa: 0,
+    impostos: 0,
+    total: 0
+  });
 
   resumo.innerHTML = `
-    <div class="resumo-linha">
-      <span>Itens selecionados</span>
-      <strong>${itensSelecionadosParaCompra.length}</strong>
-    </div>
-    <div class="resumo-linha">
-      <span>Total</span>
-      <strong>${moedaUS(totalSelecionado)}</strong>
-    </div>
+    <div class="resumo-linha"><span>Itens selecionados</span><strong>${produtosSelecionados.length}</strong></div>
+    <div class="resumo-linha"><span>Produtos</span><strong>${moedaUS(resumoSelecionado.produtos)}</strong></div>
+    <div class="resumo-linha"><span>Frete</span><strong>${moedaUS(resumoSelecionado.frete)}</strong></div>
+    <div class="resumo-linha"><span>Taxa de serviço</span><strong>${moedaUS(resumoSelecionado.taxa)}</strong></div>
+    <div class="resumo-linha"><span>Impostos</span><strong>${moedaUS(resumoSelecionado.impostos)}</strong></div>
+    <div class="resumo-linha"><span>Total Estimado (US$)</span><strong>${moedaUS(resumoSelecionado.total)}</strong></div>
+    <div class="resumo-linha"><span>Total Final (R$)</span><strong>R$ ${(resumoSelecionado.total * (window.dolarAtual || 0)).toFixed(2).replace('.', ',')}</strong></div>
   `;
 }
 
