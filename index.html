@@ -1228,6 +1228,7 @@ let areas = [];
 let clientes = [];
 let itensCarrinhoAtual = [];
 let produtos = [];
+let itensSelecionadosParaCompra = [];
 
 async function carregarProdutosDoBanco() {
   try {
@@ -1944,9 +1945,13 @@ function comprarSelecionadosCarrinho() {
     idsSelecionados.includes(p.id)
   );
 
+  // 🔥 salvar globalmente
+  itensSelecionadosParaCompra = produtosSelecionados;
+
   console.log("Produtos selecionados:", produtosSelecionados);
 
-  alert("Agora já temos os produtos completos para enviar ao checkout.");
+  // 🔥 atualizar tela (isso atualiza o resumo da direita)
+  renderCarrinhoCliente();
 }
 
   
@@ -2030,35 +2035,29 @@ async function renderCarrinhoCliente() {
     </div>
   `;
   }
-
-  const resumoCarrinho = itens.reduce((acc, p) => {
-    const preco = Number(p.preco || 0);
-    const r = calcularResumoFinanceiro(preco, p.peso || p.pesoGramas);
-
-    acc.produtos += preco;
-    acc.frete += Number(r.freteDoor || 0);
-    acc.taxa += Number(r.taxaServico || 0);
-    acc.impostos += Number(r.ii || 0) + Number(r.icms || 0);
-    acc.total += Number(r.total || 0);
-    return acc;
-  }, {
-    produtos: 0,
-    frete: 0,
-    taxa: 0,
-    impostos: 0,
-    total: 0
-  });
+// 🔥 RESUMO BASEADO NOS SELECIONADOS
+if (!itensSelecionadosParaCompra.length) {
+  resumo.innerHTML = `
+    <div class="resumo-linha"><span>Itens selecionados</span><strong>0</strong></div>
+    <div class="resumo-linha"><span>Total</span><strong>${moedaUS(0)}</strong></div>
+  `;
+} else {
+  const totalSelecionado = itensSelecionadosParaCompra.reduce((acc, item) => {
+    return acc + Number(item.preco || 0);
+  }, 0);
 
   resumo.innerHTML = `
-    <div class="resumo-linha"><span>Itens no carrinho</span><strong>${itens.length}</strong></div>
-    <div class="resumo-linha"><span>Produtos</span><strong>${moedaUS(resumoCarrinho.produtos)}</strong></div>
-    <div class="resumo-linha"><span>Frete</span><strong>${moedaUS(resumoCarrinho.frete)}</strong></div>
-    <div class="resumo-linha"><span>Taxa de serviço</span><strong>${moedaUS(resumoCarrinho.taxa)}</strong></div>
-    <div class="resumo-linha"><span>Impostos</span><strong>${moedaUS(resumoCarrinho.impostos)}</strong></div>
-    <div class="resumo-linha"><span>Total Estimado (US$)</span><strong>${moedaUS(resumoCarrinho.total)}</strong></div>
-    <div class="resumo-linha"><span>Total Final (R$)</span><strong>R$ ${(resumoCarrinho.total * (window.dolarAtual || 0)).toFixed(2).replace('.', ',')}</strong></div>
-    <div class="resumo-linha"><span>Comprados</span><strong>${pedidosCliente.length}</strong></div>
+    <div class="resumo-linha">
+      <span>Itens selecionados</span>
+      <strong>${itensSelecionadosParaCompra.length}</strong>
+    </div>
+    <div class="resumo-linha">
+      <span>Total</span>
+      <strong>${moedaUS(totalSelecionado)}</strong>
+    </div>
   `;
+}
+  
 
   if (!pedidosCliente.length) {
     historico.innerHTML = '<div class="empty">Nenhuma compra realizada até agora.</div>';
