@@ -871,8 +871,8 @@ Digite esse código no site para concluir seu cadastro.
 Larah Imports`
     });
 
-    res.json({ sucesso: true });
-
+    res.json({ sucesso: true, codigo });
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ erro: "Erro ao enviar código." });
