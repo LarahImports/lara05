@@ -1943,8 +1943,56 @@ async function verificarPagamentoAprovado(id) {
     return;
   }
 
-  alert('Próximo passo: vamos abrir a tela de pagamento dos itens selecionados.');
+  const resumo = safe('carrinhoResumoBox');
+  if (!resumo) return;
+
+  resumo.innerHTML += `
+    <div id="pagamentoSelecionadosBox" style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+      <button class="btn" style="width:auto; min-width:180px;" onclick="iniciarPagamentoPixSelecionados()">
+        Pagar com PIX
+      </button>
+      <button class="secundario-btn" style="min-width:180px;" onclick="iniciarPagamentoCartaoSelecionados()">
+        Cartão de Crédito
+      </button>
+    </div>
+
+    <div id="areaCartaoSelecionados" class="hidden" style="margin-top:12px;">
+      <input id="cardNumberSel" placeholder="Número do cartão" style="width:100%; padding:10px; margin-bottom:8px;">
+      <input id="cardNameSel" placeholder="Nome no cartão" style="width:100%; padding:10px; margin-bottom:8px;">
+      <input id="cardMonthSel" placeholder="Mês (MM)" style="width:100%; padding:10px; margin-bottom:8px;">
+      <input id="cardYearSel" placeholder="Ano (AA)" style="width:100%; padding:10px; margin-bottom:8px;">
+      <input id="cardCvvSel" placeholder="CVV" style="width:100%; padding:10px; margin-bottom:8px;">
+      <button class="btn" style="width:100%;" onclick="finalizarPagamentoCartaoSelecionados()">
+        Pagar com cartão
+      </button>
+    </div>
+
+    <div class="msg" id="pagamentoSelecionadosMsg" style="margin-top:10px;"></div>
+  `;
 }
+
+function iniciarPagamentoPixSelecionados() {
+  const msg = safe('pagamentoSelecionadosMsg');
+  if (msg) {
+    msg.innerText = 'Próximo passo: vamos gerar o PIX dos itens selecionados.';
+  }
+}
+
+function iniciarPagamentoCartaoSelecionados() {
+  const area = safe('areaCartaoSelecionados');
+  const msg = safe('pagamentoSelecionadosMsg');
+
+  if (msg) msg.innerText = '';
+  if (area) area.classList.remove('hidden');
+}
+
+function finalizarPagamentoCartaoSelecionados() {
+  const msg = safe('pagamentoSelecionadosMsg');
+  if (msg) {
+    msg.innerText = 'Próximo passo: vamos processar o cartão dos itens selecionados.';
+  }
+}
+  
 function comprarSelecionadosCarrinho() {
   const checks = document.querySelectorAll('.check-carrinho-compra:checked');
 
