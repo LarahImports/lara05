@@ -1406,19 +1406,17 @@ function abrirShopPrincipal(event) {
   restaurarSessaoCliente();
 
   if (clienteAtual) {
+    abrirTela('screen-cliente');
     renderClienteLogado();
     renderAreasCliente();
     carregarPromocoes();
     renderFeaturedHome();
-    abrirTela('screen-cliente');
-    return;
+  } else {
+    abrirSistema();
+    const msg = safe('statusMensagem');
+    if (msg) msg.innerText = 'Faça login para acessar a área do cliente.';
   }
-
-  abrirSistema();
-  const msg = safe('statusMensagem');
-  if (msg) msg.innerText = 'Faça login ou cadastro para acessar a área do cliente.';
 }
-
   
 function esconderFaleConosco() {
   document.getElementById("btnFaleConosco").classList.add("hidden");
