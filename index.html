@@ -3211,6 +3211,13 @@ function fecharModalConfirmacaoCadastro() {
 
     // opcional: já logar o cliente
     clienteAtual = { ...cadastroPendente, id: data.id || null };
+    adminLogado = false;
+    salvarSessaoCliente();
+    renderClienteLogado();
+    renderAreasCliente();
+    carregarPromocoes();
+    renderFeaturedHome();
+    mostrarFaleConosco();
 
     abrirTela('screen-cliente');
 
