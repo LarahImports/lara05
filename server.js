@@ -48,38 +48,36 @@ app.get("/teste-db", async (req, res) => {
   }
 });
 
-app.delete('/api/clientes', async (req, res) => {
+app.delete("/api/clientes/:id", async (req, res) => {
   try {
-    const { cpf, nome } = req.body;
+    const { id } = req.params;
 
-    if (!cpf && !nome) {
-      return res.status(400).json({ erro: 'Informe CPF ou nome.' });
+    // 🔥 primeiro remove do carrinho (IMPORTANTE)
+    await pool.query(
+      `DELETE FROM carrinho WHERE cliente_id = $1`,
+      [Number(id)]
+    );
+
+    // 🔥 depois remove o cliente
+    const result = await pool.query(
+      `DELETE FROM clientes
+       WHERE id = $1
+       RETURNING id, nome, login`,
+      [Number(id)]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ erro: "Cliente não encontrado." });
     }
 
-    let result;
+    return res.json({
+      ok: true,
+      cliente: result.rows[0]
+    });
 
-    if (cpf) {
-      const cpfLimpo = cpf.replace(/\D/g, '');
-
-     result = await pool.query(
-          "DELETE FROM clientes WHERE regexp_replace(cpf, '\\D', '', 'g') = $1",
-         [cpfLimpo]
-      );
-    } else {
-      result = await pool.query(
-        'DELETE FROM clientes WHERE nome ILIKE $1',
-        [`%${nome}%`]
-      );
-    }
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({ erro: 'Nenhum cliente encontrado.' });
-    }
-
-    return res.json({ ok: true, removidos: result.rowCount });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ erro: 'Erro ao excluir cliente.' });
+    res.status(500).json({ erro: "Erro ao excluir cliente." });
   }
 });
 
@@ -277,8 +275,8 @@ app.get("/api/clientes", async (req, res) => {
     const result = await pool.query(
       `SELECT id, nome, endereco, cidade, estado, cep, cpf, login
        FROM clientes
-       ORDER BY id DESC`
-    );
+       ORDER BY LOWER(nome) ASC, id ASC`
+     );
     res.json(result.rows);
   } catch (error) {
     console.error(error);
