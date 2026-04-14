@@ -1125,7 +1125,7 @@
       </div>
       <nav class="menu">
         <a href="#" class="active" onclick="abrirSistema(event)">Início</a>
-        <a href="#">Shop</a>
+        <a href="#" onclick="abrirShopPrincipal(event)">Shop</a>
         <a href="#" onclick="abrirFaqPrincipal(event)">Perguntas Frequentes</a>
         <a href="#">Sobre</a>
        <a href="https://wa.me/13055040933?text=Ola%2C%20vim%20pelo%20site%20da%20Larah%20Imports%20e%20gostaria%20de%20atendimento." target="_blank">
@@ -1400,6 +1400,26 @@ function mostrarFaleConosco() {
   btn.style.right = "140px";
 }
 
+function abrirShopPrincipal(event) {
+  if (event) event.preventDefault();
+
+  restaurarSessaoCliente();
+
+  if (clienteAtual) {
+    renderClienteLogado();
+    renderAreasCliente();
+    carregarPromocoes();
+    renderFeaturedHome();
+    abrirTela('screen-cliente');
+    return;
+  }
+
+  abrirSistema();
+  const msg = safe('statusMensagem');
+  if (msg) msg.innerText = 'Faça login ou cadastro para acessar a área do cliente.';
+}
+
+  
 function esconderFaleConosco() {
   document.getElementById("btnFaleConosco").classList.add("hidden");
   }
@@ -1866,24 +1886,24 @@ function renderAreasPublicas(){ renderAreasEm('areasPublicasGrid', 'publico'); }
 function renderAreasCliente(){ renderAreasEm('areasClienteGrid', 'cliente'); renderAreasEm('areasClienteHomeGrid', 'cliente'); }
 function renderAreasAdmin(){ renderAreasEm('areasAdminGrid', 'admin'); }
 
-function acaoProdutoHome(codigo){
+function acaoProdutoHome(codigo) {
   restaurarSessaoCliente();
-  if(clienteAtual){
+
+  if (clienteAtual) {
+    abrirTela('screen-cliente');
     renderClienteLogado();
-    abrirDetalheProduto(codigo, 'screen-cliente');
+    renderAreasCliente();
+    carregarPromocoes();
+    renderFeaturedHome();
     return;
   }
-  produtoPendente = codigo;
-  const home = safe('premiumHome');
-  const shell = safe('systemShell');
-  if(home) home.style.display = 'none';
-  if(shell) shell.classList.add('active');
-  hideAllScreens();
-  const msg = safe('statusMensagem');
-  if(msg) msg.innerText = 'Faça login ou cadastro para comprar este produto.';
-  window.scrollTo(0,0);
-}
 
+  abrirSistema();
+  const msg = safe('statusMensagem');
+  if (msg) {
+    msg.innerText = 'Faça login ou cadastro para acessar a área do cliente.';
+  }
+}
 function renderFeaturedHome(){
   const renderBox = (id) => {
     const box = safe(id);
