@@ -1887,23 +1887,24 @@ function renderAreasCliente(){ renderAreasEm('areasClienteGrid', 'cliente'); ren
 function renderAreasAdmin(){ renderAreasEm('areasAdminGrid', 'admin'); }
 
 function acaoProdutoHome(codigo) {
-  restaurarSessaoCliente();
+  if (!clienteAtual) {
+    restaurarSessaoCliente();
+  }
 
   if (clienteAtual) {
-    abrirTela('screen-cliente');
     renderClienteLogado();
-    renderAreasCliente();
-    carregarPromocoes();
-    renderFeaturedHome();
+    abrirDetalheProduto(codigo, 'screen-cliente');
     return;
   }
 
+  produtoPendente = codigo;
   abrirSistema();
   const msg = safe('statusMensagem');
   if (msg) {
-    msg.innerText = 'Faça login ou cadastro para acessar a área do cliente.';
+    msg.innerText = 'Faça login ou cadastro para comprar este produto.';
   }
 }
+  
 function renderFeaturedHome(){
   const renderBox = (id) => {
     const box = safe(id);
