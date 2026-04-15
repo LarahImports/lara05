@@ -574,6 +574,36 @@ app.get("/api/produtos", async (req, res) => {
   }
 });
 
+app.put("/api/pedidos/:id/atualizar-entrega", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { codigo_rastreio, previsao_entrega } = req.body;
+
+    const result = await pool.query(
+      `UPDATE pedidos
+       SET codigo_rastreio = COALESCE($1, codigo_rastreio),
+           previsao_entrega = COALESCE($2, previsao_entrega),
+           ultima_atualizacao = NOW()::text
+       WHERE id = $3
+       RETURNING *`,
+      [
+        codigo_rastreio || null,
+        previsao_entrega || null,
+        Number(id)
+      ]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ erro: "Pedido não encontrado" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao atualizar dados de entrega" });
+  }
+});
+
 app.post("/api/carrinho", async (req, res) => {
   try {
     const { cliente_id, produto_id } = req.body;
