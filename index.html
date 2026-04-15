@@ -1685,6 +1685,31 @@ async function renderTelaExcluirClientes() {
   }
 }
 
+async function selecionarPedidoDespacho(id) {
+  const confirmar = confirm("Deseja gerar a etiqueta e marcar este pedido como despachado?");
+  if (!confirmar) return;
+
+  try {
+    const resposta = await fetch(`/api/pedidos/${id}/despachar`, {
+      method: "PUT"
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      alert(dados.erro || "Erro ao despachar pedido.");
+      return;
+    }
+
+    alert(`Etiqueta gerada com sucesso para o pedido #${id}.`);
+    await renderParaDespacho();
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao processar o despacho.");
+  }
+}
+  
+
   async function renderParaDespacho() {
   const box = document.getElementById("listaParaDespacho");
 
