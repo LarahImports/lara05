@@ -154,14 +154,51 @@ app.get("/criar-tabelas", async (req, res) => {
      `);
 
      await pool.query(`
-       ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS observacao_envio TEXT;
+      ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS observacao_envio TEXT;
      `);
+     await pool.query(`
+     ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS despachado BOOLEAN DEFAULT FALSE;
+     `);
+
+    await pool.query(`
+     ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS data_despacho TEXT;
+    `);
+
+    await pool.query(`
+     ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS etiqueta_gerada BOOLEAN DEFAULT FALSE;
+    `);
+
+    
     res.send("Tabelas criadas/atualizadas com sucesso 🚀");
   } catch (error) {
     console.error(error);
     res.status(500).send("Erro ao criar tabelas");
   }
 });
+
+app.get("/api/pedidos/para-despacho", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT 
+        pe.*,
+        p.nome AS produto_nome,
+        c.nome AS cliente_nome
+      FROM pedidos pe
+      JOIN produtos p ON p.id = pe.produto_id
+      JOIN clientes c ON c.id = pe.cliente_id
+      WHERE pe.despachado = FALSE
+        AND (pe.forma_pagamento = 'PIX' OR pe.forma_pagamento = 'cartao')
+      ORDER BY pe.id DESC
+    `);
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar pedidos para despacho" });
+  }
+});
+
+
 app.post("/api/clientes", async (req, res) => {
   try {
     const { nome, endereco, cidade, estado, cep, cpf, login, senha } = req.body;
