@@ -198,6 +198,31 @@ app.get("/api/pedidos/para-despacho", async (req, res) => {
   }
 });
 
+app.put("/api/pedidos/:id/despachar", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query(
+      `UPDATE pedidos
+       SET despachado = TRUE,
+           data_despacho = NOW()::text,
+           etiqueta_gerada = TRUE
+       WHERE id = $1
+       RETURNING *`,
+      [Number(id)]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ erro: "Pedido não encontrado" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao despachar pedido" });
+  }
+});
+
 
 app.post("/api/clientes", async (req, res) => {
   try {
