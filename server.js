@@ -730,6 +730,7 @@ app.get("/api/pedidos/cliente/:clienteId", async (req, res) => {
           pe.produto_id,
           pe.total,
           pe.status,
+          pe.previsao_entrega,
           pe.codigo_rastreio,
           pe.local_despacho,
           pe.ultima_atualizacao,
