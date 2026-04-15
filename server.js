@@ -208,8 +208,10 @@ app.put("/api/pedidos/:id/despachar", async (req, res) => {
     const result = await pool.query(
       `UPDATE pedidos
        SET despachado = TRUE,
+           status = 'Despachado',
            data_despacho = NOW()::text,
-           etiqueta_gerada = TRUE
+           etiqueta_gerada = TRUE,
+           ultima_atualizacao = NOW()::text
        WHERE id = $1
        RETURNING *`,
       [Number(id)]
@@ -225,7 +227,6 @@ app.put("/api/pedidos/:id/despachar", async (req, res) => {
     res.status(500).json({ erro: "Erro ao despachar pedido" });
   }
 });
-
 
 app.post("/api/clientes", async (req, res) => {
   try {
