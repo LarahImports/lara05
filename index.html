@@ -2643,6 +2643,81 @@ function comprarSelecionadosCarrinho() {
   acoes.style.display = 'flex';
   }
 }
+  async function salvarPrevisaoEntregaPopup() {
+  if (!pedidoSelecionadoId) return;
+
+  const previsao = document.getElementById("inputPrevisaoEntregaPopup").value;
+  const msg = document.getElementById("msgPopupEntrega");
+
+  if (!previsao) {
+    msg.innerHTML = "Selecione a data de previsão de entrega.";
+    return;
+  }
+
+  try {
+    const resposta = await fetch(`/api/pedidos/${pedidoSelecionadoId}/atualizar-entrega`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        previsao_entrega: previsao
+      })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      msg.innerHTML = dados.erro || "Erro ao salvar previsão de entrega.";
+      return;
+    }
+
+    msg.innerHTML = "Previsão de entrega salva com sucesso.";
+    document.getElementById("inputPrevisaoEntregaPopup").value = "";
+    await renderDespachadas();
+  } catch (error) {
+    console.error(error);
+    msg.innerHTML = "Erro ao salvar previsão de entrega.";
+  }
+}
+
+  async function salvarCodigoRastreioPopup() {
+  if (!pedidoSelecionadoId) return;
+
+  const codigo = document.getElementById("inputCodigoRastreioPopup").value.trim();
+  const msg = document.getElementById("msgPopupEntrega");
+
+  if (!codigo) {
+    msg.innerHTML = "Digite o código de rastreio.";
+    return;
+  }
+
+  try {
+    const resposta = await fetch(`/api/pedidos/${pedidoSelecionadoId}/atualizar-entrega`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        codigo_rastreio: codigo
+      })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      msg.innerHTML = dados.erro || "Erro ao salvar rastreio.";
+      return;
+    }
+
+    msg.innerHTML = "Código de rastreio salvo com sucesso.";
+    document.getElementById("inputCodigoRastreioPopup").value = "";
+    await renderDespachadas();
+  } catch (error) {
+    console.error(error);
+    msg.innerHTML = "Erro ao salvar rastreio.";
+  }
+}
 
   
 async function renderCarrinhoCliente() {
