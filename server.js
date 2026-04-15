@@ -157,8 +157,11 @@ app.get("/criar-tabelas", async (req, res) => {
       ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS observacao_envio TEXT;
      `);
      await pool.query(`
-     ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS despachado BOOLEAN DEFAULT FALSE;
+      ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS despachado BOOLEAN DEFAULT FALSE;
      `);
+    await pool.query(`
+      ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS previsao_entrega TEXT;
+    `);
 
     await pool.query(`
      ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS data_despacho TEXT;
