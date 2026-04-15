@@ -228,6 +228,51 @@ app.put("/api/pedidos/:id/despachar", async (req, res) => {
   }
 });
 
+app.get("/api/pedidos/para-cancelar", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT 
+        pe.*,
+        p.nome AS produto_nome,
+        c.nome AS cliente_nome
+      FROM pedidos pe
+      JOIN produtos p ON p.id = pe.produto_id
+      JOIN clientes c ON c.id = pe.cliente_id
+      WHERE pe.despachado = FALSE
+      ORDER BY pe.id DESC
+    `);
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar pedidos para cancelamento" });
+  }
+});
+
+app.put("/api/pedidos/:id/cancelar", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query(
+      `UPDATE pedidos
+       SET status = 'Cancelado',
+           ultima_atualizacao = NOW()::text
+       WHERE id = $1
+       RETURNING *`,
+      [Number(id)]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ erro: "Pedido não encontrado" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao cancelar pedido" });
+  }
+});
+
 app.post("/api/clientes", async (req, res) => {
   try {
     const { nome, endereco, cidade, estado, cep, cpf, login, senha } = req.body;
