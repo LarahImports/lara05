@@ -488,6 +488,27 @@ app.delete("/api/produtos/:codigo", async (req, res) => {
   }
 });
 
+app.get("/api/pedidos/despachados", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT 
+        pe.*,
+        p.nome AS produto_nome,
+        c.nome AS cliente_nome
+      FROM pedidos pe
+      JOIN produtos p ON p.id = pe.produto_id
+      JOIN clientes c ON c.id = pe.cliente_id
+      WHERE pe.despachado = TRUE
+      ORDER BY pe.id DESC
+    `);
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao buscar pedidos despachados" });
+  }
+});
+
 
 app.delete("/api/areas/:nome", async (req, res) => {
   try {
