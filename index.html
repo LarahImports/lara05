@@ -2846,6 +2846,7 @@ if (!itensSelecionadosParaCompra.length) {
         <div><strong>Status:</strong> ${traduzirStatusPedido(p.status)}</div>
         <div><strong>Onde está:</strong> ${p.local_despacho || 'Aguardando atualização'}</div>
         <div><strong>Rastreio:</strong> ${p.codigo_rastreio || 'Ainda não informado'}</div>
+        <div><strong>Previsão de entrega:</strong> ${p.previsao_entrega || 'Não informada'}</div>
         <div><strong>Última atualização:</strong> ${p.ultima_atualizacao || 'Sem atualização'}</div>
         ${p.observacao_envio ? `<div><strong>Obs.:</strong> ${p.observacao_envio}</div>` : ''}
       </div>
