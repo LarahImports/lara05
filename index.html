@@ -1374,7 +1374,7 @@ function precoHtml(preco, precoOriginal){
 }
   
 function percentualTaxaServico(valor){ const preco = Number(valor || 0); if (preco <= 100) return 0.20; if (preco <= 300) return 0.15; return 0.12; }
-function calcularFrete(pesoGramas){ const peso = Number(pesoGramas || 0); if (peso <= 0) return 0; const pesoCobrado = Math.ceil(peso / 100) * 100; return (pesoCobrado / 100) * 2; }
+function calcularFrete(pesoGramas){ const peso = Number(pesoGramas || 0); if (peso <= 0) return 0; const pesoCobrado = Math.ceil(peso / 100) * 100; return (pesoCobrado / 100) * 3; }
 function calcularResumoFinanceiro(precoUSA, pesoGramas){
   const preco = Number(precoUSA || 0);
   const taxaPct = percentualTaxaServico(preco);
@@ -1382,7 +1382,8 @@ function calcularResumoFinanceiro(precoUSA, pesoGramas){
   let ii = 0;
   if (preco <= 50) ii = preco * 0.20; else ii = Math.max((preco * 0.60) - 20, 0);
   const freteDoor = calcularFrete(pesoGramas);
-  const baseICMS = preco + taxaServico + ii + freteDoor;
+  const baseICMS = preco  + ii + (freteDoor/30)*2;
+  // + TaxaServico 
   const icms = baseICMS > 0 ? (baseICMS / (1 - 0.18)) * 0.18 : 0;
   const total = preco + taxaServico + ii + freteDoor + icms;
   return { preco, taxaPct, taxaServico, ii, freteDoor, icms, total };
