@@ -453,6 +453,11 @@ app.post("/api/produtos", async (req, res) => {
     erro: "A descrição do produto deve ter pelo menos 150 caracteres."
   });
 }
+    if (!descricao || descricao.trim().length < 150) {
+  return res.status(400).json({
+    erro: "A descrição do produto deve ter pelo menos 150 caracteres."
+  });
+}
 
     console.log("BODY RECEBIDO /api/produtos:", req.body);
 
