@@ -3064,6 +3064,11 @@ async function cadastrarProduto(){
     return;
   }
 
+  if ((descricao || '').trim().length < 150) {
+  if (msg) msg.innerText = 'A descrição do produto deve ter pelo menos 150 caracteres.';
+  return;
+}
+
   let foto_url = '';
 
   if (input && input.files && input.files[0]) {
@@ -3141,7 +3146,8 @@ async function cadastrarProduto(){
 }
 function renderGerenciarProdutos(){ const box = safe('gerenciarProdutosLista'); if(!box) return; box.innerHTML = produtos.map(p => `<div class="produto-admin-item"><div class="produto-admin-info"><strong>${p.nome}</strong><span>${p.area} • ${moedaUS(p.preco)}</span></div><div class="produto-admin-acoes"><button class="btn-mini" onclick="editarProduto('${p.codigo}')">Editar</button><button class="btn-mini excluir" onclick="excluirProduto('${p.codigo}')">Excluir</button></div></div>`).join('') || '<div class="empty">Nenhum produto cadastrado.</div>'; }
 function editarProduto(codigo){ const p = produtos.find(x => x.codigo === codigo); if(!p) return; codigoProdutoEdicao = codigo; preencherSelectAreasEdicao(); if(safe('edit_prod_area')) safe('edit_prod_area').value = p.area; if(safe('edit_prod_nome')) safe('edit_prod_nome').value = p.nome; if(safe('edit_prod_descricao')) safe('edit_prod_descricao').value = p.descricao; if(safe('edit_prod_preco')) safe('edit_prod_preco').value = p.preco; if(safe('edit_prod_peso')) safe('edit_prod_peso').value = p.pesoGramas; if(safe('edit_prod_status')) safe('edit_prod_status').value = p.status; if(safe('previewFotoProdutoEdicao')) safe('previewFotoProdutoEdicao').innerHTML = p.imagem ? `<img src="${p.imagem}">` : 'Sem foto'; abrirTela('screen-editar-produto'); }
-async function salvarEdicaoProduto(){
+
+  async function salvarEdicaoProduto(){
   const p = produtos.find(x => x.codigo === codigoProdutoEdicao);
   const msg = safe('editarProdutoMsg');
   const input = safe('edit_prod_imagem_arquivo');
@@ -3154,6 +3160,11 @@ async function salvarEdicaoProduto(){
   const area = safe('edit_prod_area')?.value || p.area;
   const nome = safe('edit_prod_nome')?.value || p.nome;
   const descricao = safe('edit_prod_descricao')?.value || p.descricao;
+
+  if ((descricao || '').trim().length < 150) {
+     if (msg) msg.innerText = 'A descrição do produto deve ter pelo menos 150 caracteres.';
+  return;
+  }
   const preco = parseFloat(safe('edit_prod_preco')?.value || p.preco);
   const peso = parseFloat(safe('edit_prod_peso')?.value || p.pesoGramas);
   const status = safe('edit_prod_status')?.value || p.status;
