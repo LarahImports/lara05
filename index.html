@@ -1947,10 +1947,12 @@ function abrirPrivacidadePrincipal(){ abrirSistema(); abrirTela('screen-privacid
 function renderClienteLogado(){
   const el = safe('clienteLogadoInfo');
   if (el) el.innerHTML = `
-  <div style="text-align:center;">
-    <div><strong>Cliente:</strong> ${clienteAtual?.nome || 'Cliente'}</div>
+  <div>
+    <div style="text-align:left;">
+      <strong>Cliente:</strong> ${clienteAtual?.nome || 'Cliente'}
+    </div>
 
-    <div style="margin-top:12px; font-size:14px; color:#7a5a48;">
+    <div style="margin-top:12px; text-align:center; font-size:14px; color:#7a5a48;">
       Podemos incluir qualquer produto que você deseje, basta nos enviar o link de onde você achou o produto clicando em 
       <span style="color:#1f5fd1; font-weight:bold; cursor:pointer;" onclick="window.open('https://wa.me/13055040933','_blank')">
         FALE CONOSCO
