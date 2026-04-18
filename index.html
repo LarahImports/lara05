@@ -3538,19 +3538,25 @@ function fecharModalWhatsappCadastro() {
 
     const dados = await resposta.json();
 
-    if (!resposta.ok) {
-      throw new Error(dados.erro || "Erro ao enviar código por WhatsApp.");
-    }
+if (!resposta.ok) {
+  throw new Error(dados.erro || "Erro ao gerar código por WhatsApp.");
+}
 
-    window.codigoGeradoCadastro = dados.codigo;
+window.codigoGeradoCadastro = dados.codigo;
 
-    fecharModalWhatsappCadastro();
-    abrirModalConfirmacaoCadastro();
+const texto = encodeURIComponent(
+  `Olá ${cadastroPendente.nome || ""}, seu código de confirmação na Larah Imports é: ${dados.codigo}`
+);
 
-    const msgCodigo = document.getElementById("msgCodigoConfirmacaoCadastro");
-    if (msgCodigo) {
-      msgCodigo.innerText = "Código enviado para seu WhatsApp.";
-    }
+window.open(`https://wa.me/55${numero}?text=${texto}`, "_blank");
+
+fecharModalWhatsappCadastro();
+abrirModalConfirmacaoCadastro();
+
+const msgCodigo = document.getElementById("msgCodigoConfirmacaoCadastro");
+if (msgCodigo) {
+  msgCodigo.innerText = "Abra o WhatsApp e envie a mensagem para usar o código.";
+}
 
   } catch (error) {
     console.error(error);
