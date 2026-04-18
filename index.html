@@ -3547,7 +3547,7 @@ window.codigoGeradoCadastro = dados.codigo;
 const texto = encodeURIComponent(
   `Olá ${cadastroPendente.nome || ""}, seu código de confirmação na Larah Imports é: ${dados.codigo}`
 );
-
+alert(`https://wa.me/55${numero}?text=${texto}`);
 location.href = `https://wa.me/55${numero}?text=${texto}`;
 
 fecharModalWhatsappCadastro();
