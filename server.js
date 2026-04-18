@@ -1077,7 +1077,38 @@ Larah Imports`
   }
 });
 
+app.post("/api/cadastro/enviar-codigo-whatsapp", async (req, res) => {
+  try {
+    const { whatsapp, email, nome } = req.body;
 
+    if (!whatsapp) {
+      return res.status(400).json({ erro: "WhatsApp não informado." });
+    }
+
+    if (!email) {
+      return res.status(400).json({ erro: "E-mail não informado." });
+    }
+
+    const codigo = String(Math.floor(Math.random() * 100000)).padStart(5, "0");
+
+    codigosCadastro[email.toLowerCase()] = {
+      codigo,
+      expiraEm: Date.now() + 10 * 60 * 1000
+    };
+
+    console.log("CODIGO WHATSAPP GERADO PARA:", email, whatsapp, codigo);
+
+    return res.json({
+      sucesso: true,
+      codigo,
+      mensagem: "Código gerado com sucesso para envio por WhatsApp."
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ erro: "Erro ao gerar código para WhatsApp." });
+  }
+});
 
 
 
