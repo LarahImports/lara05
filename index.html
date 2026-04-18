@@ -3543,6 +3543,8 @@ if (!resposta.ok) {
 }
 
 window.codigoGeradoCadastro = dados.codigo;
+if (msg) msg.innerText = "PASSOU DEPOIS DO CODIGO";
+return;
 
 const texto = encodeURIComponent(
   `Olá ${cadastroPendente.nome || ""}, seu código de confirmação na Larah Imports é: ${dados.codigo}`
