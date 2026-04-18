@@ -3503,10 +3503,67 @@ function fecharModalWhatsappCadastro() {
 }
 
   async function enviarCodigoWhatsappCadastro() {
+  const numero = document.getElementById("whatsappNumeroCadastro")?.value?.trim();
   const msg = document.getElementById("msgWhatsappCadastro");
-  if (msg) msg.innerText = "FUNCAO NOVA CARREGADA";
-  alert("FUNCAO NOVA CARREGADA");
+
+  if (!numero) {
+    if (msg) msg.innerText = "Digite o número do WhatsApp.";
+    return;
+  }
+
+  if (!/^\d{10,13}$/.test(numero)) {
+    if (msg) msg.innerText = "Digite o número com DDD, apenas números.";
+    return;
+  }
+
+  if (!cadastroPendente || !cadastroPendente.login || !cadastroPendente.nome) {
+    if (msg) msg.innerText = "Refaça o cadastro antes de solicitar o código por WhatsApp.";
+    return;
+  }
+
+  try {
+    if (msg) msg.innerText = "Gerando código...";
+
+    const resposta = await fetch("/api/cadastro/enviar-codigo-whatsapp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        whatsapp: numero,
+        email: cadastroPendente.login,
+        nome: cadastroPendente.nome
+      })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      throw new Error(dados.erro || "Erro ao gerar código por WhatsApp.");
+    }
+
+    window.codigoGeradoCadastro = dados.codigo;
+
+    const texto = encodeURIComponent(
+      `Olá ${cadastroPendente.nome || ""}, seu código de confirmação na Larah Imports é: ${dados.codigo}`
+    );
+
+    window.open(`https://wa.me/55${numero}?text=${texto}`, "_blank");
+
+    fecharModalWhatsappCadastro();
+    abrirModalConfirmacaoCadastro();
+
+    const msgCodigo = document.getElementById("msgCodigoConfirmacaoCadastro");
+    if (msgCodigo) {
+      msgCodigo.innerText = "Abra o WhatsApp e envie a mensagem para usar o código.";
+    }
+
+  } catch (error) {
+    console.error(error);
+    if (msg) msg.innerText = error.message || "Erro ao enviar código por WhatsApp.";
+  }
 }
+  
   async function confirmarCodigoCadastro() {
   const codigo = document.getElementById('codigoConfirmacaoCadastro')?.value?.trim();
   const msg = document.getElementById('msgCodigoConfirmacaoCadastro');
