@@ -3487,6 +3487,76 @@ function fecharModalConfirmacaoCadastro() {
   modal.classList.add('hidden');
   modal.style.display = 'none';
 }
+function abrirModalWhatsappCadastro() {
+  const modal = document.getElementById("modalWhatsappCadastro");
+  const campo = document.getElementById("whatsappNumeroCadastro");
+  const msg = document.getElementById("msgWhatsappCadastro");
+
+  if (campo) campo.value = "";
+  if (msg) msg.innerText = "";
+
+  modal.style.display = "flex";
+}
+
+function fecharModalWhatsappCadastro() {
+  document.getElementById("modalWhatsappCadastro").style.display = "none";
+}
+
+  async function enviarCodigoWhatsappCadastro() {
+  const numero = document.getElementById("whatsappNumeroCadastro")?.value?.trim();
+  const msg = document.getElementById("msgWhatsappCadastro");
+
+  if (!numero) {
+    if (msg) msg.innerText = "Digite o número do WhatsApp.";
+    return;
+  }
+
+  if (!/^\d{10,13}$/.test(numero)) {
+    if (msg) msg.innerText = "Digite o número com DDD, apenas números.";
+    return;
+  }
+
+  if (!cadastroPendente || !cadastroPendente.login || !cadastroPendente.nome) {
+    if (msg) msg.innerText = "Refaça o cadastro antes de solicitar o código por WhatsApp.";
+    return;
+  }
+
+  try {
+    if (msg) msg.innerText = "Enviando código para o WhatsApp...";
+
+    const resposta = await fetch("/api/cadastro/enviar-codigo-whatsapp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        whatsapp: numero,
+        email: cadastroPendente.login,
+        nome: cadastroPendente.nome
+      })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      throw new Error(dados.erro || "Erro ao enviar código por WhatsApp.");
+    }
+
+    window.codigoGeradoCadastro = dados.codigo;
+
+    fecharModalWhatsappCadastro();
+    abrirModalConfirmacaoCadastro();
+
+    const msgCodigo = document.getElementById("msgCodigoConfirmacaoCadastro");
+    if (msgCodigo) {
+      msgCodigo.innerText = "Código enviado para seu WhatsApp.";
+    }
+
+  } catch (error) {
+    console.error(error);
+    if (msg) msg.innerText = error.message || "Erro ao enviar código por WhatsApp.";
+  }
+}
 
   async function confirmarCodigoCadastro() {
   const codigo = document.getElementById('codigoConfirmacaoCadastro')?.value?.trim();
@@ -3706,18 +3776,57 @@ const mp = new MercadoPago("APP_USR-feaed208-9c21-427c-baef-889f599033dd");
       color:#7a5a48;
       margin-bottom:12px;
     "></div>
-
     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-      <button class="btn" style="width:auto;" onclick="confirmarCodigoCadastro()">
-        Confirmar código
-      </button>
+       <button class="btn" style="width:auto;" onclick="confirmarCodigoCadastro()">
+       Confirmar código
+       </button>
 
-      <button class="secundario-btn" type="button" onclick="fecharModalConfirmacaoCadastro()">
-        Cancelar
-      </button>
-    </div>
+    <button class="secundario-btn" type="button" onclick="abrirModalWhatsappCadastro()">
+      NÃO RECEBI
+    </button>
+
+    <button class="secundario-btn" type="button" onclick="fecharModalConfirmacaoCadastro()">
+      Cancelar
+    </button>
+  </div>
   </div>
 </div>
+</div>
+</div>
+</div>
+
+<!-- 🔥 COLE O MODAL AQUI -->
+<div id="modalWhatsappCadastro" 
+     style="position:fixed; inset:0; background:rgba(0,0,0,0.4); display:none; align-items:center; justify-content:center; z-index:9999;">
   
+  <div style="background:white; padding:24px; border-radius:16px; max-width:400px; width:90%; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+
+    <h3 style="margin-top:0;">Receber código via WhatsApp</h3>
+
+    <p style="font-size:14px; color:#555;">
+      Digite seu número com DDD para receber o código.
+    </p>
+
+    <input id="whatsappNumeroCadastro"
+           placeholder="Ex: 11999999999"
+           style="width:100%; padding:10px; margin-top:10px; border:1px solid #ccc; border-radius:8px;" />
+
+    <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
+      
+      <button class="btn" style="width:auto;" onclick="enviarCodigoWhatsappCadastro()">
+        Enviar código
+      </button>
+
+      <button class="secundario-btn" style="width:auto;" onclick="fecharModalWhatsappCadastro()">
+        Cancelar
+      </button>
+
+    </div>
+
+    <div id="msgWhatsappCadastro" style="margin-top:10px; font-size:13px;"></div>
+
+  </div>
+</div>
+
 </body>
 </html>
