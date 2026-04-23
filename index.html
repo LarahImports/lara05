@@ -2273,9 +2273,7 @@ function abrirCatalogoPorArea(area, origem){
 }
 
 function voltarDoCatalogo(){
-  if(contextoCatalogo === 'cliente') abrirTela('screen-areas-cliente');
-  else if(contextoCatalogo === 'admin') abrirTela('screen-areas-admin');
-  else abrirTela('screen-areas-publicas');
+  history.back();
 }
 
 function abrirDetalheProduto(codigo, telaOrigem = 'screen-catalogo'){
