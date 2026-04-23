@@ -1912,6 +1912,11 @@ async function selecionarPedidoDespacho(id) {
   }
 
 function voltarTelaInicial(){
+  if (history.length > 1) {
+    history.back();
+    return;
+  }
+
   hideAllScreens();
   const home = safe('premiumHome');
   const shell = safe('systemShell');
@@ -1928,10 +1933,51 @@ function abrirTela(id){
   hideAllScreens();
   const tela = safe(id);
   if(tela) tela.classList.remove('hidden');
+
+  history.pushState({ tipo: 'tela', id }, "", "#" + id);
+
   window.scrollTo(0,0);
 }
 
+  window.addEventListener('popstate', function(event) {
+  const estado = event.state;
+
+  if (!estado) {
+  hideAllScreens();
+
+  const home = safe('premiumHome');
+  const shell = safe('systemShell');
+
+  if (shell) shell.classList.remove('active');
+  if (home) home.style.display = 'flex';
+
+  window.scrollTo(0, 0);
+  return;
+}
+
+  if (estado.tipo === 'tela' && estado.id) {
+    hideAllScreens();
+
+    const home = safe('premiumHome');
+    const shell = safe('systemShell');
+
+    if (home) home.style.display = 'none';
+    if (shell) shell.classList.remove('active');
+
+    const tela = safe(estado.id);
+    if (tela) tela.classList.remove('hidden');
+
+    window.scrollTo(0, 0);
+    return;
+  }
+});
+
 function voltarHome(){
+  if (history.length > 1) {
+    history.back();
+    return;
+  }
+
   hideAllScreens();
   const home = safe('premiumHome');
   const shell = safe('systemShell');
@@ -3702,7 +3748,7 @@ function fecharModalWhatsappCadastro() {
   abrirTela('screen-cadastro-cliente');
 }
 }
-
+history.replaceState({ tipo: 'home' }, "", "#home");
 </script>
 
 <script src="https://sdk.mercadopago.com/js/v2"></script>
