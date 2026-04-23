@@ -2072,6 +2072,8 @@ async function loginSistema(){
 
     if (msg) msg.innerText = '';
 
+    history.pushState({ tipo: 'sistema' }, "", "#sistema");
+
     if (produtoPendente) {
       const codigo = produtoPendente;
       produtoPendente = null;
