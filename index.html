@@ -1962,6 +1962,21 @@ function abrirTela(id){
   return;
 }
 
+  if (estado.tipo === 'sistema') {
+  hideAllScreens();
+
+  const home = safe('premiumHome');
+  const shell = safe('systemShell');
+
+  if (home) home.style.display = 'none';
+  if (shell) shell.classList.add('active');
+
+  const msg = safe('statusMensagem');
+  if (msg) msg.innerText = '';
+
+  window.scrollTo(0, 0);
+  return;
+}
   if (estado.tipo === 'tela' && estado.id) {
     hideAllScreens();
 
