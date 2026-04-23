@@ -2072,7 +2072,7 @@ async function loginSistema(){
 
     if (msg) msg.innerText = '';
 
-    history.pushState({ tipo: 'sistema' }, "", "#sistema");
+   history.replaceState({ tipo: 'tela', id: 'screen-cliente' }, "", "#screen-cliente");
 
     if (produtoPendente) {
       const codigo = produtoPendente;
