@@ -2072,13 +2072,15 @@ async function loginSistema(){
 
     if (msg) msg.innerText = '';
 
-    if (produtoPendente) {
-      const codigo = produtoPendente;
-      produtoPendente = null;
-      abrirDetalheProduto(codigo, 'screen-cliente');
-    } else {
-      abrirTela('screen-cliente');
-    }
+    history.replaceState({ tipo: 'home' }, "", "#home");
+
+if (produtoPendente) {
+  const codigo = produtoPendente;
+  produtoPendente = null;
+  abrirDetalheProduto(codigo, 'screen-cliente');
+} else {
+  abrirTela('screen-cliente');
+}
   } catch (error) {
     console.error(error);
     if (msg) msg.innerText = 'Erro de conexão no login.';
