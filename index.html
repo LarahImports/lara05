@@ -1582,13 +1582,20 @@ function aplicarFotoTelaInicial(){
 
 function abrirSistema(event){
   if(event) event.preventDefault();
+
   const home = safe('premiumHome');
   const shell = safe('systemShell');
+
   if(home) home.style.display = 'none';
   if(shell) shell.classList.add('active');
+
   hideAllScreens();
+
   const msg = safe('statusMensagem');
   if(msg) msg.innerText = '';
+
+  history.pushState({ tipo: 'sistema' }, "", "#sistema");
+
   window.scrollTo(0,0);
 }
 
