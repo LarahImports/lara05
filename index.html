@@ -1961,7 +1961,18 @@ function abrirTela(id){
   window.scrollTo(0, 0);
   return;
 }
+if (estado.tipo === 'home') {
+  hideAllScreens();
 
+  const home = safe('premiumHome');
+  const shell = safe('systemShell');
+
+  if (shell) shell.classList.remove('active');
+  if (home) home.style.display = 'flex';
+
+  window.scrollTo(0, 0);
+  return;
+}
   if (estado.tipo === 'sistema') {
   hideAllScreens();
 
@@ -2005,6 +2016,9 @@ function voltarHome(){
   const shell = safe('systemShell');
   if(shell) shell.classList.remove('active');
   if(home) home.style.display = 'flex';
+
+  history.pushState({ tipo: 'home' }, "", "#home");
+
   window.scrollTo(0,0);
 }
 
@@ -2073,6 +2087,7 @@ async function loginSistema(){
     if (msg) msg.innerText = '';
 
     history.replaceState({ tipo: 'home' }, "", "#home");
+    history.pushState({ tipo: 'home' }, "", "#home");
 
 if (produtoPendente) {
   const codigo = produtoPendente;
