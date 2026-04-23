@@ -2326,8 +2326,9 @@ function abrirDetalheProduto(codigo, telaOrigem = 'screen-catalogo'){
   abrirTela('screen-produto-detalhe');
 }
 
-function voltarDoDetalheProduto(){ abrirTela(contextoDetalheAnterior || 'screen-catalogo'); }
-
+function voltarDoDetalheProduto(){
+  history.back();
+}
 async function removerDoCarrinho(itemId) {
   try {
     const resposta = await fetch(`/api/carrinho/${itemId}`, {
