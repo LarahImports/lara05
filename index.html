@@ -2299,6 +2299,24 @@ function abrirDetalheProduto(codigo, telaOrigem = 'screen-catalogo'){
   };
 
   contextoDetalheAnterior = telaOrigem;
+    if (!clienteAtual || !clienteAtual.id) {
+    const btnCarrinho = safe('btnAdicionarCarrinho');
+    const btnComprar = safe('btnComprarAgora');
+
+    if (btnCarrinho) {
+      btnCarrinho.onclick = function() {
+        alert('Para colocar produtos no carrinho, faça login ou cadastre-se primeiro.');
+        abrirSistema();
+      };
+    }
+
+    if (btnComprar) {
+      btnComprar.onclick = function() {
+        alert('Para comprar, faça login ou cadastre-se primeiro.');
+        abrirSistema();
+      };
+    }
+  }
 
   const resumo = calcularResumoFinanceiro(produtoDetalheAtual.preco, produtoDetalheAtual.pesoGramas);
 
