@@ -2944,9 +2944,7 @@ async function renderCarrinhoCliente() {
 
     itens = Array.isArray(dadosCarrinho) ? dadosCarrinho : [];
     itensCarrinhoAtual = itens;
-    itensSelecionadosParaCompra = itensSelecionadosParaCompra.filter(itemSelecionado =>
-    itens.some(itemCarrinho => Number(itemCarrinho.id) === Number(itemSelecionado.id))
-    );
+    itensSelecionadosParaCompra = [...itens];
     pedidosCliente = Array.isArray(dadosPedidos) ? dadosPedidos : [];
   } catch (error) {
     console.error('Erro ao carregar carrinho/pedidos:', error);
