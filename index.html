@@ -3131,6 +3131,40 @@ async function excluirArea(nome){
     if (msg) msg.innerText = 'Erro de conexão ao excluir área.';
   }
 }
+  async function alterarArea(nome){
+  const msg = safe('excluirAreaMsg');
+  const novoNome = prompt('Digite o novo nome da área:', nome);
+
+  if (!novoNome || !novoNome.trim()) {
+    if (msg) msg.innerText = 'Alteração cancelada.';
+    return;
+  }
+
+  try {
+    const resposta = await fetch('/api/areas/' + encodeURIComponent(nome), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ novoNome: novoNome.trim() })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      if (msg) msg.innerText = dados.erro || 'Erro ao alterar área.';
+      return;
+    }
+
+    areas = areas.map(a => a === nome ? novoNome.trim() : a);
+    produtos = produtos.map(p => p.area === nome ? { ...p, area: novoNome.trim() } : p);
+
+    if (msg) msg.innerText = 'Área alterada com sucesso.';
+    renderExcluirAreas();
+    atualizarPainelAdministrativo();
+  } catch (error) {
+    console.error(error);
+    if (msg) msg.innerText = 'Erro de conexão ao alterar área.';
+  }
+}
 
 function renderExcluirAreas(){
   const box = safe('listaExcluirAreas');
@@ -3140,7 +3174,10 @@ function renderExcluirAreas(){
     ? areas.map(area => `
       <div class="linha-admin">
         <span>${area}</span>
-        <button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn-mini" onclick="alterarArea('${String(area).replace(/'/g, "\\'")}')">Alterar</button>
+          <button class="btn-mini excluir" onclick="excluirArea('${String(area).replace(/'/g, "\\'")}')">Excluir</button>
+        </div>
       </div>
     `).join('')
     : '<div class="empty">Nenhuma área cadastrada.</div>';
