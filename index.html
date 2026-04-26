@@ -2446,6 +2446,11 @@ async function comprarAgoraDetalhe() {
 
 async function colocarNoCarrinhoDetalhe() {
   const msg = safe('detalheProdutoMsg');
+  if (!clienteAtual || !clienteAtual.id) {
+    alert('Para colocar produtos no carrinho, faça login ou cadastre-se primeiro.');
+    abrirSistema();
+    return;
+  }
 
   if (!produtoDetalheAtual || !produtoDetalheAtual.id) {
   if (msg) {
@@ -3502,6 +3507,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function abrirOpcoesPagamento() {
   const precoProdutoUS = Number(produtoDetalheAtual?.preco || 0);
+    if (!clienteAtual || !clienteAtual.id) {
+    alert('Para comprar, faça login ou cadastre-se primeiro.');
+    abrirSistema();
+    return;
+  }
 
   if (precoProdutoUS < 50) {
     const diferenca = 50 - precoProdutoUS;
