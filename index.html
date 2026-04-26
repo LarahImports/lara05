@@ -2542,8 +2542,25 @@ async function verificarPagamentoAprovado(id) {
   }, 3000);
 }
   function abrirPagamentoSelecionadosCarrinho() {
-  if (!itensSelecionadosParaCompra.length) {
+  
+    if (!itensSelecionadosParaCompra.length) {
     alert('Selecione pelo menos um produto no carrinho.');
+    return;
+   }
+
+  const totalProdutosUS = itensSelecionadosParaCompra.reduce((acc, p) => {
+    return acc + Number(p.preco || 0);
+  }, 0);
+
+  if (totalProdutosUS < 50) {
+    const diferenca = 50 - totalProdutosUS;
+
+    alert(
+      'Nossos envios têm um valor mínimo de US$ 50,00.\n\n' +
+      'Por favor adicione mais US$ ' + diferenca.toFixed(2).replace('.', ',') +
+      ' para podermos providenciar o envio.'
+    );
+
     return;
   }
 
@@ -3472,6 +3489,20 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function abrirOpcoesPagamento() {
+  const precoProdutoUS = Number(produtoDetalheAtual?.preco || 0);
+
+  if (precoProdutoUS < 50) {
+    const diferenca = 50 - precoProdutoUS;
+
+    alert(
+      'Nossos envios têm um valor mínimo de US$ 50,00.\n\n' +
+      'Por favor adicione mais US$ ' + diferenca.toFixed(2).replace('.', ',') +
+      ' para podermos providenciar o envio.'
+    );
+
+    return;
+  }
+
   const box = safe('opcoesPagamentoBox');
   if (box) {
     box.classList.remove('hidden');
