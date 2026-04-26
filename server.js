@@ -568,6 +568,51 @@ app.get("/api/pedidos/despachados", async (req, res) => {
   }
 });
 
+app.put("/api/areas/:nome", async (req, res) => {
+  try {
+    const { nome } = req.params;
+    const { novoNome } = req.body;
+
+    if (!novoNome || !novoNome.trim()) {
+      return res.status(400).json({ erro: "Digite o novo nome da área." });
+    }
+
+    await pool.query("BEGIN");
+
+    const areaAtualizada = await pool.query(
+      `UPDATE areas
+       SET nome = $1
+       WHERE nome = $2
+       RETURNING *`,
+      [novoNome.trim(), nome]
+    );
+
+    if (areaAtualizada.rows.length === 0) {
+      await pool.query("ROLLBACK");
+      return res.status(404).json({ erro: "Área não encontrada." });
+    }
+
+    await pool.query(
+      `UPDATE produtos
+       SET area = $1
+       WHERE area = $2`,
+      [novoNome.trim(), nome]
+    );
+
+    await pool.query("COMMIT");
+
+    res.json({ sucesso: true, area: areaAtualizada.rows[0] });
+  } catch (error) {
+    await pool.query("ROLLBACK");
+    console.error(error);
+
+    if (error.code === "23505") {
+      return res.status(400).json({ erro: "Já existe uma área com esse nome." });
+    }
+
+    res.status(500).json({ erro: "Erro ao alterar área." });
+  }
+});
 
 app.delete("/api/areas/:nome", async (req, res) => {
   try {
