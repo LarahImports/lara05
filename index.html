@@ -2184,7 +2184,7 @@ function renderAreasHome(){
   const primeirasCinco = areas.slice(0, 5);
 
   container.innerHTML = primeirasCinco.map((area, index) =>
-    `<div class="area-card">
+    `<div class="area-card" style="cursor:pointer;" onclick="abrirCatalogoPorArea('${String(area).replace(/'/g, "\\'")}', 'premiumHome')">
       <div class="area-icon">${icones[index] || '◔'}</div>
       <div class="area-title">${area}</div>
     </div>`
@@ -2262,9 +2262,8 @@ function carregarPromocoes(){
 
 function montarCardCatalogo(produto, comBotaoCompra){
   const resumo = calcularResumoFinanceiro(produto.preco, produto.pesoGramas);
-  return `<div class="catalogo-card"><div class="foto">${imagemProdutoHtml(produto.imagem)}</div><div class="catalogo-info"><div class="nome" style="font-size:18px;">${produto.nome}</div><div class="catalogo-descricao">${produto.descricao}</div><div class="catalogo-linhas"><div class="catalogo-linha"><span>Área</span><strong>${produto.area}</strong></div><div class="catalogo-linha"><span>Preço nos EUA</span><strong>${moedaUS(produto.preco)}</strong></div><div class="catalogo-linha"><span>Peso</span><strong>${Number(produto.pesoGramas || 0).toFixed(0)} g</strong></div><div class="catalogo-linha"><span>Frete</span><strong>${moedaUS(resumo.freteDoor)}</strong></div><div class="catalogo-linha"><span>Taxa de serviço</span><strong>${moedaUS(resumo.taxaServico)}</strong></div><div class="catalogo-linha"><span>II PRC</span><strong>${moedaUS(resumo.ii)}</strong></div><div class="catalogo-linha"><span>ICMS SP</span><strong>${moedaUS(resumo.icms)}</strong></div><div class="catalogo-linha"><span>Total estimado</span><strong>${moedaUS(resumo.total)}</strong></div></div>${comBotaoCompra ? `<button class="btn" onclick="abrirDetalheProduto('${produto.codigo}','screen-catalogo')">Ver detalhes</button>` : ''}</div></div>`;
+  return `<div class="catalogo-card"><div class="foto">${imagemProdutoHtml(produto.imagem)}</div><div class="catalogo-info"><div class="nome" style="font-size:18px;">${produto.nome}</div><div class="catalogo-descricao">${produto.descricao}</div><div class="catalogo-linhas"><div class="catalogo-linha"><span>Área</span><strong>${produto.area}</strong></div><div class="catalogo-linha"><span>Preço nos EUA</span><strong>${moedaUS(produto.preco)}</strong></div><div class="catalogo-linha"><span>Peso</span><strong>${Number(produto.pesoGramas || 0).toFixed(0)} g</strong></div><div class="catalogo-linha"><span>Frete</span><strong>${moedaUS(resumo.freteDoor)}</strong></div><div class="catalogo-linha"><span>Taxa de serviço</span><strong>${moedaUS(resumo.taxaServico)}</strong></div><div class="catalogo-linha"><span>II PRC</span><strong>${moedaUS(resumo.ii)}</strong></div><div class="catalogo-linha"><span>ICMS SP</span><strong>${moedaUS(resumo.icms)}</strong></div><div class="catalogo-linha"><span>Total estimado</span><strong>${moedaUS(resumo.total)}</strong></div></div><button class="btn" onclick="abrirDetalheProduto('${produto.codigo}','screen-catalogo')">Ver detalhes</button></div></div>`;
 }
-
 function abrirCatalogoPorArea(area, origem){
   contextoCatalogo = origem;
   if(safe('tituloCatalogo')) safe('tituloCatalogo').innerText = 'Catálogo - ' + area;
