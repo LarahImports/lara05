@@ -1924,10 +1924,8 @@ async function selecionarPedidoDespacho(id) {
   }
 
 function voltarTelaInicial(){
-  if (history.length > 1) {
-    history.back();
-    return;
-  }
+  clienteAtual = null;
+  localStorage.removeItem('clienteAtual');
 
   hideAllScreens();
   const home = safe('premiumHome');
