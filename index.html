@@ -1240,8 +1240,7 @@
   
   
   
-  <section id="screen-cadastrar-produto" class="screen hidden"><div class="page"><div class="toolbar"><h2>Cadastrar Produto</h2><button class="btn back" onclick="abrirTela('screen-admin'); atualizarPainelAdministrativo();">Voltar</button></div><div class="card form-area"><div class="grid-2"><div><label>Área do Produto</label><select id="prod_area"></select></div><div><label>Nome Comercial do produto</label><input id="prod_nome" /></div><div><label>Descrição do Produto</label><textarea id="prod_descricao" ></textarea></div><div><label>Preço do Produto US$</label><input id="prod_preco" type="number" step="0.01" placeholder="ex: 123.45" /><label>Peso do Produto (gramas)</label><input id="prod_peso" type="number" step="1" placeholder="ex: 123" /><label>Status do Produto</label><select id="prod_status"><option value="N">Normal</option><option value="P">Promocao</option><option value="D">Destaque</option></select></div></div><label>Foto do produto</label><input id="prod_imagem_arquivo" type="file" accept="image/*" onchange="previewFotoProduto()" /><div class="preview-box preview-produto" id="previewFotoProduto">Sem foto</div><button class="btn" onclick="cadastrarProduto()">Confirmar Informações</button><div class="msg" id="produtoMsg"></div></div></div></section>
-  <section id="screen-areas-publicas" class="screen hidden"><div class="page"><div class="toolbar"><h2>Áreas de Produtos</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="subtitulo-area">Escolha uma área para visualizar os produtos.</div><div class="grid-areas" id="areasPublicasGrid"></div></div></section>
+  <section id="screen-cadastrar-produto" class="screen hidden"><div class="page"><div class="toolbar"><h2>Cadastrar Produto</h2><button class="btn back" onclick="abrirTela('screen-admin'); atualizarPainelAdministrativo();">Voltar</button></div><div class="card form-area"><div class="grid-2"><div><label>Área do Produto</label><select id="prod_area"></select></div><div><label>Nome Comercial do produto</label><input id="prod_nome" /></div><div><label>Descrição do Produto</label><textarea id="prod_descricao" ></textarea></div><div><label>Preço do Produto US$</label><input id="prod_preco" type="number" step="0.01" placeholder="ex: 123.45" /><label>Peso do Produto (gramas)</label><input id="prod_peso" type="number" step="1" placeholder="ex: 123" /><label>Status do Produto</label><select id="prod_status"><option value="N">Normal</option><option value="P">Promocao</option><option value="D">Destaque</option></select></div></div><label>Foto 1 (principal)</label><input id="prod_imagem_arquivo_1" type="file" accept="image/*" onchange="previewFotoProduto(1)" /><label>Foto 2</label><input id="prod_imagem_arquivo_2" type="file" accept="image/*" onchange="previewFotoProduto(2)" /><label>Foto 3</label><input id="prod_imagem_arquivo_3" type="file" accept="image/*" onchange="previewFotoProduto(3)" /><div class="preview-box preview-produto" id="previewFotoProduto">Sem foto</div><button class="btn" onclick="cadastrarProduto()">Confirmar Informações</button><div class="msg" id="produtoMsg"></div></div></div></section>  <section id="screen-areas-publicas" class="screen hidden"><div class="page"><div class="toolbar"><h2>Áreas de Produtos</h2><button class="btn back" onclick="voltarHome()">Voltar</button></div><div class="subtitulo-area">Escolha uma área para visualizar os produtos.</div><div class="grid-areas" id="areasPublicasGrid"></div></div></section>
   <section id="screen-areas-cliente" class="screen hidden"><div class="page"><div class="toolbar"><h2>Áreas de Produtos</h2><button class="btn back" onclick="history.back()">Voltar</button></div><div class="subtitulo-area">Escolha uma área para visualizar os produtos.</div><div class="grid-areas" id="areasClienteGrid"></div></div></section>
   <section id="screen-areas-admin" class="screen hidden"><div class="page"><div class="toolbar"><h2>Áreas de Produtos</h2><button class="btn back" onclick="history.back()">Voltar</button></div><div class="subtitulo-area">Escolha uma área para visualizar o catálogo.</div><div class="grid-areas" id="areasAdminGrid"></div></div></section>
   <section id="screen-catalogo" class="screen hidden"><div class="page"><div class="toolbar"><h2 id="tituloCatalogo">Catálogo de Produtos</h2><button class="btn back" onclick="voltarDoCatalogo()">Voltar</button></div><div class="catalogo-grade" id="catalogoArea"></div></div></section>
@@ -3225,7 +3224,10 @@ async function cadastrarProduto(){
   const peso = parseFloat(safe('prod_peso')?.value || '0');
   const status = safe('prod_status')?.value || 'N';
   const msg = safe('produtoMsg');
-  const input = safe('prod_imagem_arquivo');
+
+  const input1 = safe('prod_imagem_arquivo_1');
+  const input2 = safe('prod_imagem_arquivo_2');
+  const input3 = safe('prod_imagem_arquivo_3');
 
   if (!area || !nome) {
     if (msg) msg.innerText = 'Preencha área e nome do produto.';
@@ -3233,53 +3235,26 @@ async function cadastrarProduto(){
   }
 
   if ((descricao || '').trim().length < 150) {
-  if (msg) msg.innerText = 'A descrição do produto deve ter pelo menos 150 caracteres.';
-  return;
-}
-
-  let foto_url = '';
-
-  if (input && input.files && input.files[0]) {
-    const reader = new FileReader();
-
-    reader.onload = async (e) => {
-      foto_url = e.target.result;
-
-      try {
-        const resposta = await fetch('/api/produtos', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            area,
-            nome,
-            descricao,
-            preco,
-            peso,
-            status,
-            foto_url
-          })
-        });
-
-        const dados = await resposta.json();
-
-        if (!resposta.ok) {
-          if (msg) msg.innerText = dados.erro || 'Erro ao cadastrar produto.';
-          return;
-        }
-
-        await carregarProdutosDoBanco();
-        if (msg) msg.innerText = 'Produto cadastrado com sucesso.';
-        atualizarPainelAdministrativo();
-        limparFormularioProduto();
-      } catch (error) {
-        console.error(error);
-        if (msg) msg.innerText = 'Erro de conexão ao cadastrar produto.';
-      }
-    };
-
-    reader.readAsDataURL(input.files[0]);
+    if (msg) msg.innerText = 'A descrição do produto deve ter pelo menos 150 caracteres.';
     return;
   }
+
+  const lerImagem = (input) => {
+    return new Promise((resolve) => {
+      if (!input || !input.files || !input.files[0]) {
+        resolve('');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.readAsDataURL(input.files[0]);
+    });
+  };
+
+  const foto_url_1 = await lerImagem(input1);
+  const foto_url_2 = await lerImagem(input2);
+  const foto_url_3 = await lerImagem(input3);
 
   try {
     const resposta = await fetch('/api/produtos', {
@@ -3292,7 +3267,9 @@ async function cadastrarProduto(){
         preco,
         peso,
         status,
-        foto_url
+        foto_url_1,
+        foto_url_2,
+        foto_url_3
       })
     });
 
@@ -3489,7 +3466,25 @@ async function salvarFotoTelaPrincipal(){
   }
 }
 function carregarPreviewFotoPrincipalAtual(){ const box = safe('previewFotoTelaPrincipal'); if(box) box.innerHTML = fotoTelaInicial ? `<img src="${fotoTelaInicial}">` : 'Sem foto'; }
-function previewFotoProduto(){ const input = safe('prod_imagem_arquivo'); const box = safe('previewFotoProduto'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
+function previewFotoProduto(numero){
+  const input = safe('prod_imagem_arquivo_' + numero);
+  const box = safe('previewFotoProduto');
+
+  if (!input || !box || !input.files || !input.files[0]) return;
+
+  const reader = new FileReader();
+
+  reader.onload = e => {
+    if (numero === 1) {
+      box.innerHTML = `<img src="${e.target.result}">`;
+    } else {
+      // adiciona as outras imagens sem apagar a principal
+      box.innerHTML += `<img src="${e.target.result}" style="max-width:80px; margin:5px;">`;
+    }
+  };
+
+  reader.readAsDataURL(input.files[0]);
+}
 function previewFotoProdutoEdicao(){ const input = safe('edit_prod_imagem_arquivo'); const box = safe('previewFotoProdutoEdicao'); if(!input || !box || !input.files || !input.files[0]) return; const reader = new FileReader(); reader.onload = e => { box.innerHTML = `<img src="${e.target.result}">`; }; reader.readAsDataURL(input.files[0]); }
 
 window.addEventListener('DOMContentLoaded', () => {
