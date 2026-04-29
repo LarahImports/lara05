@@ -1318,15 +1318,17 @@ async function carregarProdutosDoBanco() {
     }
 
     produtos = dados.map(p => ({
-      id: p.id ?? p.produto_id ?? p.ID ?? p.Id,
-      codigo: p.codigo,
-      area: p.area,
-      nome: p.nome,
-      descricao: p.descricao,
-      preco: Number(p.preco || 0),
-      pesoGramas: Number(p.peso || 0),
-      status: p.status,
-      imagem: p.foto_url || ''
+     id: p.id ?? p.produto_id ?? p.ID ?? p.Id,
+     codigo: p.codigo,
+     area: p.area,
+     nome: p.nome,
+     descricao: p.descricao,
+     preco: Number(p.preco || 0),
+     pesoGramas: Number(p.peso || 0),
+     status: p.status,
+     imagem: p.foto_url || '',
+     imagem2: p.foto_url_2 || '',
+     imagem3: p.foto_url_3 || ''
     }));
 
     renderFeaturedHome();
