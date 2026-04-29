@@ -106,7 +106,9 @@ app.get("/criar-tabelas", async (req, res) => {
         preco NUMERIC,
         peso NUMERIC,
         status TEXT,
-        foto_url TEXT
+        foto_url TEXT,
+        foto_url_2 TEXT,
+        foto_url_3 TEXT
       );
 
       CREATE TABLE IF NOT EXISTS carrinho (
@@ -170,7 +172,13 @@ app.get("/criar-tabelas", async (req, res) => {
     await pool.query(`
      ALTER TABLE pedidos ADD COLUMN IF NOT EXISTS etiqueta_gerada BOOLEAN DEFAULT FALSE;
     `);
+    await pool.query(`
+      ALTER TABLE produtos ADD COLUMN IF NOT EXISTS foto_url_2 TEXT;
+    `);
 
+    await pool.query(`
+      ALTER TABLE produtos ADD COLUMN IF NOT EXISTS foto_url_3 TEXT;
+    `);
     
     res.send("Tabelas criadas/atualizadas com sucesso 🚀");
   } catch (error) {
@@ -418,8 +426,7 @@ app.post("/api/login", async (req, res) => {
 app.put("/api/produtos/:codigo", async (req, res) => {
   try {
     const { codigo } = req.params;
-    const { area, nome, descricao, preco, peso, status, foto_url } = req.body;
-
+    const { area, nome, descricao, preco, peso, status, foto_url_1, foto_url_2, foto_url_3 } = req.body;
     const result = await pool.query(
       `UPDATE produtos
        SET area = $1,
@@ -428,10 +435,23 @@ app.put("/api/produtos/:codigo", async (req, res) => {
            preco = $4,
            peso = $5,
            status = $6,
-           foto_url = $7
-       WHERE codigo = $8
+           foto_url = $7,
+           foto_url_2 = $8,
+           foto_url_3 = $9
+       WHERE codigo = $10
        RETURNING *`,
-      [area, nome, descricao, preco, peso, status, foto_url, codigo]
+      [
+         area,
+         nome,
+         descricao,
+         preco,
+         peso,
+         status,
+         foto_url_1,
+         foto_url_2 || null,
+         foto_url_3 || null,
+         codigo
+     ]
     );
 
     if (result.rows.length === 0) {
@@ -484,11 +504,22 @@ app.post("/api/produtos", async (req, res) => {
     const codigo = prefixo + proximoNumero;
 
     const result = await pool.query(
-      `INSERT INTO produtos (codigo, area, nome, descricao, preco, peso, status, foto_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-       RETURNING *`,
-      [codigo, area, nome, descricao, preco, peso, status, foto_url]
-    );
+  `INSERT INTO produtos (codigo, area, nome, descricao, preco, peso, status, foto_url, foto_url_2, foto_url_3)
+   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+   RETURNING *`,
+  [
+    codigo,
+    area,
+    nome,
+    descricao,
+    preco,
+    peso,
+    status,
+    foto_url_1,
+    foto_url_2 || null,
+    foto_url_3 || null
+  ]
+);
 
     console.log("PRODUTO SALVO NO BANCO:", result.rows[0]);
 
