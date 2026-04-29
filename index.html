@@ -3234,10 +3234,7 @@ async function cadastrarProduto(){
     return;
   }
 
-  if ((descricao || '').trim().length < 150) {
-    if (msg) msg.innerText = 'A descrição do produto deve ter pelo menos 150 caracteres.';
-    return;
-  }
+
 
   const lerImagem = (input) => {
     return new Promise((resolve) => {
