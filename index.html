@@ -2286,16 +2286,18 @@ function abrirDetalheProduto(codigo, telaOrigem = 'screen-catalogo'){
   }
 
   produtoDetalheAtual = {
-    id: Number(produto.id),
-    codigo: produto.codigo,
-    area: produto.area,
-    nome: produto.nome,
-    descricao: produto.descricao,
-    preco: Number(produto.preco || 0),
-    pesoGramas: Number(produto.pesoGramas || 0),
-    status: produto.status,
-    imagem: produto.imagem || ''
-  };
+  id: Number(produto.id),
+  codigo: produto.codigo,
+  area: produto.area,
+  nome: produto.nome,
+  descricao: produto.descricao,
+  preco: Number(produto.preco || 0),
+  pesoGramas: Number(produto.pesoGramas || 0),
+  status: produto.status,
+  imagem: produto.imagem || '',
+  imagem2: produto.imagem2 || '',
+  imagem3: produto.imagem3 || ''
+};
 
   contextoDetalheAnterior = telaOrigem;
     if (!clienteAtual || !clienteAtual.id) {
@@ -2319,8 +2321,7 @@ function abrirDetalheProduto(codigo, telaOrigem = 'screen-catalogo'){
 
   const resumo = calcularResumoFinanceiro(produtoDetalheAtual.preco, produtoDetalheAtual.pesoGramas);
 
-  if(safe('detalheProdutoFoto')) safe('detalheProdutoFoto').innerHTML = imagemProdutoHtml(produtoDetalheAtual.imagem);
-  if(safe('detalheProdutoNome')) safe('detalheProdutoNome').innerText = produtoDetalheAtual.nome;
+  if(safe('detalheProdutoFoto')) safe('detalheProdutoFoto').innerHTML = galeriaProdutoHtml(produtoDetalheAtual);  if(safe('detalheProdutoNome')) safe('detalheProdutoNome').innerText = produtoDetalheAtual.nome;
   if(safe('detalheProdutoDescricao')) safe('detalheProdutoDescricao').innerText = produtoDetalheAtual.descricao;
   if(safe('detalheProdutoArea')) safe('detalheProdutoArea').innerText = produtoDetalheAtual.area;
   if (safe('detalheProdutoPreco')) {
@@ -2343,6 +2344,26 @@ function abrirDetalheProduto(codigo, telaOrigem = 'screen-catalogo'){
   abrirTela('screen-produto-detalhe');
 }
 
+  function galeriaProdutoHtml(produto){
+  let html = '';
+
+  if (produto.imagem) {
+    html += `<img src="${produto.imagem}" style="max-width:100%; margin-bottom:10px;">`;
+  }
+
+  if (produto.imagem2) {
+    html += `<img src="${produto.imagem2}" style="max-width:100%; margin-bottom:10px;">`;
+  }
+
+  if (produto.imagem3) {
+    html += `<img src="${produto.imagem3}" style="max-width:100%; margin-bottom:10px;">`;
+  }
+
+  return html || 'Sem imagem';
+}
+
+
+  
 function voltarDoDetalheProduto(){
   history.back();
 }
