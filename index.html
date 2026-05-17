@@ -1807,7 +1807,7 @@ function desenharListaExcluirClientes() {
   lista.innerHTML = clientesExcluirLista.map((cliente, index) => `
     <div
       class="item-cliente-excluir ${index === clienteExcluirSelecionadoIndex ? 'selecionado' : ''}"
-      onclick="clienteExcluirSelecionadoIndex = ${index}; destacarClienteSelecionado(); confirmarExclusaoClientePorIndex(${index});"
+      onclick="clienteExcluirSelecionadoIndex = ${index}; destacarClienteSelecionado();"
       data-index="${index}"
     >
       <div class="linha-principal">${escapeHtml(cliente.login || 'sem login')} - ${escapeHtml(cliente.nome || 'Sem nome')}</div>
