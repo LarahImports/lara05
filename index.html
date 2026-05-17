@@ -2639,7 +2639,7 @@ async function verificarPagamentoAprovado(id) {
    }
 
   const totalProdutosUS = itensSelecionadosParaCompra.reduce((acc, p) => {
-    return acc + Number(p.preco || 0);
+    return acc + parseFloat(String(p.preco || 0).replace(',', '.'));
   }, 0);
 
   if (totalProdutosUS < 10) {
