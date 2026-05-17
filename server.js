@@ -57,7 +57,11 @@ app.delete("/api/clientes/:id", async (req, res) => {
       `DELETE FROM carrinho WHERE cliente_id = $1`,
       [Number(id)]
     );
-
+    await pool.query(
+     `DELETE FROM pedidos WHERE cliente_id = $1`,
+     [Number(id)]
+    );
+    
     // 🔥 depois remove o cliente
     const result = await pool.query(
       `DELETE FROM clientes
