@@ -2642,11 +2642,11 @@ async function verificarPagamentoAprovado(id) {
     return acc + Number(p.preco || 0);
   }, 0);
 
-  if (totalProdutosUS < 50) {
-    const diferenca = 50 - totalProdutosUS;
+  if (totalProdutosUS < 10) {
+    const diferenca = 10 - totalProdutosUS;
 
     alert(
-      'Nossos envios têm um valor mínimo de US$ 50,00.\n\n' +
+      'Nossos envios têm um valor mínimo de US$ 10,00.\n\n' +
       'Por favor adicione mais US$ ' + diferenca.toFixed(2).replace('.', ',') +
       ' para podermos providenciar o envio.'
     );
@@ -3586,11 +3586,11 @@ function abrirOpcoesPagamento() {
     return;
   }
 
-  if (precoProdutoUS < 50) {
-    const diferenca = 50 - precoProdutoUS;
+  if (precoProdutoUS < 10) {
+    const diferenca = 10 - precoProdutoUS;
 
     alert(
-      'Nossos envios têm um valor mínimo de US$ 50,00.\n\n' +
+      'Nossos envios têm um valor mínimo de US$ 10,00.\n\n' +
       'Por favor adicione mais US$ ' + diferenca.toFixed(2).replace('.', ',') +
       ' para podermos providenciar o envio.'
     );
