@@ -3044,7 +3044,7 @@ async function renderCarrinhoCliente() {
     conteudo.innerHTML = itens.map((p, i) => `
   <div class="linha-admin">
     <div style="display:flex; align-items:center; gap:10px;">
-      <input type="checkbox" class="check-carrinho-compra" value="${p.id}">
+      <input type="checkbox" class="check-carrinho-compra" value="${p.id}" checked>
       <span>${i + 1}. ${p.nome}</span>
     </div>
 
