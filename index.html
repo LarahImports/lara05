@@ -2867,7 +2867,7 @@ function comprarSelecionadosCarrinho() {
   const idsSelecionados = Array.from(checks).map(c => Number(c.value));
 
   const produtosSelecionados = itensCarrinhoAtual.filter(p =>
-    idsSelecionados.includes(p.id)
+  idsSelecionados.includes(Number(p.id))
   );
 
   itensSelecionadosParaCompra = produtosSelecionados;
