@@ -1261,7 +1261,22 @@
  </div>
  </div>
  </section>
- 
+
+<section id="screen-excluir-cliente" class="screen hidden">
+  <div class="page">
+    <div class="toolbar">
+      <h2>Excluir Cliente</h2>
+      <button class="btn back" onclick="history.back()">Voltar</button>
+    </div>
+
+    <div class="card">
+      <p class="subtitulo-area">Selecione um cliente para excluir.</p>
+      <div id="listaExcluirClientes" class="lista-clientes-excluir"></div>
+      <div class="msg" id="excluirClienteMsg"></div>
+    </div>
+  </div>
+</section>
+  
 <section id="screen-carrinho" class="screen hidden">
   <div class="page">
     <div class="toolbar">
@@ -1607,8 +1622,6 @@ function abrirSistema(event){
 
   async function confirmarExclusaoClientePorIndex(index) {
 
-    console.log("FUNCAO EXCLUIR CHAMADA");
-    return;
   const cliente = clientesExcluirLista[index];
   const msg = document.getElementById('excluirClienteMsg');
 
@@ -1922,9 +1935,9 @@ async function selecionarPedidoDespacho(id) {
 }
 
  function abrirTelaExcluirCliente() {
-  abrirTela('screen-excluir-clientes');
+  abrirTela('screen-excluir-cliente');
   renderTelaExcluirClientes();
-  }
+}
 
 function voltarTelaInicial(){
   clienteAtual = null;
