@@ -3579,19 +3579,27 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function abrirOpcoesPagamento() {
-  const precoProdutoUS = Number(produtoDetalheAtual?.preco || 0);
-    if (!clienteAtual || !clienteAtual.id) {
+
+  if (!clienteAtual || !clienteAtual.id) {
     alert('Para comprar, faça login ou cadastre-se primeiro.');
     abrirSistema();
     return;
   }
 
-  if (precoProdutoUS < 10) {
-    const diferenca = 10 - precoProdutoUS;
+  let totalCarrinho = 0;
+
+  carrinho.forEach(item => {
+    totalCarrinho += Number(item.preco || 0);
+  });
+
+  if (totalCarrinho < 10) {
+
+    const diferenca = 10 - totalCarrinho;
 
     alert(
       'Nossos envios têm um valor mínimo de US$ 10,00.\n\n' +
-      'Por favor adicione mais US$ ' + diferenca.toFixed(2).replace('.', ',') +
+      'Por favor adicione mais US$ ' +
+      diferenca.toFixed(2).replace('.', ',') +
       ' para podermos providenciar o envio.'
     );
 
@@ -3599,6 +3607,7 @@ function abrirOpcoesPagamento() {
   }
 
   const box = safe('opcoesPagamentoBox');
+
   if (box) {
     box.classList.remove('hidden');
   }
